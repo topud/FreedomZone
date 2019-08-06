@@ -1,7 +1,7 @@
 ﻿// Sets the Rigidbody's velocity in Start().
 using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     [RequireComponent(typeof(Rigidbody2D))]
     public class DefaultVelocity : MonoBehaviour

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     public abstract class StaticData : StaticDataDictionary<StaticData>
     {

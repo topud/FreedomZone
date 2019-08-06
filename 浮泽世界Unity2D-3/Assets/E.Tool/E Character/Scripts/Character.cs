@@ -3,7 +3,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using E.Utility;
 using E.Tool;
 
 [RequireComponent(typeof(Rigidbody2D))] 

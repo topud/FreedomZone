@@ -8,7 +8,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Reflection;
 
-namespace E.Utility
+namespace E.Tool
 {
     public class Utility
     {

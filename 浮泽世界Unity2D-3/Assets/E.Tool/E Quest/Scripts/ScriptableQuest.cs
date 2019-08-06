@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using E.Utility;
+using E.Tool;
 
 public abstract class ScriptableQuest : StaticData
 {

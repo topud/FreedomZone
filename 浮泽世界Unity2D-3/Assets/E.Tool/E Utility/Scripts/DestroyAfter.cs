@@ -1,7 +1,7 @@
 ﻿// Destroys the GameObject after a certain time.
 using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     public class DestroyAfter : MonoBehaviour
     {

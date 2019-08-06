@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using E.Utility;
 using E.Tool;
 
 public class Player : Character

@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using E.Utility;
 
 namespace E.Tool
 {

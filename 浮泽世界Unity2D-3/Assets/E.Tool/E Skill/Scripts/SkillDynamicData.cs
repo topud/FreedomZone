@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using E.Utility;
+using E.Tool;
 
 [Serializable]
 public class SkillDynamicData : DynamicData

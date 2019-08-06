@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     public abstract class DynamicData
     {

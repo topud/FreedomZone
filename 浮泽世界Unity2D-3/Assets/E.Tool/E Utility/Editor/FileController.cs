@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 using System;
 
 
-namespace E.Utility
+namespace E.Tool
 {
     /// <summary>
     /// 文件控制脚本

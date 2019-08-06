@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     public class SortByDepth : MonoBehaviour
     {

@@ -10,7 +10,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEditor;
 
-namespace E.Utility
+namespace E.Tool
 {
     [CustomPropertyDrawer(typeof(ReadOnlyAttribute))]
     public class ReadOnlyDrawer : PropertyDrawer

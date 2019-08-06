@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
-using E.Utility;
+using E.Tool;
 
 [Serializable]
 public class Skill

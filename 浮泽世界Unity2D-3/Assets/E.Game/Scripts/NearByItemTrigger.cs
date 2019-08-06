@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using E.Utility;
+using E.Tool;
 using UnityEngine;
 
 public class NearByItemTrigger : MonoBehaviour

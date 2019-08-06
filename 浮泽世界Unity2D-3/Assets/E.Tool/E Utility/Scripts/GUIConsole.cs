@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 
-namespace E.Utility
+namespace E.Tool
 {
     class LogEntry
     {

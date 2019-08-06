@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using E.Tool;
-using E.Utility;
 using UnityEngine;
 using UnityEngine.UI;
+using E.Tool;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(AudioSource))]

@@ -11,7 +11,7 @@ using System;
 using System.IO;
 using UnityEditor;
 
-namespace E.Utility
+namespace E.Tool
 {
     public class AssetCreator<T> where T : ScriptableObject
     {

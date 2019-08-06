@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
-using E.Utility;
 
 namespace E.Tool
 {

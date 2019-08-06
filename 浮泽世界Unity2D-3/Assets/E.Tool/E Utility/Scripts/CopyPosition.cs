@@ -2,7 +2,7 @@
 // which is useful for the camera.
 using UnityEngine;
 
-namespace E.Utility
+namespace E.Tool
 {
     public class CopyPosition : MonoBehaviour
     {

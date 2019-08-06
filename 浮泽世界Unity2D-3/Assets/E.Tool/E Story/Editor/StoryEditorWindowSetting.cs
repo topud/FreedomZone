@@ -9,7 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
-using E.Utility;
+using E.Tool;
 
 namespace E.Tool
 {

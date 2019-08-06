@@ -13,7 +13,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
-using E.Utility;
+using E.Tool;
 
 public class SaveManager : SingletonPattern<SaveManager>
 {

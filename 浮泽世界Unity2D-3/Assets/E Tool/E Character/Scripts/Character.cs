@@ -25,7 +25,7 @@ public abstract class Character : MonoBehaviour
     [ReadOnly, SerializeField] protected Rigidbody2D Rigidbody;
     [ReadOnly, SerializeField] protected Collider2D Collider;
     [ReadOnly, SerializeField] protected CharacterUI CharacterUI;
-    [ReadOnly, SerializeField] protected SortByDepth SortByDepth;
+    [ReadOnly, SerializeField] protected CharacterPartController SortByDepth;
 
 
     protected virtual void Awake()
@@ -35,7 +35,7 @@ public abstract class Character : MonoBehaviour
         Rigidbody = GetComponent<Rigidbody2D>();
         Collider = GetComponent<Collider2D>();
         CharacterUI = GetComponentInChildren<CharacterUI>();
-        SortByDepth = GetComponentInChildren<SortByDepth>();
+        SortByDepth = GetComponentInChildren<CharacterPartController>();
     }
     protected virtual void OnEnable()
     {

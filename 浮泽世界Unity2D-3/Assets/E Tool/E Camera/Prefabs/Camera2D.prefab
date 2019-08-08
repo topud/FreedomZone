@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3135017763196590130}
   m_Layer: 0
-  m_Name: CameraManager
+  m_Name: Camera2D
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -48,7 +48,7 @@ GameObject:
   - component: {fileID: 3135017763232818072}
   - component: {fileID: 3135017763232818075}
   m_Layer: 0
-  m_Name: Camera - Main
+  m_Name: Camera Main
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,9 +153,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pixelsToUnits: 50
-  pixelsToUnitsMax: 100
-  pixelsToUnitsMin: 20
-  scaleSpeed: 10
   zoom: 2
 --- !u!114 &3135017763232818075
 MonoBehaviour:
@@ -186,7 +183,7 @@ GameObject:
   - component: {fileID: 3135017763452501954}
   - component: {fileID: 3135017763452501955}
   m_Layer: 0
-  m_Name: Camera - Minimap
+  m_Name: Camera Minimap
   m_TagString: MinimapCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

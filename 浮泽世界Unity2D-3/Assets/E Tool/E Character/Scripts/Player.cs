@@ -16,13 +16,12 @@ public class Player : Character
     protected override void OnEnable()
     {
         base.OnEnable();
+        Myself = this;
+        AIPath.enabled = false;
     }
     protected override void Start()
     {
         base.Start();
-        Myself = this;
-        Camera.main.GetComponent<CameraFollowTarget2D>().target = transform;
-        GameObject.FindWithTag("MinimapCamera").GetComponent<CopyPosition>().target = transform;
     }
     protected override void Update()
     {
@@ -92,12 +91,16 @@ public class Player : Character
             }
             Rigidbody.velocity = direction * currentSpeed;
 
+            Animator.SetTrigger("Walk");
+
             // 绘制动线
             Debug.DrawLine(transform.position, transform.position + (Vector3)direction * Rigidbody.velocity.magnitude, Color.green, 0, false);
         }
         else
         {
             Rigidbody.velocity = Vector2.zero;
+
+            Animator.SetTrigger("Idle");
         }
     }
     private void CheckPickUp()

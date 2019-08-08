@@ -14,9 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\u77F3\u5934"
   describe: "\u8FD9\u662F\u4E00\u5757\u77F3\u5934"
-  icon: {fileID: 21300000, guid: ebb53059f3b904008a07a343c9f09334, type: 3}
+  icon: {fileID: 21300008, guid: 87efaf20c96bd46b2a6e7bf4d4d3fd57, type: 3}
   prefab: {fileID: 2443446638038779542, guid: a1b418d3ba6ef5143be895b4b6e8b93f, type: 3}
   invincible: 0
+  movable: 0
   weight: 50
   health: 10
   rmbPrice: 10

@@ -15,6 +15,12 @@ namespace E.Tool
         [Header("×èÄá")]
         public float damp = 5;
 
+        private void Update()
+        {
+            //Ä¬ÈÏ¸úËæÍæ¼Ò
+            if (!target) target = Player.Myself.transform;
+        }
+        [ExecuteInEditMode]
         private void FixedUpdate()
         {
             if (!target) return;

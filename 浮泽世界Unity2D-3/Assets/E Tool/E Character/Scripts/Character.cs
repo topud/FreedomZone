@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Pathfinding;
 using E.Tool;
 
 [RequireComponent(typeof(Rigidbody2D))] 
@@ -16,6 +17,7 @@ public abstract class Character : MonoBehaviour
     [Header("角色状态")]
     [ReadOnly] public CharacterState State = CharacterState.Idle;
     [ReadOnly] public bool IsFaceRight = true;
+    [ReadOnly] public float RunBeyondDistance = 5;
     [ReadOnly] public Character Target;
     [ReadOnly] public List<Item> NearbyItems = new List<Item>();
 
@@ -26,6 +28,8 @@ public abstract class Character : MonoBehaviour
     [ReadOnly, SerializeField] protected Collider2D Collider;
     [ReadOnly, SerializeField] protected CharacterUI CharacterUI;
     [ReadOnly, SerializeField] protected CharacterPartController SortByDepth;
+    [ReadOnly, SerializeField] protected AIPath AIPath;
+    [ReadOnly, SerializeField] protected AIDestinationSetter AIDestinationSetter;
 
 
     protected virtual void Awake()
@@ -36,6 +40,8 @@ public abstract class Character : MonoBehaviour
         Collider = GetComponent<Collider2D>();
         CharacterUI = GetComponentInChildren<CharacterUI>();
         SortByDepth = GetComponentInChildren<CharacterPartController>();
+        AIPath = GetComponent<AIPath>();
+        AIDestinationSetter = GetComponent<AIDestinationSetter>();
     }
     protected virtual void OnEnable()
     {
@@ -50,6 +56,17 @@ public abstract class Character : MonoBehaviour
     }
     protected virtual void Update()
     {
+        if (AIDestinationSetter.target)
+        {
+            if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
+            {
+                AIPath.maxSpeed = DynamicData.Speed;
+            }
+            else
+            {
+                AIPath.maxSpeed = 2;
+            }
+        }
     }
     protected virtual void FixedUpdate()
     {

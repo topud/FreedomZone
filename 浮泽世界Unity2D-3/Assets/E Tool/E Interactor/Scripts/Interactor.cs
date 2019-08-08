@@ -35,6 +35,8 @@ public class Interactor : MonoBehaviour
         CharacterUI.HideName();
         CharacterUI.HideTalk();
         CharacterUI.SetName(StaticData.Name);
+        gameObject.layer = StaticData.Movable ? 9 : 10;
+        Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
         Rigidbody.mass = StaticData.Weight;
         gameObject.name = StaticData.Name;
     }

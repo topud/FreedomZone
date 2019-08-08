@@ -9,10 +9,14 @@ namespace E.Tool
         public bool x, y, z;
         public Transform target;
 
-        void Update()
+        private void Update()
+        {
+            //Ä¬ÈÏ¸úËæÍæ¼Ò
+            if (!target) target = Player.Myself.transform;
+        }
+        private void FixedUpdate()
         {
             if (!target) return;
-
             transform.position = new Vector3(
                 (x ? target.position.x : transform.position.x),
                 (y ? target.position.y : transform.position.y),

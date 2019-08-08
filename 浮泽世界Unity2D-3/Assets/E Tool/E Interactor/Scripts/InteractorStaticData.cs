@@ -7,6 +7,7 @@ using E.Tool;
 [CreateAssetMenu(menuName = "E Interactor")]
 public class InteractorStaticData : StaticData
 {
+    [SerializeField, Tooltip("是否可移动")] private bool movable = true;
     [SerializeField, Tooltip("质量")] private int weight = 10;
 
     [SerializeField, Tooltip("耐久")] private int health = 10;
@@ -16,6 +17,7 @@ public class InteractorStaticData : StaticData
     [SerializeField, Tooltip("使用后习得的技能")] private List<Skill> skills = new List<Skill>();
     [SerializeField, Tooltip("使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
 
+    public bool Movable { get => movable; }
     public int Weight { get => weight; }
     public int Health { get => health; }
     public int RMBPrice { get => rmbPrice; set => rmbPrice = value; }

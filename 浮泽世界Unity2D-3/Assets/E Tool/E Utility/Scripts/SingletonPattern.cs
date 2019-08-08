@@ -13,7 +13,7 @@ namespace E.Tool
 {
     public class SingletonPattern<T> : MonoBehaviour where T : MonoBehaviour
     {
-        public static T Singleton { get; private set; }
+        public static T Singleton { get; protected set; }
 
         protected virtual void Awake()
         {

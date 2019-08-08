@@ -15,12 +15,10 @@ namespace E.Tool
 {
     public class UIManager : SingletonPattern<UIManager>
     {
-        [Header("【组件】")]
-        [SerializeField] private CanvasGroup cvgStatic = null;
-        [SerializeField] private CanvasGroup cvgWindows = null;
-        [SerializeField] private CanvasGroup cvgPopups = null;
-
-        [Header("【UI脚本】")]
+        [Header("组件")]
+        public CanvasGroup LobbyUI;
+        public CanvasGroup LoadUI;
+        public CanvasGroup GameUI;
         public UICharacterInfo UICharacterInfo;
         public UIInventory UIInventory;
         public UISubItems UISubItems;
@@ -28,10 +26,6 @@ namespace E.Tool
         public UIAcceptedQuests UIAcceptedQuests;
         public UIPublishedQuests UIPublishedQuests;
         public UIMinimap UIMinimap;
-
-        [Header("【运行时变量】")]
-        public UIDisplayMode uiDisplayMode = UIDisplayMode.Default;
-        public EntityInfoDisplayMode entityInfoDisplayMode = EntityInfoDisplayMode.HoverShowAndHitShow;
 
         protected override void Awake()
         {
@@ -46,29 +40,32 @@ namespace E.Tool
         }
         private void Update()
         {
-            switch (uiDisplayMode)
+            switch (GameManager.Singleton.UIAndIOState)
             {
-                case UIDisplayMode.Default:
-                    SetCursor(true);
-                    cvgStatic.alpha = 1;
-                    cvgWindows.alpha = 1;
-                    cvgPopups.alpha = 1;
+                case UIAndIOState.ShowUIAndUseIO:
                     break;
-                case UIDisplayMode.Debug:
-                    SetCursor(true);
-                    cvgStatic.alpha = 1;
-                    cvgWindows.alpha = 1;
-                    cvgPopups.alpha = 1;
+                case UIAndIOState.ShowUIAndUnuseIO:
                     break;
-                case UIDisplayMode.Hide:
-                    SetCursor(false);
-                    cvgStatic.alpha = 0;
-                    cvgWindows.alpha = 0;
-                    cvgPopups.alpha = 0;
+                case UIAndIOState.HideUIAndUseIO:
+                    break;
+                case UIAndIOState.HideUIAndUnuseIO:
                     break;
                 default:
                     break;
             }
+        }
+        private void Reset()
+        {
+            LobbyUI = transform.Find("LobbyUI").GetComponent<CanvasGroup>();
+            LoadUI = transform.Find("LoadUI").GetComponent<CanvasGroup>();
+            GameUI = transform.Find("GameUI").GetComponent<CanvasGroup>();
+            UICharacterInfo = GetComponentInChildren<UICharacterInfo>(true);
+            UIInventory = GetComponentInChildren<UIInventory>(true);
+            UISubItems = GetComponentInChildren<UISubItems>(true);
+            UISkills = GetComponentInChildren<UISkills>(true);
+            UIAcceptedQuests = GetComponentInChildren<UIAcceptedQuests>(true);
+            UIPublishedQuests = GetComponentInChildren<UIPublishedQuests>(true);
+            UIMinimap = GetComponentInChildren<UIMinimap>(true);
         }
 
         /// <summary>
@@ -86,21 +83,6 @@ namespace E.Tool
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
-        }
-
-        public enum UIDisplayMode
-        {
-            Default = 0,
-            Debug = 1,
-            Hide = 2,
-        }
-        public enum EntityInfoDisplayMode
-        {
-            AlwaysShow = 0,
-            HoverShowOnly = 1,
-            HitShowOnly = 2,
-            HoverShowAndHitShow = 3,
-            AlwaysHide = 4
         }
     }
 }

@@ -51,11 +51,7 @@ public class Interactor : MonoBehaviour
     private void OnMouseEnter()
     {
         SortByDepth.SetColor(new Color(0.8f, 0.8f, 0.8f));
-        if (UIManager.Singleton.entityInfoDisplayMode == UIManager.EntityInfoDisplayMode.HoverShowOnly ||
-            UIManager.Singleton.entityInfoDisplayMode == UIManager.EntityInfoDisplayMode.HoverShowAndHitShow)
-        {
-            CharacterUI.ShowName();
-        }
+        CharacterUI.ShowName();
     }
     private void OnMouseOver()
     {
@@ -79,10 +75,6 @@ public class Interactor : MonoBehaviour
     private void OnMouseExit()
     {
         SortByDepth.SetColor(new Color(1, 1, 1));
-        if (UIManager.Singleton.entityInfoDisplayMode == UIManager.EntityInfoDisplayMode.HoverShowOnly ||
-            UIManager.Singleton.entityInfoDisplayMode == UIManager.EntityInfoDisplayMode.HoverShowAndHitShow)
-        {
-            CharacterUI.HideName();
-        }
+        CharacterUI.HideName();
     }
 }

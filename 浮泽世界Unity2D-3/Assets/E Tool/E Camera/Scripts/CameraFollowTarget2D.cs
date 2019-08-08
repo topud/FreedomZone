@@ -15,7 +15,7 @@ namespace E.Tool
         [Header("×èÄá")]
         public float damp = 5;
 
-      private void LateUpdate()
+        private void FixedUpdate()
         {
             if (!target) return;
 

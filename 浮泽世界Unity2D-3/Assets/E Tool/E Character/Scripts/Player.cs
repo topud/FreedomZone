@@ -27,6 +27,10 @@ public class Player : Character
     protected override void Update()
     {
         base.Update();
+    }
+    protected override void FixedUpdate()
+    {
+        base.FixedUpdate();
         if (State != CharacterState.Dead && State != CharacterState.Talk)
         {
             CheckMove();

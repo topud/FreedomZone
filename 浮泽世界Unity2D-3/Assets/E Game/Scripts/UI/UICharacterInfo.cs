@@ -58,7 +58,7 @@ namespace E.Tool
                 txtMind.text = Character.DynamicData.MaxMind.ToString();
                 txtPower.text = Character.DynamicData.MaxPower.ToString();
                 txtIntelligence.text = Character.DynamicData.Intelligence.ToString();
-                txtSpeed.text = Character.DynamicData.Speed.ToString();
+                txtSpeed.text = Character.DynamicData.MaxSpeed.ToString();
                 txtStrength.text = Character.DynamicData.Strength.ToString();
                 txtDefense.text = Character.DynamicData.Defense.ToString();
             }

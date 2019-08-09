@@ -72,11 +72,57 @@ namespace E.Tool
             }
         }
 
+        /// <summary>
+        /// 设置整体颜色
+        /// </summary>
+        /// <param name="color"></param>
         public void SetColor(Color color)
         {
             foreach (SpriteRenderer item in Renderers)
             {
                 item.color = color;
+            }
+        }
+        /// <summary>
+        /// 设置身体部件颜色
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetColor(Color color, BodyType bodyType)
+        {
+            foreach (SpriteRenderer item in BodyParts)
+            {
+                if (item.GetComponent<CharacterPart>().BodyType == bodyType)
+                {
+                    item.color = color;
+                }
+            }
+        }
+        /// <summary>
+        /// 设置服装部件颜色
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetColor(Color color, ClothType bodyType)
+        {
+            foreach (SpriteRenderer item in ClothParts)
+            {
+                if (item.GetComponent<CharacterPart>().ClothType == bodyType)
+                {
+                    item.color = color;
+                }
+            }
+        }
+        /// <summary>
+        /// 设置饰品部件颜色
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetColor(Color color, DecorationType bodyType)
+        {
+            foreach (SpriteRenderer item in DecorationParts)
+            {
+                if (item.GetComponent<CharacterPart>().DecorationType == bodyType)
+                {
+                    item.color = color;
+                }
             }
         }
     }

@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    [RequireComponent(typeof(Renderer))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public class CharacterPart : MonoBehaviour
     {
         public PartType PartType = PartType.身体;
-        public BodyType BodyType;
-        public ClothType ClothType;
-        public DecorationType DecorationType;
+        public BodyType BodyType = BodyType.脸型;
+        public ClothType ClothType = ClothType.上衣;
+        public DecorationType DecorationType = DecorationType.头顶饰品;
     }
 
     public enum PartType

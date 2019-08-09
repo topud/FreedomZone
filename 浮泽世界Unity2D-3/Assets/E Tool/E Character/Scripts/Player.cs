@@ -83,18 +83,18 @@ public class Player : Character
             int currentSpeed;
             if (Input.GetKey(KeyCode.LeftShift))
             {
-                currentSpeed = DynamicData.Speed;
+                currentSpeed = DynamicData.MaxSpeed;
             }
             else
             {
-                currentSpeed = DynamicData.Speed / 2;
+                currentSpeed = DynamicData.BaseSpeed;
             }
             Rigidbody.velocity = direction * currentSpeed;
 
             Animator.SetTrigger("Walk");
 
             // 绘制动线
-            Debug.DrawLine(transform.position, transform.position + (Vector3)direction * Rigidbody.velocity.magnitude, Color.green, 0, false);
+            Debug.DrawLine(transform.position, transform.position + (Vector3)direction * currentSpeed, Color.green, 0, false);
         }
         else
         {

@@ -8,18 +8,34 @@ namespace E.Tool
 {
     public abstract class StaticData : StaticDataDictionary<StaticData>
     {
-        [SerializeField, Tooltip("名称")] private new string name = "";
-        [SerializeField, Tooltip("描述"), TextArea(1, 30)] private string describe = "";
-        [SerializeField, Tooltip("图标")]  private Sprite icon = null;
-        [SerializeField, Tooltip("预制体")] private GameObject prefab = null;
-        [SerializeField, Tooltip("是否无敌")] private bool invincible = false;
+        [SerializeField, Tooltip("名称")] protected new string name = "";
+        [SerializeField, Tooltip("描述"), TextArea(1, 30)] protected string describe = "";
+        [SerializeField, Tooltip("图标")] protected Sprite icon = null;
+        [SerializeField, Tooltip("预制体")] protected GameObject prefab = null;
+        [SerializeField, Tooltip("是否无敌")] protected bool invincible = false;
 
+        /// <summary>
+        /// 名称
+        /// </summary>
         public string Name { get => name; }
+        /// <summary>
+        /// 描述
+        /// </summary>
         public string Describe { get => describe; }
+        /// <summary>
+        /// 图标
+        /// </summary>
         public Sprite Icon { get => icon; }
+        /// <summary>
+        /// 预制体
+        /// </summary>
         public GameObject Prefab { get => prefab; }
+        /// <summary>
+        /// 是否无敌
+        /// </summary>
         public bool Invincible { get => invincible; }
     }
+
     public abstract class StaticDataDictionary<T> : ScriptableObject where T : ScriptableObject
     {
         private static Dictionary<int, T> dictionary;

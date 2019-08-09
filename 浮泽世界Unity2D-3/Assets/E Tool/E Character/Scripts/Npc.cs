@@ -4,10 +4,20 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Npc : Character
+namespace E.Tool
 {
-    protected override void Awake()
+    public class Npc : Character
     {
-        base.Awake();
+        protected override void Awake()
+        {
+            base.Awake();
+        }
+
+
+        private void CheckMove()
+        {
+            Animator.SetTrigger("Walk");
+            Animator.SetTrigger("Idle");
+        }
     }
 }

@@ -26,6 +26,11 @@ public class Player : Character
     protected override void Update()
     {
         base.Update();
+        if (State != CharacterState.Dead && State != CharacterState.Talk)
+        {
+            CheckPickUp();
+            CheckTalk();
+        }
     }
     protected override void FixedUpdate()
     {
@@ -33,11 +38,15 @@ public class Player : Character
         if (State != CharacterState.Dead && State != CharacterState.Talk)
         {
             CheckMove();
-            CheckPickUp();
         }
-        else
-        {
-        }
+    }
+    protected override void LateUpdate()
+    {
+        base.LateUpdate();
+    }
+    protected override void OnDisable()
+    {
+        base.OnDisable();
     }
     protected override void OnDestroy()
     {
@@ -115,17 +124,44 @@ public class Player : Character
         Item item = NearbyItems[Utility.Min(diss)];
         foreach (Item it in NearbyItems)
         {
-            it.CharacterUI.SetNameColor(Color.white);
+            it.TargetUI.SetNameColor(Color.white);
         }
-        item.CharacterUI.SetNameColor(Color.yellow);
+        item.TargetUI.SetNameColor(Color.yellow);
 
         if (Input.GetKeyUp(KeyCode.F))
         {
             if (Vector2.Distance(item.GetComponent<Transform>().position, transform.position) <= 1.4)
             {
                 item.gameObject.SetActive(false);
-                DynamicData.Inventory.Add(item);
-                Debug.Log("拾取" + item.StaticData.Name);
+                DynamicData.Items.Add(item);
+                UIManager.Singleton.UIInventory.RefreshContent();
+                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+            }
+        }
+    }
+    private void CheckTalk()
+    {
+        if (NearbyCharacters.Count == 0) return;
+
+        List<float> diss = new List<float>();
+        for (int i = 0; i < NearbyCharacters.Count; i++)
+        {
+            diss.Add(Vector2.Distance(NearbyCharacters[i].GetComponent<Transform>().position, transform.position));
+        }
+        Character target = NearbyCharacters[Utility.Min(diss)];
+        foreach (Character it in NearbyCharacters)
+        {
+            it.TargetUI.SetNameColor(Color.white);
+        }
+        target.TargetUI.SetNameColor(Color.yellow);
+
+        if (Input.GetKeyUp(KeyCode.F))
+        {
+            if (Vector2.Distance(target.GetComponent<Transform>().position, transform.position) <= 1.4)
+            {
+                //target.gameObject.SetActive(false);
+                //DynamicData.Inventory.Add(target);
+                Debug.Log(string.Format("与 {0} 交谈", target.StaticData.Name));
             }
         }
     }

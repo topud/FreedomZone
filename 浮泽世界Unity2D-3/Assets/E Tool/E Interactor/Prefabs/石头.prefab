@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6353631478210439943}
   - component: {fileID: 4000060697525791407}
   - component: {fileID: 3514506528385543032}
-  - component: {fileID: 2120000793245088807}
+  - component: {fileID: 8430094243641300896}
   - component: {fileID: 1011689643633065698}
   m_Layer: 9
   m_Name: "\u77F3\u5934"
@@ -238,7 +238,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2120000793245088807
+--- !u!114 &8430094243641300896
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,14 +247,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2443446638038779542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b5fb9ce1492452499576f473de1123, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e4654a5473c0894b82d9187dcb16c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Renderers:
   - {fileID: 2443446638038779536}
-  BodyParts: []
-  ClothParts: []
-  DecorationParts: []
   precision: 100
   offset: 0
 --- !u!114 &1011689643633065698
@@ -271,15 +268,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StaticData: {fileID: 11400000, guid: 424acb0b6121c224887ce0e684cae630, type: 2}
   DynamicData:
+    name: "\u77F3\u5934"
+    invincible: 0
     maxHealth: 10
     health: 10
     rmbPrice: 10
-  Animator: {fileID: 0}
-  AudioSource: {fileID: 0}
-  Rigidbody: {fileID: 0}
-  Collider: {fileID: 0}
-  CharacterUI: {fileID: 0}
-  SortByDepth: {fileID: 0}
+  Animator: {fileID: 2452707708429428148}
+  AudioSource: {fileID: 3514506528385543032}
+  Rigidbody: {fileID: 4000060697525791407}
+  Collider: {fileID: 6353631478210439943}
+  TargetUI: {fileID: 1173665722460601086}
+  SpriteController: {fileID: 8430094243641300896}
 --- !u!1001 &2270597424533857588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,3 +404,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2270597424533857588}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1173665722460601086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1138138099617963978, guid: eddbad569603930428e01e3d21da4542,
+    type: 3}
+  m_PrefabInstance: {fileID: 2270597424533857588}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9caf493b2898b0a49a4bce636d710df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

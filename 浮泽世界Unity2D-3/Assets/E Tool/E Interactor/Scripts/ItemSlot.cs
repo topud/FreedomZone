@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using UnityEngine;
+using E.Tool;
 
 [Serializable]
 public partial struct ItemSlot

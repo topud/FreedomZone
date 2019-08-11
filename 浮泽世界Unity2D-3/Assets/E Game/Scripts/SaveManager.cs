@@ -39,7 +39,12 @@ public class SaveManager : SingletonPattern<SaveManager>
             Directory.CreateDirectory(SaveFolder);
         }
 
-        Save save = NewSave();
+        Save save = new Save
+        {
+            Time = DateTime.Now,
+            PlayerDynamicData = Player.Myself.DynamicData,
+            PlayerPosition = Player.Myself.transform.position,
+        };
         string json = JsonUtility.ToJson(save);
         File.WriteAllText(CurrentSaveFilePath, json);
 
@@ -54,7 +59,7 @@ public class SaveManager : SingletonPattern<SaveManager>
             string json = File.ReadAllText(CurrentSaveFilePath);
             Save save = JsonUtility.FromJson<Save>(json);
 
-            Player.Myself.DynamicData = save.PlayerDynamicData;
+            Player.Myself.SetData(save.PlayerDynamicData);
             Player.Myself.transform.position = save.PlayerPosition;
 
             Debug.Log("读档成功：" + CurrentSaveFilePath);
@@ -64,16 +69,6 @@ public class SaveManager : SingletonPattern<SaveManager>
         {
             Debug.Log("读档失败，存档文件不存在：" + CurrentSaveFilePath);
         }
-    }
-    private Save NewSave()
-    {
-        Save save = new Save
-        {
-            Time = DateTime.Now,
-            PlayerDynamicData = Player.Myself.DynamicData,
-            PlayerPosition = Player.Myself.transform.position,
-        };
-        return save;
     }
 }
 

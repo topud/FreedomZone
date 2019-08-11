@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class Floor : Interactor
+namespace E.Tool
 {
+    public class Floor : Interactor
+    {
+    }
 }

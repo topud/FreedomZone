@@ -1,5 +1,3 @@
-// This component copies a Transform's position to automatically follow it,
-// which is useful for the camera.
 using UnityEngine;
 
 namespace E.Tool

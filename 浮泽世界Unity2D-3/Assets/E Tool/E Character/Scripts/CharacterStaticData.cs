@@ -2,7 +2,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using E.Tool;
 
 namespace E.Tool
 {
@@ -34,10 +33,11 @@ namespace E.Tool
         [SerializeField, Tooltip("初始智力")] private int intelligence = 5;
         [SerializeField, Tooltip("初始力量")] private int strength = 5;
         [SerializeField, Tooltip("初始防御")] private int defense = 1;
+        [SerializeField, Tooltip("初始容量")] private int volume = 10;
 
         [SerializeField, Tooltip("初始携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("初始携带的浮泽币")] private int fzb = 0;
-        [SerializeField, Tooltip("初始携带的物品")] private List<Item> inventory = new List<Item>();
+        [SerializeField, Tooltip("初始携带的物品")] private List<Item> items = new List<Item>();
         [SerializeField, Tooltip("初始掌握的技能")] private List<Skill> skills = new List<Skill>();
         [SerializeField, Tooltip("初始拥有的增益")] private List<Buff> buffs = new List<Buff>();
         [SerializeField, Tooltip("初始接受的任务")] private List<Quest> acceptedQuests = new List<Quest>();
@@ -138,6 +138,10 @@ namespace E.Tool
         /// 初始防御
         /// </summary>
         public int Defense { get => defense; }
+        /// <summary>
+        /// 初始容量
+        /// </summary>
+        public int Volume { get => volume; }
 
         /// <summary>
         /// 初始携带的人民币
@@ -150,7 +154,7 @@ namespace E.Tool
         /// <summary>
         /// 初始携带的物品
         /// </summary>
-        public List<Item> Inventory { get => inventory; }
+        public List<Item> Items { get => items; }
         /// <summary>
         /// 初始掌握的技能
         /// </summary>
@@ -174,10 +178,10 @@ namespace E.Tool
     }
 
     [Serializable]
-    public class Relationship
+    public struct Relationship
     {
         [SerializeField, Tooltip("对象")] private CharacterStaticData character;
-        [SerializeField, Tooltip("好感度")] private int favorability = 0;
+        [SerializeField, Tooltip("好感度")] private int favorability;
 
         /// <summary>
         /// 对象
@@ -206,6 +210,7 @@ namespace E.Tool
             }
             else
             {
+                this.character = null;
                 Debug.LogError("未指定人际关系对象");
             }
             if (favorability >= -100 && favorability <= 100)

@@ -42,7 +42,7 @@ namespace E.Tool
             {
                 if (config == null)
                 {
-                    config = (StoryEditorWindowSetting)StoryEditorWindowSetting.GetDictionaryValues()[0];
+                    config = (StoryEditorWindowSetting)StoryEditorWindowSetting.GetValues()[0];
                 }
                 return config;
             }
@@ -56,7 +56,7 @@ namespace E.Tool
             {
                 if (storys == null)
                 {
-                    storys = ScriptableStory.GetDictionaryValues();
+                    storys = ScriptableStory.GetValues();
                 }
                 return storys;
             }
@@ -191,7 +191,7 @@ namespace E.Tool
         /// </summary>
         private static void RefreshStorys()
         {
-            storys = ScriptableStory.ReGetDictionaryValues();
+            storys = ScriptableStory.ReGetValues();
         }
         /// <summary>
         /// 刷新鼠标坐标

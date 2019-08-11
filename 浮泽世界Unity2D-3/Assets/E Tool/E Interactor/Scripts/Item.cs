@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class Item : Interactor
+namespace E.Tool
 {
+    public class Item : Interactor
+    {
 
+    }
 }

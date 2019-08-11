@@ -23,10 +23,11 @@ namespace E.Tool
         [SerializeField, Tooltip("当前智力")] private int intelligence = 5;
         [SerializeField, Tooltip("当前力量")] private int strength = 5;
         [SerializeField, Tooltip("当前防御")] private int defense = 1;
+        [SerializeField, Tooltip("当前容量")] private int volume = 10;
 
         [SerializeField, Tooltip("当前携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("当前携带的浮泽币")] private int fzb = 0;
-        [SerializeField, Tooltip("当前携带的物品")] private List<Item> inventory = new List<Item>();
+        [SerializeField, Tooltip("当前携带的物品")] private List<Item> items = new List<Item>();
         [SerializeField, Tooltip("当前掌握的技能")] private List<Skill> skills = new List<Skill>();
         [SerializeField, Tooltip("当前拥有的增益")] private List<Buff> buffs = new List<Buff>();
         [SerializeField, Tooltip("当前接受的任务")] private List<Quest> acceptedQuests = new List<Quest>();
@@ -208,6 +209,14 @@ namespace E.Tool
             get => defense;
             set => defense = value > 0 ? value : defense;
         }
+        /// <summary>
+        /// 当前容量
+        /// </summary>
+        public int Volume
+        {
+            get => volume;
+            set => volume = value > 0 ? value : volume;
+        }
 
         /// <summary>
         /// 当前携带的人民币
@@ -228,10 +237,10 @@ namespace E.Tool
         /// <summary>
         /// 当前携带的物品
         /// </summary>
-        public List<Item> Inventory
+        public List<Item> Items
         {
-            get => inventory;
-            set => inventory = value;
+            get => items;
+            set => items = value;
         }
         /// <summary>
         /// 当前掌握的技能

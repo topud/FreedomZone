@@ -9,5 +9,9 @@ namespace E.Tool
     {
         public Image image;
         public Slider slider;
+        public override void UpdateData()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

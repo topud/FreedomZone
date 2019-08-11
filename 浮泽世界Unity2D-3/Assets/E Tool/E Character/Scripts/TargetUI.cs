@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class CharacterUI : MonoBehaviour
+    public class TargetUI : MonoBehaviour
     {
         [SerializeField] private GameObject PanName;
         [SerializeField] private GameObject PanTalk;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    public class CharacterPartController : MonoBehaviour
+    public class CharacterSprite : MonoBehaviour
     {
         /// <summary>
         /// 渲染器
@@ -72,6 +72,18 @@ namespace E.Tool
             }
         }
 
+        /// <summary>
+        /// 设置整体透明度
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetAlpha(float alpha)
+        {
+            foreach (SpriteRenderer item in Renderers)
+            {
+                alpha = Mathf.Clamp01(alpha);
+                item.color = new Color(item.color.r, item.color.g, item.color.b, alpha);
+            }
+        }
         /// <summary>
         /// 设置整体颜色
         /// </summary>

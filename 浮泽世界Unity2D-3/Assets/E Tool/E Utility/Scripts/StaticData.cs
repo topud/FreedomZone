@@ -52,35 +52,6 @@ namespace E.Tool
         }
 
         /// <summary>
-        /// 重新获取资源字典
-        /// </summary>
-        /// <returns></returns>
-        public static Dictionary<int, T> ReGetDictionary()
-        {
-            LoadDictionary();
-            return Dictionary;
-        }
-        /// <summary>
-        /// 获取资源字典的值
-        /// </summary>
-        /// <returns></returns>
-        public static List<T> GetDictionaryValues()
-        {
-            List<T> values = new List<T>();
-            values.AddRange(Dictionary.Values);
-            return values;
-        }
-        /// <summary>
-        /// 重新获取资源字典的值
-        /// </summary>
-        /// <returns></returns>
-        public static List<T> ReGetDictionaryValues()
-        {
-            List<T> values = new List<T>();
-            values.AddRange(ReGetDictionary().Values);
-            return values;
-        }
-        /// <summary>
         /// 从资源目录载入所有该类型的资源
         /// </summary>
         private static void LoadDictionary()
@@ -100,6 +71,46 @@ namespace E.Tool
                     Debug.LogError("Resources文件夹内包含多个同名的 {" + typeof(T).Name + "} {" + duplicate + "}，如果它们在不同的子文件夹，请将它们的名称前加上 “（子文件夹名）”以区分。");
                 }
             }
+        }
+        /// <summary>
+        /// 重新获取资源字典
+        /// </summary>
+        /// <returns></returns>
+        public static Dictionary<int, T> ReGetDictionary()
+        {
+            LoadDictionary();
+            return Dictionary;
+        }
+        /// <summary>
+        /// 获取资源字典指定名称的值
+        /// </summary>
+        /// <returns></returns>
+        public static T GetValue(string name)
+        {
+            foreach (T item in Dictionary.Values)
+            {
+                if (item.name == name)
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 获取资源字典的值
+        /// </summary>
+        /// <returns></returns>
+        public static List<T> GetValues()
+        {
+            return Dictionary.Values.ToList();
+        }
+        /// <summary>
+        /// 重新获取资源字典的值
+        /// </summary>
+        /// <returns></returns>
+        public static List<T> ReGetValues()
+        {
+            return ReGetDictionary().Values.ToList();
         }
     }
 }

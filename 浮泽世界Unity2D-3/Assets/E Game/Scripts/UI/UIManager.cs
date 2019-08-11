@@ -21,10 +21,8 @@ namespace E.Tool
         public CanvasGroup GameUI;
         public UICharacterInfo UICharacterInfo;
         public UIInventory UIInventory;
-        public UISubItems UISubItems;
         public UISkills UISkills;
-        public UIAcceptedQuests UIAcceptedQuests;
-        public UIPublishedQuests UIPublishedQuests;
+        public UIQuests UIQuests;
         public UIMinimap UIMinimap;
 
         protected override void Awake()
@@ -32,10 +30,8 @@ namespace E.Tool
             base.Awake();
             UICharacterInfo.gameObject.SetActive(false);
             UIInventory.gameObject.SetActive(false);
-            UISubItems.gameObject.SetActive(false);
             UISkills.gameObject.SetActive(false);
-            UIAcceptedQuests.gameObject.SetActive(false);
-            UIPublishedQuests.gameObject.SetActive(false);
+            UIQuests.gameObject.SetActive(false);
             UIMinimap.gameObject.SetActive(false);
         }
         private void Update()
@@ -61,10 +57,8 @@ namespace E.Tool
             GameUI = transform.Find("GameUI").GetComponent<CanvasGroup>();
             UICharacterInfo = GetComponentInChildren<UICharacterInfo>(true);
             UIInventory = GetComponentInChildren<UIInventory>(true);
-            UISubItems = GetComponentInChildren<UISubItems>(true);
             UISkills = GetComponentInChildren<UISkills>(true);
-            UIAcceptedQuests = GetComponentInChildren<UIAcceptedQuests>(true);
-            UIPublishedQuests = GetComponentInChildren<UIPublishedQuests>(true);
+            UIQuests = GetComponentInChildren<UIQuests>(true);
             UIMinimap = GetComponentInChildren<UIMinimap>(true);
         }
 

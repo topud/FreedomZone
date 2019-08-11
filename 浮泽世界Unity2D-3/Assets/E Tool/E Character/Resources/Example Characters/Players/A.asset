@@ -14,12 +14,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: A
   describe: "\u8DEF\u4EBAA"
-  icon: {fileID: 21300000, guid: bc2a9e6f563d44bb6a44fec40dcc1558, type: 3}
+  icon: {fileID: 21300000, guid: a6aef86d63dffe440b2cf3aa1f173a5f, type: 3}
   prefab: {fileID: 1505016760143036, guid: 3f57dba51b8cdc446aa7f8d0d5913537, type: 3}
   invincible: 0
   gender: 0
   height: 160
   weight: 50
+  race: 0
   startYear: 2020
   college: "\u8BBE\u8BA1\u5B66\u9662"
   profession: "\u89C6\u89C9\u4F20\u8FBE\u8BBE\u8BA1"
@@ -27,20 +28,23 @@ MonoBehaviour:
   grade: "\u4E00\u5E74\u7EA7"
   class: "\u7532"
   studentID: F20390052
-  health: 20
-  mind: 20
-  power: 20
+  maxHealth: 20
+  maxMind: 20
+  maxPower: 20
   healthRecoveryCoefficient: 1
   mindRecoveryCoefficient: 1
   powerRecoveryCoefficient: 1
+  maxSpeed: 5
+  baseSpeed: 2
   intelligence: 5
-  speed: 5
   strength: 5
   defense: 1
+  volume: 10
   rmb: 100
   fzb: 0
-  inventory: []
+  items: []
   skills: []
   buffs: []
-  acceptedQuest: []
-  publishedQuest: []
+  acceptedQuests: []
+  publishedQuests: []
+  relationships: []

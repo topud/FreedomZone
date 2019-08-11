@@ -5,8 +5,8 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIBaseSlot : MonoBehaviour
+    public abstract class UIBaseSlot : MonoBehaviour
     {
-        public UIShowToolTip tooltip;
+        public abstract void UpdateData();
     }
 }

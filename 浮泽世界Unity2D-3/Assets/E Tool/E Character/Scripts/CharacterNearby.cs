@@ -16,22 +16,39 @@ namespace E.Tool
         private void OnTriggerEnter2D(Collider2D col)
         {
             Item item = col.GetComponent<Item>();
-            if (item != null)
+            if (item)
             {
-                item.CharacterUI.ShowName();
+                item.TargetUI.ShowName();
                 if (!character.NearbyItems.Contains(item))
                 {
                     character.NearbyItems.Add(item);
+                }
+            }
+
+            Character target = col.GetComponent<Character>();
+            if (target)
+            {
+                target.TargetUI.ShowName();
+                if (!character.NearbyCharacters.Contains(target))
+                {
+                    character.NearbyCharacters.Add(target);
                 }
             }
         }
         private void OnTriggerExit2D(Collider2D col)
         {
             Item item = col.GetComponent<Item>();
-            if (item != null)
+            if (item)
             {
-                item.CharacterUI.HideName();
+                item.TargetUI.HideName();
                 character.NearbyItems.Remove(item);
+            }
+
+            Character target = col.GetComponent<Character>();
+            if (target)
+            {
+                target.TargetUI.HideName();
+                character.NearbyCharacters.Remove(target);
             }
         }
     }

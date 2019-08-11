@@ -15,5 +15,9 @@ namespace E.Tool
         public Image cooldownCircle;
         public Text descriptionText;
         public Button upgradeButton;
+        public override void UpdateData()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

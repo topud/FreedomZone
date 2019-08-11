@@ -14,10 +14,10 @@ GameObject:
   - component: {fileID: 6353631478210439943}
   - component: {fileID: 4000060697525791407}
   - component: {fileID: 3514506528385543032}
-  - component: {fileID: 2120000793245088807}
+  - component: {fileID: 3843289490510987396}
   - component: {fileID: 1011689643633065698}
   m_Layer: 9
-  m_Name: "\u5934\u9AA8"
+  m_Name: "\u888B\u5B50"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -94,7 +94,7 @@ SpriteRenderer:
   m_SortingLayerID: -1824539169
   m_SortingLayer: -7
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 79f61a3364320b647bff14daf714ed47, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c2e8fc5e3559db04eaf990f495aabc75, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -238,7 +238,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &2120000793245088807
+--- !u!114 &3843289490510987396
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,14 +247,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2443446638038779542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59b5fb9ce1492452499576f473de1123, type: 3}
+  m_Script: {fileID: 11500000, guid: 0e4654a5473c0894b82d9187dcb16c49, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Renderers:
   - {fileID: 2443446638038779536}
-  BodyParts: []
-  ClothParts: []
-  DecorationParts: []
   precision: 100
   offset: 0
 --- !u!114 &1011689643633065698
@@ -271,15 +268,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StaticData: {fileID: 11400000, guid: 012cbccd87b21cb44866bb7c612991d5, type: 2}
   DynamicData:
+    name: "\u888B\u5B50"
+    invincible: 0
+    stack: 1
     maxHealth: 10
     health: 10
-    rmbPrice: 10
-  Animator: {fileID: 0}
-  AudioSource: {fileID: 0}
-  Rigidbody: {fileID: 0}
-  Collider: {fileID: 0}
-  CharacterUI: {fileID: 0}
-  SortByDepth: {fileID: 0}
+    items: []
+  Animator: {fileID: 2452707708429428148}
+  AudioSource: {fileID: 3514506528385543032}
+  Rigidbody: {fileID: 4000060697525791407}
+  Collider: {fileID: 6353631478210439943}
+  TargetUI: {fileID: 1173665722460601086}
+  SpriteController: {fileID: 3843289490510987396}
 --- !u!1001 &2270597424533857588
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -405,3 +405,15 @@ RectTransform:
     type: 3}
   m_PrefabInstance: {fileID: 2270597424533857588}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1173665722460601086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1138138099617963978, guid: eddbad569603930428e01e3d21da4542,
+    type: 3}
+  m_PrefabInstance: {fileID: 2270597424533857588}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9caf493b2898b0a49a4bce636d710df3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

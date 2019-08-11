@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Pathfinding;
-using E.Tool;
 
 namespace E.Tool
 {
@@ -23,31 +22,22 @@ namespace E.Tool
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public Character Target;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
+        [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
 
         [Header("组件")]
-        [ReadOnly, SerializeField] protected Collider2D Collider;
-        [ReadOnly, SerializeField] protected Rigidbody2D Rigidbody;
-        [ReadOnly, SerializeField] protected AudioSource AudioSource;
-        [ReadOnly, SerializeField] protected Animator Animator;
-        [ReadOnly, SerializeField] protected AIPath AIPath;
-        [ReadOnly, SerializeField] protected AIDestinationSetter AIDestinationSetter;
-        [ReadOnly, SerializeField] protected CharacterUI CharacterUI;
-        [ReadOnly, SerializeField] protected CharacterPartController CharacterPartController;
+        [ReadOnly] public Collider2D Collider;
+        [ReadOnly] public Rigidbody2D Rigidbody;
+        [ReadOnly] public AudioSource AudioSource;
+        [ReadOnly] public Animator Animator;
+        [ReadOnly] public AIPath AIPath;
+        [ReadOnly] public AIDestinationSetter AIDestinationSetter;
+        [ReadOnly] public TargetUI TargetUI;
+        [ReadOnly] public CharacterSprite SpriteController;
 
 
         protected virtual void Awake()
         {
-            //自带组件
-            Collider = GetComponent<Collider2D>();
-            Rigidbody = GetComponent<Rigidbody2D>();
-            AudioSource = GetComponent<AudioSource>();
-            Animator = GetComponentInChildren<Animator>();
-            //插件组件
-            AIPath = GetComponent<AIPath>();
-            AIDestinationSetter = GetComponent<AIDestinationSetter>();
-            //E 组件
-            CharacterUI = GetComponentInChildren<CharacterUI>();
-            CharacterPartController = GetComponentInChildren<CharacterPartController>();
+            SetComponents();
         }
         protected virtual void OnEnable()
         {
@@ -55,10 +45,9 @@ namespace E.Tool
             ResetData();
             //数据应用，显示更新
             Rigidbody.mass = StaticData.Weight;
-            gameObject.name = StaticData.Name;
-            CharacterUI.SetName(StaticData.Name);
-            CharacterUI.HideName();
-            CharacterUI.HideTalk();
+            TargetUI.SetName(StaticData.Name);
+            TargetUI.HideName();
+            TargetUI.HideTalk();
         }
         protected virtual void Start()
         {
@@ -93,10 +82,16 @@ namespace E.Tool
         {
 
         }
+        protected virtual void Reset()
+        {
+            StaticData = (CharacterStaticData)CharacterStaticData.GetValue(gameObject.name);
+            ResetData();
+            SetComponents();
+        }
         private void OnMouseEnter()
         {
-            CharacterPartController.SetColor(new Color(0.8f, 0.8f, 0.8f));
-            CharacterUI.ShowName();
+            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
+            TargetUI.ShowName();
         }
         private void OnMouseOver()
         {
@@ -107,7 +102,7 @@ namespace E.Tool
         }
         private void OnMouseDown()
         {
-            CharacterPartController.SetColor(new Color(0.6f, 0.6f, 0.6f));
+            SpriteController.SetColor(new Color(0.6f, 0.6f, 0.6f));
         }
         private void OnMouseDrag()
         {
@@ -115,20 +110,26 @@ namespace E.Tool
         }
         private void OnMouseUp()
         {
-            CharacterPartController.SetColor(new Color(0.8f, 0.8f, 0.8f));
+            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
         }
         private void OnMouseExit()
         {
-            CharacterPartController.SetColor(new Color(1, 1, 1));
-            CharacterUI.HideName();
+            SpriteController.SetColor(new Color(1, 1, 1));
+            TargetUI.HideName();
         }
 
         /// <summary>
-        /// 设置数据
+        /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
         public virtual void SetData(CharacterDynamicData data)
         {
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据不存在，无法设置数据");
+                return;
+            }
+
             if (data.Name == StaticData.Name)
             {
                 DynamicData = data;
@@ -140,10 +141,16 @@ namespace E.Tool
             }
         }
         /// <summary>
-        /// 重置数据
+        /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
         public virtual void ResetData()
         {
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据不存在，无法设置数据");
+                return;
+            }
+
             DynamicData.Name = StaticData.Name;
             DynamicData.Invincible = StaticData.Invincible;
 
@@ -164,12 +171,29 @@ namespace E.Tool
 
             DynamicData.RMB = StaticData.RMB;
             DynamicData.FZB = StaticData.FZB;
-            DynamicData.Inventory = StaticData.Inventory;
-            DynamicData.Skills = StaticData.Skills;
+            DynamicData.Items = new List<Item>(StaticData.Items);
+            DynamicData.Skills = new List<Skill>(StaticData.Skills);
             DynamicData.Buffs = StaticData.Buffs;
             DynamicData.AcceptedQuests = StaticData.AcceptedQuests;
             DynamicData.PublishedQuests = StaticData.PublishedQuests;
             DynamicData.Relationships = StaticData.Relationships;
+        }
+        /// <summary>
+        /// 设置组件
+        /// </summary>
+        public virtual void SetComponents()
+        {
+            //自带组件
+            Collider = GetComponent<Collider2D>();
+            Rigidbody = GetComponent<Rigidbody2D>();
+            AudioSource = GetComponent<AudioSource>();
+            Animator = GetComponentInChildren<Animator>();
+            //插件组件
+            AIPath = GetComponent<AIPath>();
+            AIDestinationSetter = GetComponent<AIDestinationSetter>();
+            //E 组件
+            TargetUI = GetComponentInChildren<TargetUI>();
+            SpriteController = GetComponentInChildren<CharacterSprite>();
         }
 
         /// <summary>
@@ -178,7 +202,7 @@ namespace E.Tool
         /// <returns></returns>
         public float HealthPercent()
         {
-            return (DynamicData.MaxHealth != 0) ? (float)DynamicData.Health / DynamicData.MaxHealth : 0;
+            return (DynamicData.MaxHealth > 0) ? (float)DynamicData.Health / DynamicData.MaxHealth : 0;
         }
         /// <summary>
         /// 脑力百分比
@@ -186,7 +210,7 @@ namespace E.Tool
         /// <returns></returns>
         public float MindPercent()
         {
-            return (DynamicData.MaxMind != 0) ? (float)DynamicData.Mind / DynamicData.MaxMind : 0;
+            return (DynamicData.MaxMind > 0) ? (float)DynamicData.Mind / DynamicData.MaxMind : 0;
         }
         /// <summary>
         /// 体力百分比
@@ -194,7 +218,7 @@ namespace E.Tool
         /// <returns></returns>
         public float PowerPercent()
         {
-            return (DynamicData.MaxPower != 0) ? (float)DynamicData.Power / DynamicData.MaxPower : 0;
+            return (DynamicData.MaxPower > 0) ? (float)DynamicData.Power / DynamicData.MaxPower : 0;
         }
         /// <summary>
         /// 复活
@@ -231,87 +255,6 @@ namespace E.Tool
         {
             return 0;// inventory.FindIndex(slot => slot.amount > 0 && slot.item.Name == itemName);
         }
-        public bool InventoryRemove(Item item, int amount)
-        {
-            //for (int i = 0; i < inventory.Count; ++i)
-            {
-                //ItemSlot slot = inventory[i];
-                //// note: .Equals because name AND dynamic variables matter (petLevel etc.)
-                //if (slot.amount > 0 && slot.item.Equals(item))
-                //{
-                //    // take as many as possible
-                //    amount -= slot.DecreaseAmount(amount);
-                //    inventory[i] = slot;
-
-                //    // are we done?
-                //    if (amount == 0) return true;
-                //}
-            }
-            return false;
-        }
-        public bool InventoryCanAdd(Item item, int amount)
-        {
-            //// go through each slot
-            //for (int i = 0; i < inventory.Count; ++i)
-            //{
-            //    // empty? then subtract maxstack
-            //    if (inventory[i].amount == 0)
-            //        amount -= item.MaxStack;
-            //    // not empty. same type too? then subtract free amount (max-amount)
-            //    // note: .Equals because name AND dynamic variables matter (petLevel etc.)
-            //    else if (inventory[i].item.Equals(item))
-            //        amount -= (inventory[i].item.MaxStack - inventory[i].amount);
-
-            //    // were we able to fit the whole amount already?
-            //    if (amount <= 0) return true;
-            //}
-
-            return false;
-        }
-        public bool InventoryAdd(Item item, int amount)
-        {
-            // we only want to add them if there is enough space for all of them, so
-            // let's double check
-            //if (InventoryCanAdd(item, amount))
-            //{
-            //    // add to same item stacks first (if any)
-            //    // (otherwise we add to first empty even if there is an existing
-            //    //  stack afterwards)
-            //    for (int i = 0; i < inventory.Count; ++i)
-            //    {
-            //        // not empty and same type? then add free amount (max-amount)
-            //        // note: .Equals because name AND dynamic variables matter (petLevel etc.)
-            //        if (inventory[i].amount > 0 && inventory[i].item.Equals(item))
-            //        {
-            //            ItemSlot temp = inventory[i];
-            //            amount -= temp.IncreaseAmount(amount);
-            //            inventory[i] = temp;
-            //        }
-
-            //        // were we able to fit the whole amount already? then stop loop
-            //        if (amount <= 0) return true;
-            //    }
-
-            //    // add to empty slots (if any)
-            //    for (int i = 0; i < inventory.Count; ++i)
-            //    {
-            //        // empty? then fill slot with as many as possible
-            //        if (inventory[i].amount == 0)
-            //        {
-            //            int add = Mathf.Min(amount, item.MaxStack);
-            //            inventory[i] = new ItemSlot(item, add);
-            //            amount -= add;
-            //        }
-
-            //        // were we able to fit the whole amount already? then stop loop
-            //        if (amount <= 0) return true;
-            //    }
-            //    // we should have been able to add all of them
-            //    if (amount != 0) Debug.LogError("inventory add failed: " + item.Name + " " + amount);
-            //}
-            return false;
-        }
-
     }
 
     public enum CharacterState

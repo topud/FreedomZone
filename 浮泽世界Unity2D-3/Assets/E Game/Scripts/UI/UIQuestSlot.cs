@@ -10,5 +10,9 @@ namespace E.Tool
         //无Tooltip
         public Button nameButton;
         public Text descriptionText;
+        public override void UpdateData()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

@@ -25,12 +25,11 @@ namespace E.Tool
         {
             if (!target) return;
 
-            // calculate goal position
+            // 计算目标地点
             Vector2 goal = (Vector2)target.position + offset;
             Vector2 position = Vector2.Lerp(transform.position, goal, Time.deltaTime * damp);
 
-            // snap to grid, so it's always in multiples of 1/16 for pixel perfect looks
-            // and to prevent shaking effects of moving objects etc.
+            // 吸附网格
             if (snapToGrid)
             {
                 float gridSize = pixelDensity.pixelsToUnits * pixelDensity.zoom;
@@ -38,7 +37,6 @@ namespace E.Tool
                 position.y = Mathf.Round(position.y * gridSize) / gridSize;
             }
 
-            // convert to 3D but keep Z to stay in front of 2D plane
             transform.position = new Vector3(position.x, position.y, transform.position.z);
         }
     }

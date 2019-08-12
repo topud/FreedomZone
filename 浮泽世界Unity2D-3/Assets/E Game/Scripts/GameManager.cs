@@ -33,11 +33,11 @@ public class GameManager : SingletonPattern<GameManager>
                 }
                 break;
             case GameState.Game:
-                if (Input.GetKeyUp(KeyCode.O))
+                if (Input.GetKeyUp(KeyCode.LeftBracket))
                 {
                     SaveManager.Singleton.SaveGame();
                 }
-                else if (Input.GetKeyUp(KeyCode.P))
+                else if (Input.GetKeyUp(KeyCode.RightBracket))
                 {
                     SaveManager.Singleton.LoadGame();
                 }

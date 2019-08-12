@@ -94,8 +94,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 16
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1180856863294806
 GameObject:
   m_ObjectHideFlags: 0
@@ -190,8 +189,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 11
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1260765658617912
 GameObject:
   m_ObjectHideFlags: 0
@@ -286,8 +284,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 10
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1310034877587314
 GameObject:
   m_ObjectHideFlags: 0
@@ -319,7 +316,6 @@ Transform:
   m_Children:
   - {fileID: 2210963338490057456}
   - {fileID: 4787711831080544}
-  - {fileID: 1071298570630689516}
   m_Father: {fileID: 5244364306029629588}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: -90}
@@ -384,9 +380,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PartType: 0
-  BodyType: 0
-  ClothType: 0
-  DecorationType: 0
+  BodyType: 9
+  ItemType: 3
 --- !u!1 &1342436468649768
 GameObject:
   m_ObjectHideFlags: 0
@@ -485,8 +480,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 1
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1396624032841978
 GameObject:
   m_ObjectHideFlags: 0
@@ -499,7 +493,7 @@ GameObject:
   - component: {fileID: 212509577456578672}
   - component: {fileID: 6965306197106815881}
   m_Layer: 0
-  m_Name: Back Item
+  m_Name: Bag
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -579,10 +573,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PartType: 2
+  PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 4
+  ItemType: 2
 --- !u!1 &1422119021577194
 GameObject:
   m_ObjectHideFlags: 0
@@ -677,8 +670,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 17
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1562347301814644
 GameObject:
   m_ObjectHideFlags: 0
@@ -691,7 +683,7 @@ GameObject:
   - component: {fileID: 212166297835026708}
   - component: {fileID: 4514518707359985572}
   m_Layer: 0
-  m_Name: Overhead Item
+  m_Name: Hat
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -771,10 +763,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PartType: 2
+  PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 0
 --- !u!1 &1590122689377746
 GameObject:
   m_ObjectHideFlags: 0
@@ -869,8 +860,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 2
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1655243998411012
 GameObject:
   m_ObjectHideFlags: 0
@@ -965,8 +955,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 0
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &1815118901651672
 GameObject:
   m_ObjectHideFlags: 0
@@ -1059,7 +1048,6 @@ MonoBehaviour:
   - {fileID: 212327885459025510}
   - {fileID: 5525434199047743307}
   - {fileID: 212509577456578672}
-  - {fileID: 9219422895209517142}
   - {fileID: 212562736503235108}
   - {fileID: 212624243839199470}
   - {fileID: 212808766668813056}
@@ -1104,12 +1092,17 @@ MonoBehaviour:
   - {fileID: 212975629571437478}
   - {fileID: 9081915898330628005}
   - {fileID: 212590415526268780}
-  ClothParts:
+  ItemParts:
   - {fileID: 5525434199047743307}
+  - {fileID: 212509577456578672}
+  - {fileID: 212166297835026708}
+  - {fileID: 739937076649164180}
   - {fileID: 7542704302160141687}
+  - {fileID: 212961096623038308}
   - {fileID: 268573231282119632}
   - {fileID: 1879104913866339979}
   - {fileID: 6540051212602485075}
+  - {fileID: 46180891406236343}
   - {fileID: 4683651541698308679}
   - {fileID: 6366598442200767610}
   - {fileID: 1499974809459306981}
@@ -1118,13 +1111,6 @@ MonoBehaviour:
   - {fileID: 9213612128913755464}
   - {fileID: 2252868205001899556}
   - {fileID: 62135541663536718}
-  DecorationParts:
-  - {fileID: 212509577456578672}
-  - {fileID: 9219422895209517142}
-  - {fileID: 212166297835026708}
-  - {fileID: 739937076649164180}
-  - {fileID: 212961096623038308}
-  - {fileID: 46180891406236343}
   precision: 100
   offset: 0
 --- !u!114 &1064352721075112854
@@ -1263,10 +1249,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PartType: 2
+  PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 8
+  ItemType: 11
 --- !u!1 &38752233474141776
 GameObject:
   m_ObjectHideFlags: 0
@@ -1361,8 +1346,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 9
-  DecorationType: 0
+  ItemType: 14
 --- !u!1 &265409989129486594
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,8 +1441,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 19
-  ClothType: 10
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &340166099130034581
 GameObject:
   m_ObjectHideFlags: 0
@@ -1567,7 +1550,7 @@ GameObject:
   - component: {fileID: 739937076649164180}
   - component: {fileID: 4998559622492374275}
   m_Layer: 0
-  m_Name: Face Item
+  m_Name: Mask
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1647,10 +1630,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PartType: 2
+  PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 1
+  ItemType: 1
 --- !u!1 &1117101492829399658
 GameObject:
   m_ObjectHideFlags: 0
@@ -1845,8 +1827,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 8
-  DecorationType: 0
+  ItemType: 13
 --- !u!1 &2270472712703067460
 GameObject:
   m_ObjectHideFlags: 0
@@ -2041,8 +2022,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 15
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &2537533548860219357
 GameObject:
   m_ObjectHideFlags: 0
@@ -2252,8 +2232,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 2
-  DecorationType: 0
+  ItemType: 5
 --- !u!1 &3776402503570062175
 GameObject:
   m_ObjectHideFlags: 0
@@ -2413,8 +2392,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 4
-  DecorationType: 0
+  ItemType: 7
 --- !u!1 &4090091826211783986
 GameObject:
   m_ObjectHideFlags: 0
@@ -2509,8 +2487,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 7
-  DecorationType: 0
+  ItemType: 12
 --- !u!1 &4236791723045565978
 GameObject:
   m_ObjectHideFlags: 0
@@ -2605,8 +2582,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 1
-  DecorationType: 0
+  ItemType: 4
 --- !u!1 &4320800712982508355
 GameObject:
   m_ObjectHideFlags: 0
@@ -2864,8 +2840,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 3
-  DecorationType: 0
+  ItemType: 6
 --- !u!1 &5865226937601319900
 GameObject:
   m_ObjectHideFlags: 0
@@ -3084,102 +3059,6 @@ MonoBehaviour:
   m_Length: 0.40002823
   m_ChildTransform: {fileID: 1618484818767418382}
   m_AttachedIK: {fileID: 0}
---- !u!1 &6454518148063985497
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1071298570630689516}
-  - component: {fileID: 9219422895209517142}
-  - component: {fileID: 5165825666189441916}
-  m_Layer: 0
-  m_Name: Chest Item
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1071298570630689516
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6454518148063985497}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.06, y: -0.16, z: -0.1}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 4730241530711622}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!212 &9219422895209517142
-SpriteRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6454518148063985497}
-  m_Enabled: 1
-  m_CastShadows: 0
-  m_ReceiveShadows: 0
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 0
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_Sprite: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_FlipX: 0
-  m_FlipY: 0
-  m_DrawMode: 0
-  m_Size: {x: 0.61, y: 0.22}
-  m_AdaptiveModeThreshold: 0.5
-  m_SpriteTileMode: 0
-  m_WasSpriteAssigned: 0
-  m_MaskInteraction: 0
-  m_SpriteSortPoint: 0
---- !u!114 &5165825666189441916
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6454518148063985497}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  PartType: 2
-  BodyType: 0
-  ClothType: 0
-  DecorationType: 2
 --- !u!1 &6486460013157305579
 GameObject:
   m_ObjectHideFlags: 0
@@ -3274,8 +3153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &6525595183498667733
 GameObject:
   m_ObjectHideFlags: 0
@@ -3370,8 +3248,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 12
-  DecorationType: 0
+  ItemType: 17
 --- !u!1 &7716061202584834265
 GameObject:
   m_ObjectHideFlags: 0
@@ -3466,8 +3343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 14
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &7746326812608146277
 GameObject:
   m_ObjectHideFlags: 0
@@ -3562,8 +3438,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 5
-  DecorationType: 0
+  ItemType: 8
 --- !u!1 &7860240824526387516
 GameObject:
   m_ObjectHideFlags: 0
@@ -3656,10 +3531,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1779e9f10de5d9d43a8782923eb39490, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PartType: 2
+  PartType: 1
   BodyType: 0
-  ClothType: 0
-  DecorationType: 7
+  ItemType: 10
 --- !u!1 &7871644590835187700
 GameObject:
   m_ObjectHideFlags: 0
@@ -3804,8 +3678,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 18
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &8328395433625709540
 GameObject:
   m_ObjectHideFlags: 0
@@ -3950,8 +3823,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 15
-  ClothType: 6
-  DecorationType: 0
+  ItemType: 9
 --- !u!1 &8580304227367427026
 GameObject:
   m_ObjectHideFlags: 0
@@ -4046,8 +3918,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 11
-  DecorationType: 0
+  ItemType: 16
 --- !u!1 &8586974755663469299
 GameObject:
   m_ObjectHideFlags: 0
@@ -4142,8 +4013,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 12
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3
 --- !u!1 &8932567446499470803
 GameObject:
   m_ObjectHideFlags: 0
@@ -4238,8 +4108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 1
   BodyType: 0
-  ClothType: 10
-  DecorationType: 0
+  ItemType: 15
 --- !u!1 &9182416003332310662
 GameObject:
   m_ObjectHideFlags: 0
@@ -4334,5 +4203,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   PartType: 0
   BodyType: 13
-  ClothType: 0
-  DecorationType: 0
+  ItemType: 3

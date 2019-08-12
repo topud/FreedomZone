@@ -35,6 +35,106 @@ namespace E.Tool
                 default:
                     break;
             }
+
+            if (Input.GetKeyUp(UICharacter.HotKey))
+            {
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    if (!UICharacter.TogInfo.isOn)
+                    {
+                        UICharacter.TogInfo.isOn = true;
+                    }
+                    else
+                    {
+                        UICharacter.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    UICharacter.gameObject.SetActive(true);
+                    UICharacter.TogInfo.isOn = true;
+                }
+            }
+            else if (Input.GetKeyUp(UICharacter.HotKeyInventory))
+            {
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    if (!UICharacter.TogInventory.isOn)
+                    {
+                        UICharacter.TogInventory.isOn = true;
+                    }
+                    else
+                    {
+                        UICharacter.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    UICharacter.gameObject.SetActive(true);
+                    UICharacter.TogInventory.isOn = true;
+                }
+            }
+            else if (Input.GetKeyUp(UICharacter.HotKeyEquipment))
+            {
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    if (!UICharacter.TogEquipment.isOn)
+                    {
+                        UICharacter.TogEquipment.isOn = true;
+                    }
+                    else
+                    {
+                        UICharacter.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    UICharacter.gameObject.SetActive(true);
+                    UICharacter.TogEquipment.isOn = true;
+                }
+            }
+            else if (Input.GetKeyUp(UICharacter.HotKeySkill))
+            {
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    if (!UICharacter.TogSkill.isOn)
+                    {
+                        UICharacter.TogSkill.isOn = true;
+                    }
+                    else
+                    {
+                        UICharacter.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    UICharacter.gameObject.SetActive(true);
+                    UICharacter.TogSkill.isOn = true;
+                }
+            }
+            else if (Input.GetKeyUp(UICharacter.HotKeyQuest))
+            {
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    if (!UICharacter.TogQuest.isOn)
+                    {
+                        UICharacter.TogQuest.isOn = true;
+                    }
+                    else
+                    {
+                        UICharacter.gameObject.SetActive(false);
+                    }
+                }
+                else
+                {
+                    UICharacter.gameObject.SetActive(true);
+                    UICharacter.TogQuest.isOn = true;
+                }
+            }
+            else if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                UICharacter.gameObject.SetActive(false);
+            }
         }
         private void Reset()
         {

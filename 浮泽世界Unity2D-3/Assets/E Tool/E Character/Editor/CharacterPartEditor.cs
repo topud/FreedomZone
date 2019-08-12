@@ -24,11 +24,8 @@ namespace E.Tool
                 case PartType.身体:
                     Target.BodyType = (BodyType)EditorGUILayout.EnumPopup("身体部件", Target.BodyType);
                     break;
-                case PartType.服装:
-                    Target.ClothType = (ClothType)EditorGUILayout.EnumPopup("服装部件", Target.ClothType);
-                    break;
-                case PartType.饰品:
-                    Target.DecorationType = (DecorationType)EditorGUILayout.EnumPopup("饰品部件", Target.DecorationType);
+                case PartType.物品:
+                    Target.ItemType = (ItemType)EditorGUILayout.EnumPopup("物品部件", Target.ItemType);
                     break;
                 default:
                     break;

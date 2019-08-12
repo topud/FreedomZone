@@ -6,12 +6,21 @@ namespace E.Tool
 {
     public class UICharacter : UIBase
     {
+        public KeyCode HotKeyInventory = KeyCode.O;
+        public KeyCode HotKeyEquipment = KeyCode.P;
+        public KeyCode HotKeySkill = KeyCode.K;
+        public KeyCode HotKeyQuest = KeyCode.L;
         [Header("组件")]
         [SerializeField] private UICharacterInfo uiCharacterInfo;
         [SerializeField] private UICharacterInventory uiCharacterInventory;
         [SerializeField] private UICharacterEquipment uiCharacterEquipment;
         [SerializeField] private UICharacterSkill uiCharacterSkill;
         [SerializeField] private UICharacterQuest uiCharacterQuest;
+        public Toggle TogInfo;
+        public Toggle TogInventory;
+        public Toggle TogEquipment;
+        public Toggle TogSkill;
+        public Toggle TogQuest;
 
         [Header("数据")]
         public static Character Target;
@@ -19,11 +28,18 @@ namespace E.Tool
         private void Awake()
         {
             uiCharacterInventory.slotPrefab.SetActive(false);
+
+            TogInfo.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogInfo); });
+            TogInventory.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogInventory); });
+            TogEquipment.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogEquipment); });
+            TogSkill.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogSkill); });
+            TogQuest.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogQuest); });
+
         }
         private void Start()
         {
             Target = Player.Myself;
-            RefreshContent();
+            UpdateInventory();
         }
         private void Update()
         {
@@ -49,10 +65,32 @@ namespace E.Tool
                 uiCharacterInfo.txtSpeed.text = Target.DynamicData.MaxSpeed.ToString();
                 uiCharacterInfo.txtStrength.text = Target.DynamicData.Strength.ToString();
                 uiCharacterInfo.txtDefense.text = Target.DynamicData.Defense.ToString();
-                
-                uiCharacterInventory.txtWeight.text = Target.StaticData.Weight.ToString();
-                uiCharacterInventory.txtRMB.text = Target.DynamicData.RMB.ToString();
-                uiCharacterInventory.txtFZB.text = Target.DynamicData.FZB.ToString();
+            }
+        }
+        private void OnToggleClick(Toggle toggle)
+        {
+            if (toggle.isOn)
+            {
+                if (toggle == TogInfo)
+                {
+                    ShowInfo();
+                }
+                else if (toggle == TogInventory)
+                {
+                    ShowInventory();
+                }
+                else if (toggle == TogEquipment)
+                {
+                    ShowEquipment();
+                }
+                else if (toggle == TogSkill)
+                {
+                    ShowSkills();
+                }
+                else if (toggle == TogQuest)
+                {
+                    ShowQuests();
+                }
             }
         }
 
@@ -118,7 +156,7 @@ namespace E.Tool
         }
 
         
-        public void RefreshContent()
+        public void UpdateInventory()
         {
             for (int i = 1; i < uiCharacterInventory.content.childCount; i++)
             {
@@ -142,6 +180,9 @@ namespace E.Tool
     [Serializable]
     public class UICharacterInfo 
     {
+        public GameObject scrInfo;
+        public GameObject panInfoDetail;
+        [Space(5)]
         public Text txtBirthday;
         public Text txtGender;
         public Text txtHeight;
@@ -162,56 +203,49 @@ namespace E.Tool
         public Text txtSpeed;
         public Text txtStrength;
         public Text txtDefense;
-
-        public GameObject scrInfo;
-        public GameObject panInfoDetail;
     }
     [Serializable]
     public class UICharacterInventory
     {
-        public Transform content;
-        public GameObject slotPrefab;
-        public Text txtRMB;
-        public Text txtFZB;
-        public Text txtWeight;
-        public Text txtVolume;
-
         public GameObject scrItems;
         public GameObject panItemDetail;
+        [Space(5)]
+        public Transform content;
+        public GameObject slotPrefab;
     }
     [Serializable]
     public class UICharacterEquipment
     {
-        [Header("组件")]
+        public GameObject scrItems;
+        public GameObject panEquipDetail;
+        [Space(5)]
         public UISlotEquipment slotBag;
         public UISlotEquipment slotCoat;
         public UISlotEquipment slotPants;
         public UISlotEquipment slotHat;
         public UISlotEquipment slotMask;
-        public UISlotEquipment slotShoes;
         public UISlotEquipment slotGloves;
+        public UISlotEquipment slotShoes;
         public UISlotEquipment slotHandheld;
-
-        public GameObject scrItems;
-        public GameObject panEquipDetail;
     }
     [Serializable]
     public class UICharacterSkill
     {
-        public UISlotSkill slotPrefab;
-        public Transform content;
-        public Text skillExperienceText;
-
         public GameObject scrSkills;
         public GameObject panSkillDetail;
+        [Space(5)]
+        public UISlotSkill slotPrefab;
+        public Transform content;
+        [Space(5)]
+        public Text skillExperienceText;
     }
     [Serializable]
     public class UICharacterQuest
     {
-        public Transform trfQuest;
-        public UISlotQuest slotQuest;
-
         public GameObject scrQuests;
         public GameObject panQuestDetail;
+        [Space(5)]
+        public Transform trfQuest;
+        public UISlotQuest slotQuest;
     }
 }

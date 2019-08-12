@@ -10,15 +10,13 @@ namespace E.Tool
     {
         public PartType PartType = PartType.身体;
         public BodyType BodyType = BodyType.脸型;
-        public ClothType ClothType = ClothType.上衣;
-        public DecorationType DecorationType = DecorationType.头顶饰品;
+        public ItemType ItemType = ItemType.上衣;
     }
 
     public enum PartType
     {
         身体,
-        服装,
-        饰品
+        物品
     }
     public enum BodyType
     {
@@ -46,8 +44,11 @@ namespace E.Tool
         右脚,
     }
 
-    public enum ClothType
+    public enum ItemType
     {
+        帽子,
+        面具,
+        背包,
         上衣,
         左上袖,
         右上袖,
@@ -55,24 +56,13 @@ namespace E.Tool
         右下袖,
         左手套,
         右手套,
+        左手物品,
+        右手物品,
         左上裤,
         右上裤,
         左下裤,
         右下裤,
         左鞋,
         右鞋,
-    }
-
-    public enum DecorationType
-    {
-        头顶饰品,
-        脸部饰品,
-        胸部饰品,
-        腰部饰品,
-        背部饰品,
-        左腕饰品,
-        右腕饰品,
-        左手物品,
-        右手物品
     }
 }

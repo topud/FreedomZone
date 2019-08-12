@@ -6,7 +6,7 @@ namespace E.Tool
 {
     public partial class UIBuffs : UIBase
     {
-        public UIBuffSlot slotPrefab;
+        public UISlotBuff slotPrefab;
 
         void Update()
         {

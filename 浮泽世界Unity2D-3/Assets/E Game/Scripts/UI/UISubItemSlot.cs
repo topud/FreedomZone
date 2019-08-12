@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISubItemSlot : UIBaseSlot
+    public class UISubItemSlot : UISlotBase
     {
         public UIDragAndDropable dragAndDropable;
         public Image imgIcon;

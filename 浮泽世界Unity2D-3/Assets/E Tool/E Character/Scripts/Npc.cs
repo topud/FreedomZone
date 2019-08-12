@@ -51,8 +51,14 @@ namespace E.Tool
 
         private void CheckMove()
         {
-            Animator.SetTrigger("Walk");
-            Animator.SetTrigger("Idle");
+            if (AIPath.canMove)
+            {
+                Animator.SetTrigger("Walk");
+            }
+            else
+            {
+                Animator.SetTrigger("Idle");
+            }
         }
     }
 }

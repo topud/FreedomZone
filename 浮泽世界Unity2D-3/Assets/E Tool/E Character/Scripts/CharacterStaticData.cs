@@ -33,8 +33,7 @@ namespace E.Tool
         [SerializeField, Tooltip("初始智力")] private int intelligence = 5;
         [SerializeField, Tooltip("初始力量")] private int strength = 5;
         [SerializeField, Tooltip("初始防御")] private int defense = 1;
-        [SerializeField, Tooltip("初始容量")] private int volume = 10;
-
+        
         [SerializeField, Tooltip("初始携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("初始携带的浮泽币")] private int fzb = 0;
         [SerializeField, Tooltip("初始携带的物品")] private List<Item> items = new List<Item>();
@@ -138,11 +137,7 @@ namespace E.Tool
         /// 初始防御
         /// </summary>
         public int Defense { get => defense; }
-        /// <summary>
-        /// 初始容量
-        /// </summary>
-        public int Volume { get => volume; }
-
+        
         /// <summary>
         /// 初始携带的人民币
         /// </summary>

@@ -23,7 +23,6 @@ namespace E.Tool
         [SerializeField, Tooltip("当前智力")] private int intelligence = 5;
         [SerializeField, Tooltip("当前力量")] private int strength = 5;
         [SerializeField, Tooltip("当前防御")] private int defense = 1;
-        [SerializeField, Tooltip("当前容量")] private int volume = 10;
 
         [SerializeField, Tooltip("当前携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("当前携带的浮泽币")] private int fzb = 0;
@@ -40,13 +39,7 @@ namespace E.Tool
         public int MaxHealth
         {
             get => maxHealth;
-            set
-            {
-                if (value > 0)
-                {
-                    maxHealth = value;
-                }
-            }
+            set => maxHealth = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前脑力上限
@@ -54,13 +47,7 @@ namespace E.Tool
         public int MaxMind
         {
             get => maxMind;
-            set
-            {
-                if (value > 0)
-                {
-                    maxMind = value;
-                }
-            }
+            set => maxMind = Utility.ClampMin(value, 0); 
         }
         /// <summary>
         /// 当前体力上限
@@ -68,13 +55,7 @@ namespace E.Tool
         public int MaxPower
         {
             get => maxPower;
-            set
-            {
-                if (value > 0)
-                {
-                    maxPower = value;
-                }
-            }
+            set => maxPower = Utility.ClampMin(value, 0); 
         }
         /// <summary>
         /// 当前生机
@@ -85,20 +66,7 @@ namespace E.Tool
             set
             {
                 if (!invincible)
-                {
-                    if (value < 0)
-                    {
-                        health = 0;
-                    }
-                    else if (value > MaxHealth)
-                    {
-                        health = MaxHealth;
-                    }
-                    else
-                    {
-                        health = value;
-                    }
-                }
+                { health = Utility.Clamp(value, 0, MaxHealth); }
             }
         }
         /// <summary>
@@ -107,21 +75,7 @@ namespace E.Tool
         public int Mind
         {
             get => mind;
-            set
-            {
-                if (value < 0)
-                {
-                    mind = 0;
-                }
-                else if (value > MaxMind)
-                {
-                    mind = MaxMind;
-                }
-                else
-                {
-                    mind = value;
-                }
-            }
+            set { mind = Utility.Clamp(value, 0, MaxMind); }
         }
         /// <summary>
         /// 当前体力
@@ -129,21 +83,7 @@ namespace E.Tool
         public int Power
         {
             get => power;
-            set
-            {
-                if (value < 0)
-                {
-                    power = 0;
-                }
-                else if (value > MaxPower)
-                {
-                    power = MaxPower;
-                }
-                else
-                {
-                    power = value;
-                }
-            }
+            set { power = Utility.Clamp(value, 0, MaxPower); }
         }
         /// <summary>
         /// 当前生机恢复系数
@@ -151,7 +91,7 @@ namespace E.Tool
         public int HealthRecoveryCoefficient
         {
             get => healthRecoveryCoefficient;
-            set => healthRecoveryCoefficient = value;
+            set => healthRecoveryCoefficient = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前脑力恢复系数
@@ -159,7 +99,7 @@ namespace E.Tool
         public int MindRecoveryCoefficient
         {
             get => mindRecoveryCoefficient;
-            set => mindRecoveryCoefficient = value;
+            set => mindRecoveryCoefficient = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前体力恢复系数
@@ -167,7 +107,7 @@ namespace E.Tool
         public int PowerRecoveryCoefficient
         {
             get => powerRecoveryCoefficient;
-            set => powerRecoveryCoefficient = value;
+            set => powerRecoveryCoefficient = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前速度上限
@@ -175,7 +115,7 @@ namespace E.Tool
         public int MaxSpeed
         {
             get => maxSpeed;
-            set => maxSpeed = value > 0 ? value : maxSpeed;
+            set => maxSpeed = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前基础速度
@@ -183,7 +123,7 @@ namespace E.Tool
         public int BaseSpeed
         {
             get => baseSpeed;
-            set => baseSpeed = value > 0 ? value : baseSpeed;
+            set => baseSpeed = Utility.Clamp(value, 0, MaxSpeed);
         }
         /// <summary>
         /// 当前智力
@@ -191,7 +131,7 @@ namespace E.Tool
         public int Intelligence
         {
             get => intelligence;
-            set => intelligence = value > 0 ? value : intelligence;
+            set => intelligence = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前力量
@@ -199,7 +139,7 @@ namespace E.Tool
         public int Strength
         {
             get => strength;
-            set => strength = value > 0 ? value : strength;
+            set => strength = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前防御
@@ -207,15 +147,7 @@ namespace E.Tool
         public int Defense
         {
             get => defense;
-            set => defense = value > 0 ? value : defense;
-        }
-        /// <summary>
-        /// 当前容量
-        /// </summary>
-        public int Volume
-        {
-            get => volume;
-            set => volume = value > 0 ? value : volume;
+            set => defense = Utility.ClampMin(value, 0);
         }
 
         /// <summary>
@@ -224,7 +156,7 @@ namespace E.Tool
         public int RMB
         {
             get => rmb;
-            set => rmb = value;
+            set => rmb = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前携带的浮泽币
@@ -232,7 +164,7 @@ namespace E.Tool
         public int FZB
         {
             get => fzb;
-            set => fzb = value;
+            set => fzb = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前携带的物品

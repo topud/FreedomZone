@@ -8,17 +8,20 @@ namespace E.Tool
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(AudioSource))]
-    public class Interactor : MonoBehaviour
+    public abstract class Interactor : MonoBehaviour
     {
         [Header("物品数据")]
         public InteractorStaticData StaticData;
         public InteractorDynamicData DynamicData;
 
+        [Header("物品状态")]
+        [ReadOnly] public bool IsFaceRight = true;
+
         [Header("组件")]
-        [ReadOnly] public Animator Animator;
-        [ReadOnly] public AudioSource AudioSource;
-        [ReadOnly] public Rigidbody2D Rigidbody;
         [ReadOnly] public Collider2D Collider;
+        [ReadOnly] public Rigidbody2D Rigidbody;
+        [ReadOnly] public AudioSource AudioSource;
+        [ReadOnly] public Animator Animator;
         [ReadOnly] public TargetUI TargetUI;
         [ReadOnly] public InteractorSprite SpriteController;
 
@@ -122,7 +125,7 @@ namespace E.Tool
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        public virtual void ResetData()
+        protected virtual void ResetData()
         {
             if (!StaticData)
             {
@@ -133,6 +136,7 @@ namespace E.Tool
             DynamicData.Name = StaticData.Name;
             DynamicData.Invincible = StaticData.Invincible;
 
+            DynamicData.Stack = StaticData.Stack;
             DynamicData.MaxHealth = StaticData.MaxHealth;
             DynamicData.Health = StaticData.MaxHealth;
             DynamicData.Items = StaticData.Items;
@@ -140,7 +144,7 @@ namespace E.Tool
         /// <summary>
         /// 设置组件
         /// </summary>
-        public virtual void SetComponents()
+        protected virtual void SetComponents()
         {
             //自带组件
             Collider = GetComponent<Collider2D>();
@@ -156,7 +160,7 @@ namespace E.Tool
         /// 耐久百分比
         /// </summary>
         /// <returns></returns>
-        public float HealthPercent()
+        public float GetHealthPercentage()
         {
             return (DynamicData.MaxHealth > 0) ? (float)DynamicData.Health / DynamicData.MaxHealth : 0;
         }
@@ -164,7 +168,7 @@ namespace E.Tool
         /// 容量占用比
         /// </summary>
         /// <returns></returns>
-        public float CapacityPercent()
+        public float GetCapacityPercentage()
         {
             if (StaticData.Accommodatable)
             {

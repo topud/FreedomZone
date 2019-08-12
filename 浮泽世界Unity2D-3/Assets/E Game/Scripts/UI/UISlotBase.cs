@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public abstract class UIBaseSlot : MonoBehaviour
+    public abstract class UISlotBase : MonoBehaviour
     {
         public abstract void UpdateData();
     }

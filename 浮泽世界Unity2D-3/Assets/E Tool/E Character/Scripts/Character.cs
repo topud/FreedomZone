@@ -97,7 +97,7 @@ namespace E.Tool
         {
             if (Input.GetMouseButtonUp(1))
             {
-                UIManager.Singleton.UICharacterInfo.Character = this;
+                UICharacter.Target = this;
             }
         }
         private void OnMouseDown()
@@ -143,7 +143,7 @@ namespace E.Tool
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        public virtual void ResetData()
+        protected virtual void ResetData()
         {
             if (!StaticData)
             {
@@ -181,7 +181,7 @@ namespace E.Tool
         /// <summary>
         /// 设置组件
         /// </summary>
-        public virtual void SetComponents()
+        protected virtual void SetComponents()
         {
             //自带组件
             Collider = GetComponent<Collider2D>();
@@ -200,7 +200,7 @@ namespace E.Tool
         /// 生机百分比
         /// </summary>
         /// <returns></returns>
-        public float HealthPercent()
+        public float GetHealthPercentage()
         {
             return (DynamicData.MaxHealth > 0) ? (float)DynamicData.Health / DynamicData.MaxHealth : 0;
         }
@@ -208,7 +208,7 @@ namespace E.Tool
         /// 脑力百分比
         /// </summary>
         /// <returns></returns>
-        public float MindPercent()
+        public float GetMindPercentage()
         {
             return (DynamicData.MaxMind > 0) ? (float)DynamicData.Mind / DynamicData.MaxMind : 0;
         }
@@ -216,15 +216,38 @@ namespace E.Tool
         /// 体力百分比
         /// </summary>
         /// <returns></returns>
-        public float PowerPercent()
+        public float GetPowerPercentage()
         {
             return (DynamicData.MaxPower > 0) ? (float)DynamicData.Power / DynamicData.MaxPower : 0;
+        }
+        /// <summary>
+        /// 是否存活
+        /// </summary>
+        /// <returns></returns>
+        public bool IsAlive()
+        {
+            return DynamicData.Health > 0;
+        }
+
+        /// <summary>
+        /// 更改当前生命值上限
+        /// </summary>
+        public void ChangeMaxHealth(int value)
+        {
+            DynamicData.MaxHealth += value;
+        }
+        /// <summary>
+        /// 更改当前生命值
+        /// </summary>
+        public void ChangeHealth(int value)
+        {
+            DynamicData.Health += value;
         }
         /// <summary>
         /// 复活
         /// </summary>
         /// <param name="healthP"></param>
-        public void Revive(float healthP = 1, float mindP = 0, float powerP = 0)
+        public void Revive(float healthP = 1, float mindP = 1, float powerP = 1)
         {
             DynamicData.Health = Mathf.RoundToInt(DynamicData.MaxHealth * healthP);
             DynamicData.Mind = Mathf.RoundToInt(DynamicData.MaxMind * mindP);
@@ -241,19 +264,6 @@ namespace E.Tool
                 DynamicData.Mind += DynamicData.MindRecoveryCoefficient * 1;
                 DynamicData.Power += DynamicData.PowerRecoveryCoefficient * 1;
             }
-        }
-        /// <summary>
-        /// 是否存活
-        /// </summary>
-        /// <returns></returns>
-        public bool IsAlive()
-        {
-            return DynamicData.Health > 0;
-        }
-
-        public int GetInventoryIndexByName(string itemName)
-        {
-            return 0;// inventory.FindIndex(slot => slot.amount > 0 && slot.item.Name == itemName);
         }
     }
 

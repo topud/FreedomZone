@@ -19,13 +19,13 @@ namespace E.Tool
             {
                 gameObject.SetActive(true);
 
-                healthSlider.value = player.HealthPercent();
+                healthSlider.value = player.GetHealthPercentage();
                 healthStatus.text = player.DynamicData.Health + " / " + player.DynamicData.MaxHealth;
 
-                mindSlider.value = player.MindPercent();
+                mindSlider.value = player.GetMindPercentage();
                 mindStatus.text = player.DynamicData.Mind + " / " + player.DynamicData.MaxMind;
 
-                powerSlider.value = player.PowerPercent();
+                powerSlider.value = player.GetPowerPercentage();
                 powerStatus.text = player.DynamicData.Power + " / " + player.DynamicData.MaxPower;
             }
             else gameObject.SetActive(false);

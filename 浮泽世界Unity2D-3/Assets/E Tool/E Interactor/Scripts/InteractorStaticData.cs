@@ -11,6 +11,7 @@ namespace E.Tool
         [SerializeField, Tooltip("是否可移动")] private bool movable = true;
         [SerializeField, Tooltip("是否可堆叠")] private bool stackable = false;
         [SerializeField, Tooltip("是否可容纳")] private bool accommodatable = false;
+        [SerializeField, Tooltip("是否可腐烂")] private bool perishable = false;
 
         [SerializeField, Tooltip("质量")] private int weight = 10;
         [SerializeField, Tooltip("体积")] private int volume = 1;
@@ -35,6 +36,10 @@ namespace E.Tool
         /// 是否可容纳
         /// </summary>
         public bool Accommodatable { get => accommodatable; }
+        /// <summary>
+        /// 是否可腐烂
+        /// </summary>
+        public bool Perishable { get => perishable; }
 
         /// <summary>
         /// 质量

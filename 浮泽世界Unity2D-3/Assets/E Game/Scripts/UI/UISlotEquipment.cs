@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIEquipmentSlot : UIBaseSlot
+    public class UISlotEquipment : UISlotBase
     {
         public UIDragAndDropable dragAndDropable;
         public Image imgIcon;
@@ -19,7 +19,7 @@ namespace E.Tool
         public override void UpdateData()
         {
             imgIcon.sprite = item.StaticData.Icon;
-            imgHealth.fillAmount = item.HealthPercent();
+            imgHealth.fillAmount = item.GetHealthPercentage();
         }
     }
 }

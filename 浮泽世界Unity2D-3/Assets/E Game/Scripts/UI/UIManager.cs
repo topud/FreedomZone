@@ -1,14 +1,6 @@
-﻿// ========================================================
-// 作者：E Star 
-// 创建时间：2018-12-21 13:33:17 
-// 当前版本：1.0 
-// 作用描述：UI管理员
-// 挂载目标：UICanvas
-// ========================================================
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace E.Tool
@@ -19,19 +11,13 @@ namespace E.Tool
         public CanvasGroup LobbyUI;
         public CanvasGroup LoadUI;
         public CanvasGroup GameUI;
-        public UICharacterInfo UICharacterInfo;
-        public UIInventory UIInventory;
-        public UISkills UISkills;
-        public UIQuests UIQuests;
+        public UICharacter UICharacter;
         public UIMinimap UIMinimap;
 
         protected override void Awake()
         {
             base.Awake();
-            UICharacterInfo.gameObject.SetActive(false);
-            UIInventory.gameObject.SetActive(false);
-            UISkills.gameObject.SetActive(false);
-            UIQuests.gameObject.SetActive(false);
+            UICharacter.gameObject.SetActive(false);
             UIMinimap.gameObject.SetActive(false);
         }
         private void Update()
@@ -55,10 +41,7 @@ namespace E.Tool
             LobbyUI = transform.Find("LobbyUI").GetComponent<CanvasGroup>();
             LoadUI = transform.Find("LoadUI").GetComponent<CanvasGroup>();
             GameUI = transform.Find("GameUI").GetComponent<CanvasGroup>();
-            UICharacterInfo = GetComponentInChildren<UICharacterInfo>(true);
-            UIInventory = GetComponentInChildren<UIInventory>(true);
-            UISkills = GetComponentInChildren<UISkills>(true);
-            UIQuests = GetComponentInChildren<UIQuests>(true);
+            UICharacter = GetComponentInChildren<UICharacter>(true);
             UIMinimap = GetComponentInChildren<UIMinimap>(true);
         }
 

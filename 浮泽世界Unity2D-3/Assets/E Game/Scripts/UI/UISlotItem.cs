@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIItemSlot : UIBaseSlot
+    public class UISlotItem : UISlotBase
     {
         public UIDragAndDropable dragAndDropable;
         public Text txtName;
@@ -25,7 +25,7 @@ namespace E.Tool
             {
                 togFolder.gameObject.SetActive(true);
                 panCapacity.SetActive(true);
-                imgCapacity.fillAmount = item.CapacityPercent();
+                imgCapacity.fillAmount = item.GetCapacityPercentage();
             }
             else
             {

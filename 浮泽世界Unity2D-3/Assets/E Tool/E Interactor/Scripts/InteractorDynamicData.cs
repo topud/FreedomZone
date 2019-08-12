@@ -19,7 +19,7 @@ namespace E.Tool
         public int Stack
         {
             get => stack;
-            set => stack = value;
+            set => stack = Utility.ClampMin(value, 1);
         }
         /// <summary>
         /// 当前耐久上限
@@ -27,13 +27,7 @@ namespace E.Tool
         public int MaxHealth
         {
             get => maxHealth;
-            set
-            {
-                if (value > 0)
-                {
-                    maxHealth = value;
-                }
-            }
+            set => maxHealth = Utility.ClampMin(value, 0);
         }
         /// <summary>
         /// 当前耐久
@@ -43,20 +37,11 @@ namespace E.Tool
             get => health;
             set
             {
-                if (value < 0)
-                {
-                    health = 0;
-                }
-                else if (value > MaxHealth)
-                {
-                    health = MaxHealth;
-                }
-                else
-                {
-                    health = value;
-                }
+                if (!invincible)
+                { health = Utility.Clamp(value, 0, MaxHealth); }
             }
         }
+
         /// <summary>
         /// 当前容纳物品
         /// </summary>

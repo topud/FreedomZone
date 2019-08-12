@@ -134,7 +134,7 @@ public class Player : Character
             {
                 item.gameObject.SetActive(false);
                 DynamicData.Items.Add(item);
-                UIManager.Singleton.UIInventory.RefreshContent();
+                //UIManager.Singleton.UIInventory.RefreshContent();
                 Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
             }
         }

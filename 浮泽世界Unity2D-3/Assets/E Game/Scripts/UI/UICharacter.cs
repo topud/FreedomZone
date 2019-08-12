@@ -1,6 +1,4 @@
-﻿// Note: this script has to be on an always-active UI parent, so that we can
-// always react to the hotkey.
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 using System;
 
@@ -9,89 +7,211 @@ namespace E.Tool
     public class UICharacter : UIBase
     {
         [Header("组件")]
-        [SerializeField] private GameObject scrInfo;
-        [SerializeField] private GameObject scrItems;
-        [SerializeField] private GameObject scrSkills;
-        [SerializeField] private GameObject scrQuests;
-        [SerializeField] private GameObject panInfoDetail;
-        [SerializeField] private GameObject panItemDetail;
-        [SerializeField] private GameObject panEquipDetail;
-        [SerializeField] private GameObject panSkillDetail;
-        [SerializeField] private GameObject panQuestDetail;
+        [SerializeField] private UICharacterInfo uiCharacterInfo;
+        [SerializeField] private UICharacterInventory uiCharacterInventory;
+        [SerializeField] private UICharacterEquipment uiCharacterEquipment;
+        [SerializeField] private UICharacterSkill uiCharacterSkill;
+        [SerializeField] private UICharacterQuest uiCharacterQuest;
 
         [Header("数据")]
-        public Character Character;
+        public static Character Target;
 
+        private void Awake()
+        {
+            uiCharacterInventory.slotPrefab.SetActive(false);
+        }
         private void Start()
         {
-            Character = Player.Myself;
+            Target = Player.Myself;
+            RefreshContent();
         }
         private void Update()
         {
-            if (Character)
+            if (Target)
             {
+                uiCharacterInfo.txtBirthday.text = Target.StaticData.Birthday.ToString("yyyy 年 M 月 d 日");
+                uiCharacterInfo.txtGender.text = Target.StaticData.Gender.ToString();
+                uiCharacterInfo.txtHeight.text = Target.StaticData.Height.ToString() + " cm";
+                uiCharacterInfo.txtWeight.text = Target.StaticData.Weight.ToString() + " kg";
+
+                uiCharacterInfo.txtStartYear.text = Target.StaticData.StartYear.ToString() + " 年";
+                uiCharacterInfo.txtCollege.text = Target.StaticData.College.ToString();
+                uiCharacterInfo.txtProfession.text = Target.StaticData.Profession.ToString();
+                uiCharacterInfo.txtDegree.text = Target.StaticData.Degree.ToString();
+                uiCharacterInfo.txtGrade.text = Target.StaticData.Grade.ToString();
+                uiCharacterInfo.txtClass.text = Target.StaticData.Class.ToString();
+                uiCharacterInfo.txtStudentID.text = Target.StaticData.StudentID.ToString();
+
+                uiCharacterInfo.txtHealth.text = Target.DynamicData.MaxHealth.ToString();
+                uiCharacterInfo.txtMind.text = Target.DynamicData.MaxMind.ToString();
+                uiCharacterInfo.txtPower.text = Target.DynamicData.MaxPower.ToString();
+                uiCharacterInfo.txtIntelligence.text = Target.DynamicData.Intelligence.ToString();
+                uiCharacterInfo.txtSpeed.text = Target.DynamicData.MaxSpeed.ToString();
+                uiCharacterInfo.txtStrength.text = Target.DynamicData.Strength.ToString();
+                uiCharacterInfo.txtDefense.text = Target.DynamicData.Defense.ToString();
+                
+                uiCharacterInventory.txtWeight.text = Target.StaticData.Weight.ToString();
+                uiCharacterInventory.txtRMB.text = Target.DynamicData.RMB.ToString();
+                uiCharacterInventory.txtFZB.text = Target.DynamicData.FZB.ToString();
             }
         }
 
         public void ShowInfo()
         {
-            scrInfo.SetActive(true);
-            scrItems.SetActive(false);
-            scrSkills.SetActive(false);
-            scrQuests.SetActive(false);
-            panInfoDetail.SetActive(true);
-            panItemDetail.SetActive(false);
-            panEquipDetail.SetActive(false);
-            panSkillDetail.SetActive(false);
-            panQuestDetail.SetActive(false);
+            uiCharacterInfo.scrInfo.SetActive(true);
+            uiCharacterInfo.panInfoDetail.SetActive(true);
+            uiCharacterInventory.scrItems.SetActive(false);
+            uiCharacterInventory.panItemDetail.SetActive(false);
+            uiCharacterEquipment.panEquipDetail.SetActive(false);
+            uiCharacterSkill.scrSkills.SetActive(false);
+            uiCharacterSkill.panSkillDetail.SetActive(false);
+            uiCharacterQuest.scrQuests.SetActive(false);
+            uiCharacterQuest.panQuestDetail.SetActive(false);
         }
         public void ShowInventory()
         {
-            scrInfo.SetActive(false);
-            scrItems.SetActive(true);
-            scrSkills.SetActive(false);
-            scrQuests.SetActive(false);
-            panInfoDetail.SetActive(false);
-            panItemDetail.SetActive(true);
-            panEquipDetail.SetActive(false);
-            panSkillDetail.SetActive(false);
-            panQuestDetail.SetActive(false);
+            uiCharacterInfo.scrInfo.SetActive(false);
+            uiCharacterInfo.panInfoDetail.SetActive(false);
+            uiCharacterInventory.scrItems.SetActive(true);
+            uiCharacterInventory.panItemDetail.SetActive(true);
+            uiCharacterEquipment.panEquipDetail.SetActive(false);
+            uiCharacterSkill.scrSkills.SetActive(false);
+            uiCharacterSkill.panSkillDetail.SetActive(false);
+            uiCharacterQuest.scrQuests.SetActive(false);
+            uiCharacterQuest.panQuestDetail.SetActive(false);
         }
         public void ShowEquipment()
         {
-            scrInfo.SetActive(false);
-            scrItems.SetActive(true);
-            scrSkills.SetActive(false);
-            scrQuests.SetActive(false);
-            panInfoDetail.SetActive(false);
-            panItemDetail.SetActive(false);
-            panEquipDetail.SetActive(true);
-            panSkillDetail.SetActive(false);
-            panQuestDetail.SetActive(false);
+            uiCharacterInfo.scrInfo.SetActive(false);
+            uiCharacterInfo.panInfoDetail.SetActive(false);
+            uiCharacterInventory.scrItems.SetActive(true);
+            uiCharacterInventory.panItemDetail.SetActive(false);
+            uiCharacterEquipment.panEquipDetail.SetActive(true);
+            uiCharacterSkill.scrSkills.SetActive(false);
+            uiCharacterSkill.panSkillDetail.SetActive(false);
+            uiCharacterQuest.scrQuests.SetActive(false);
+            uiCharacterQuest.panQuestDetail.SetActive(false);
         }
         public void ShowSkills()
         {
-            scrInfo.SetActive(false);
-            scrItems.SetActive(false);
-            scrSkills.SetActive(true);
-            scrQuests.SetActive(false);
-            panInfoDetail.SetActive(false);
-            panItemDetail.SetActive(false);
-            panEquipDetail.SetActive(false);
-            panSkillDetail.SetActive(true);
-            panQuestDetail.SetActive(false);
+            uiCharacterInfo.scrInfo.SetActive(false);
+            uiCharacterInfo.panInfoDetail.SetActive(false);
+            uiCharacterInventory.scrItems.SetActive(false);
+            uiCharacterInventory.panItemDetail.SetActive(false);
+            uiCharacterEquipment.panEquipDetail.SetActive(false);
+            uiCharacterSkill.scrSkills.SetActive(true);
+            uiCharacterSkill.panSkillDetail.SetActive(true);
+            uiCharacterQuest.scrQuests.SetActive(false);
+            uiCharacterQuest.panQuestDetail.SetActive(false);
         }
         public void ShowQuests()
         {
-            scrInfo.SetActive(false);
-            scrItems.SetActive(false);
-            scrSkills.SetActive(false);
-            scrQuests.SetActive(true);
-            panInfoDetail.SetActive(false);
-            panItemDetail.SetActive(false);
-            panEquipDetail.SetActive(false);
-            panSkillDetail.SetActive(false);
-            panQuestDetail.SetActive(true);
+            uiCharacterInfo.scrInfo.SetActive(false);
+            uiCharacterInfo.panInfoDetail.SetActive(false);
+            uiCharacterInventory.scrItems.SetActive(false);
+            uiCharacterInventory.panItemDetail.SetActive(false);
+            uiCharacterEquipment.panEquipDetail.SetActive(false);
+            uiCharacterSkill.scrSkills.SetActive(false);
+            uiCharacterSkill.panSkillDetail.SetActive(false);
+            uiCharacterQuest.scrQuests.SetActive(true);
+            uiCharacterQuest.panQuestDetail.SetActive(true);
         }
+
+        
+        public void RefreshContent()
+        {
+            for (int i = 1; i < uiCharacterInventory.content.childCount; i++)
+            {
+                Destroy(uiCharacterInventory.content.GetChild(i).gameObject);
+            }
+
+            if (!Target)
+            {
+                return;
+            }
+
+            foreach (Item item in Target.DynamicData.Items)
+            {
+                GameObject go = Instantiate(uiCharacterInventory.slotPrefab, uiCharacterInventory.content);
+                go.GetComponent<UISlotItem>().SetData(item);
+                go.SetActive(true);
+            }
+        }
+    }
+
+    [Serializable]
+    public class UICharacterInfo 
+    {
+        public Text txtBirthday;
+        public Text txtGender;
+        public Text txtHeight;
+        public Text txtWeight;
+        [Space(5)]
+        public Text txtStartYear;
+        public Text txtCollege;
+        public Text txtProfession;
+        public Text txtDegree;
+        public Text txtGrade;
+        public Text txtClass;
+        public Text txtStudentID;
+        [Space(5)]
+        public Text txtHealth;
+        public Text txtMind;
+        public Text txtPower;
+        public Text txtIntelligence;
+        public Text txtSpeed;
+        public Text txtStrength;
+        public Text txtDefense;
+
+        public GameObject scrInfo;
+        public GameObject panInfoDetail;
+    }
+    [Serializable]
+    public class UICharacterInventory
+    {
+        public Transform content;
+        public GameObject slotPrefab;
+        public Text txtRMB;
+        public Text txtFZB;
+        public Text txtWeight;
+        public Text txtVolume;
+
+        public GameObject scrItems;
+        public GameObject panItemDetail;
+    }
+    [Serializable]
+    public class UICharacterEquipment
+    {
+        [Header("组件")]
+        public UISlotEquipment slotBag;
+        public UISlotEquipment slotCoat;
+        public UISlotEquipment slotPants;
+        public UISlotEquipment slotHat;
+        public UISlotEquipment slotMask;
+        public UISlotEquipment slotShoes;
+        public UISlotEquipment slotGloves;
+        public UISlotEquipment slotHandheld;
+
+        public GameObject scrItems;
+        public GameObject panEquipDetail;
+    }
+    [Serializable]
+    public class UICharacterSkill
+    {
+        public UISlotSkill slotPrefab;
+        public Transform content;
+        public Text skillExperienceText;
+
+        public GameObject scrSkills;
+        public GameObject panSkillDetail;
+    }
+    [Serializable]
+    public class UICharacterQuest
+    {
+        public Transform trfQuest;
+        public UISlotQuest slotQuest;
+
+        public GameObject scrQuests;
+        public GameObject panQuestDetail;
     }
 }

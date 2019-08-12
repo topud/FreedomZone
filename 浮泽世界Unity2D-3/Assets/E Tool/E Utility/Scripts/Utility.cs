@@ -13,23 +13,46 @@ namespace E.Tool
     public class Utility
     {
         /// <summary>
-        /// 限定数字范围
+        /// 限定数字范围，仅包含最小值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <returns></returns>
+        public static int ClampMin(int value, int min)
+        {
+            if (value < min) return min;
+            return value;
+        }
+        /// <summary>
+        /// 限定数字范围，仅包含最大值
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
         /// <param name="max"></param>
         /// <returns></returns>
-        public static long Clamp(long value, long min, long max)
+        public static int ClampMax(int value, int max)
+        {
+            if (value > max) return max;
+            return value;
+        }
+        /// <summary>
+        /// 限定数字范围，包含最小值和最大值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static int Clamp(int value, int min, int max)
         {
             if (value < min) return min;
             if (value > max) return max;
             return value;
         }
         /// <summary>
-        /// 最小值
+        /// 获取数组中最小值的索引
         /// </summary>
-        /// <param name="array"></param>
-        /// <returns></returns>
+        /// <param name="array">数组</param>
+        /// <returns>最小值的索引</returns>
         public static int Min(List<float> array)
         {
             float value = 0;

@@ -8,11 +8,16 @@ namespace E.Tool
     public class UIManager : SingletonPattern<UIManager>
     {
         [Header("组件")]
-        public CanvasGroup LobbyUI;
-        public CanvasGroup LoadUI;
-        public CanvasGroup GameUI;
+        public GameObject LobbyUI;
+        public GameObject LoadUI;
+        public GameObject GameUI;
         public UICharacter UICharacter;
         public UIMinimap UIMinimap;
+        public UIGameMenu UIGameMenu;
+        public UISave UISave;
+        public UISetting UISetting;
+        public UIPopup UIPopup;
+        public UILobbyMenu UILobbyMenu;
 
         protected override void Awake()
         {
@@ -36,7 +41,7 @@ namespace E.Tool
                     break;
             }
 
-            if (Input.GetKeyUp(UICharacter.HotKey))
+            if (Input.GetKeyUp(KeyCode.I))
             {
                 if (UICharacter.gameObject.activeInHierarchy)
                 {
@@ -55,7 +60,7 @@ namespace E.Tool
                     UICharacter.TogInfo.isOn = true;
                 }
             }
-            else if (Input.GetKeyUp(UICharacter.HotKeyInventory))
+            else if (Input.GetKeyUp(KeyCode.O))
             {
                 if (UICharacter.gameObject.activeInHierarchy)
                 {
@@ -74,7 +79,7 @@ namespace E.Tool
                     UICharacter.TogInventory.isOn = true;
                 }
             }
-            else if (Input.GetKeyUp(UICharacter.HotKeyEquipment))
+            else if (Input.GetKeyUp(KeyCode.P))
             {
                 if (UICharacter.gameObject.activeInHierarchy)
                 {
@@ -93,7 +98,7 @@ namespace E.Tool
                     UICharacter.TogEquipment.isOn = true;
                 }
             }
-            else if (Input.GetKeyUp(UICharacter.HotKeySkill))
+            else if (Input.GetKeyUp(KeyCode.K))
             {
                 if (UICharacter.gameObject.activeInHierarchy)
                 {
@@ -112,7 +117,7 @@ namespace E.Tool
                     UICharacter.TogSkill.isOn = true;
                 }
             }
-            else if (Input.GetKeyUp(UICharacter.HotKeyQuest))
+            else if (Input.GetKeyUp(KeyCode.L))
             {
                 if (UICharacter.gameObject.activeInHierarchy)
                 {
@@ -133,16 +138,25 @@ namespace E.Tool
             }
             else if (Input.GetKeyUp(KeyCode.Escape))
             {
-                UICharacter.gameObject.SetActive(false);
+                if (UICharacter.gameObject.activeInHierarchy)
+                {
+                    UICharacter.gameObject.SetActive(false);
+                }
+                UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
             }
         }
         private void Reset()
         {
-            LobbyUI = transform.Find("LobbyUI").GetComponent<CanvasGroup>();
-            LoadUI = transform.Find("LoadUI").GetComponent<CanvasGroup>();
-            GameUI = transform.Find("GameUI").GetComponent<CanvasGroup>();
+            LobbyUI = transform.Find("LobbyUI").gameObject;
+            LoadUI = transform.Find("LoadUI").gameObject;
+            GameUI = transform.Find("GameUI").gameObject;
             UICharacter = GetComponentInChildren<UICharacter>(true);
             UIMinimap = GetComponentInChildren<UIMinimap>(true);
+            UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
+            UISave = GetComponentInChildren<UISave>(true);
+            UISetting = GetComponentInChildren<UISetting>(true);
+            UIPopup = GetComponentInChildren<UIPopup>(true);
+            UILobbyMenu = GetComponentInChildren<UILobbyMenu>(true);
         }
 
         /// <summary>

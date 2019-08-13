@@ -24,6 +24,8 @@ public class GameManager : SingletonPattern<GameManager>
     private void Update()
     {
         UpdateGameState();
+
+# if UNITY_EDITOR
         switch (GameState)
         {
             case GameState.Lobby:
@@ -45,6 +47,7 @@ public class GameManager : SingletonPattern<GameManager>
             default:
                 break;
         }
+# endif
     }
 
     public void LoadScene(string name, bool useLoadUI = false)
@@ -54,15 +57,8 @@ public class GameManager : SingletonPattern<GameManager>
             Debug.LogError("请求加载的场景不存在");
             return;
         }
-
-        if (useLoadUI)
-        {
-            UIManager.Singleton.LoadUI.alpha = 1;
-        }
-        else
-        {
-            UIManager.Singleton.LoadUI.alpha = 0;
-        }
+        
+        UIManager.Singleton.LoadUI.SetActive(useLoadUI);
         SceneManager.LoadScene(name);
     }
     private void UpdateGameState()

@@ -6,10 +6,6 @@ namespace E.Tool
 {
     public class UICharacter : UIBase
     {
-        public KeyCode HotKeyInventory = KeyCode.O;
-        public KeyCode HotKeyEquipment = KeyCode.P;
-        public KeyCode HotKeySkill = KeyCode.K;
-        public KeyCode HotKeyQuest = KeyCode.L;
         [Header("组件")]
         [SerializeField] private UICharacterInfo uiCharacterInfo;
         [SerializeField] private UICharacterInventory uiCharacterInventory;

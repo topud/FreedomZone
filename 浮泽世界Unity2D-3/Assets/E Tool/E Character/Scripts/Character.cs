@@ -97,7 +97,7 @@ namespace E.Tool
         {
             if (Input.GetMouseButtonUp(1))
             {
-                UICharacter.Target = this;
+                UICharacterDetail.Target = this;
             }
         }
         private void OnMouseDown()

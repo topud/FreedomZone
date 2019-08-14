@@ -1,6 +1,4 @@
-﻿// This component can be attached to moveable windows, so that they are only
-// moveable within the Screen boundaries.
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace E.Tool
 {

@@ -4,7 +4,7 @@ using System;
 
 namespace E.Tool
 {
-    public class UICharacter : UIBase
+    public class UICharacterDetail : UIBase
     {
         [Header("组件")]
         [SerializeField] private UICharacterInfo uiCharacterInfo;
@@ -17,6 +17,7 @@ namespace E.Tool
         public Toggle TogEquipment;
         public Toggle TogSkill;
         public Toggle TogQuest;
+        public ToggleGroup TogGroup;
 
         [Header("数据")]
         public static Character Target;
@@ -30,7 +31,6 @@ namespace E.Tool
             TogEquipment.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogEquipment); });
             TogSkill.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogSkill); });
             TogQuest.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogQuest); });
-
         }
         private void Start()
         {

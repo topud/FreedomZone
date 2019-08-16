@@ -48,6 +48,9 @@ TagManager:
   - name: Entity
     uniqueID: 2470428127
     locked: 0
+  - name: Default
+    uniqueID: 0
+    locked: 0
   - name: Foreground
     uniqueID: 3099144059
     locked: 0
@@ -65,9 +68,6 @@ TagManager:
     locked: 0
   - name: 
     uniqueID: 1136474945
-    locked: 0
-  - name: Default
-    uniqueID: 0
     locked: 0
   - name: 
     uniqueID: 1591611385

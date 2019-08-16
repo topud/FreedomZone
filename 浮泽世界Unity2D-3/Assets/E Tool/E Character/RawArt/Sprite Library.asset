@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bf7c34a0dc4e6348bea04faa70406ee, type: 3}
+  m_Name: Sprite Library
+  m_EditorClassIdentifier: 
+  m_Labels:
+  - m_Name: Hair
+    m_Hash: 1019596327
+    m_CategoryList:
+    - m_Name: 1
+      m_Hash: -2082672713
+      m_Sprite: {fileID: 21300000, guid: b38353add3db3f146b4c479188f3d56a, type: 3}
+    - m_Name: 2
+      m_Hash: 450215437
+      m_Sprite: {fileID: 21300000, guid: bf96c8c70f6120545ae3d19edc9c769f, type: 3}
+    - m_Name: 3
+      m_Hash: 1842515611
+      m_Sprite: {fileID: 21300000, guid: 93d5b0603bc9f394eb42686353c648c7, type: 3}

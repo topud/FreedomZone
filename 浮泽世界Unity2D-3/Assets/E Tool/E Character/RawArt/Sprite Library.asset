@@ -16,12 +16,7 @@ MonoBehaviour:
   - m_Name: Hair
     m_Hash: 1019596327
     m_CategoryList:
-    - m_Name: 1
-      m_Hash: -2082672713
-      m_Sprite: {fileID: 21300000, guid: b38353add3db3f146b4c479188f3d56a, type: 3}
-    - m_Name: 2
-      m_Hash: 450215437
-      m_Sprite: {fileID: 21300000, guid: bf96c8c70f6120545ae3d19edc9c769f, type: 3}
-    - m_Name: 3
-      m_Hash: 1842515611
-      m_Sprite: {fileID: 21300000, guid: 93d5b0603bc9f394eb42686353c648c7, type: 3}
+    - m_Name: Defaut
+      m_Hash: 648093882
+      m_Sprite: {fileID: 1279602683197421590, guid: ee2867555c034e7449b798fbdde94bed,
+        type: 3}

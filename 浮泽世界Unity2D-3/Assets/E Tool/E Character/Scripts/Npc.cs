@@ -51,14 +51,19 @@ namespace E.Tool
 
         private void CheckMove()
         {
-            if (AIPath.canMove)
+            //朝向
+            if (AIPath.desiredVelocity.x >= 0.01f)
             {
-                Animator.SetTrigger("Walk");
+                IsFaceRight = false;
+                SpriteController.transform.localScale = new Vector3(-1, 1, 1);
             }
-            else
+            else if (AIPath.desiredVelocity.x < -0.01f)
             {
-                Animator.SetTrigger("Idle");
+                IsFaceRight = true;
+                SpriteController.transform.localScale = new Vector3(1, 1, 1);
             }
+            //动画
+            Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));
         }
     }
 }

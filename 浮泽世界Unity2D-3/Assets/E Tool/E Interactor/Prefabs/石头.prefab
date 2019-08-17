@@ -71,6 +71,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 4294967295
   m_RendererPriority: 0
   m_Materials:
@@ -93,14 +94,14 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1824539169
-  m_SortingLayer: -7
+  m_SortingLayer: -1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300008, guid: 87efaf20c96bd46b2a6e7bf4d4d3fd57, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 85dae9fdae7378d46be92ba3ef0c060a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.28, y: 1.28}
+  m_Size: {x: 1.32, y: 1.32}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -121,7 +122,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 1.1
+  m_Radius: 0.6
 --- !u!50 &4000060697525791407
 Rigidbody2D:
   serializedVersion: 4
@@ -289,11 +290,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2443446638038779539}
     m_Modifications:
-    - target: {fileID: 1386646370977371809, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_Name
-      value: UIText
-      objectReference: {fileID: 0}
     - target: {fileID: 7000362930801000329, guid: eddbad569603930428e01e3d21da4542,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -399,85 +395,10 @@ PrefabInstance:
       propertyPath: m_Pivot.y
       value: 0.5
       objectReference: {fileID: 0}
-    - target: {fileID: 331955852344206921, guid: eddbad569603930428e01e3d21da4542,
+    - target: {fileID: 1386646370977371809, guid: eddbad569603930428e01e3d21da4542,
         type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344206921, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4123289753569551797, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4123289753569551797, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 331955852344190663, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchorMin.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchorMax.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4778068253877186778, guid: eddbad569603930428e01e3d21da4542,
-        type: 3}
-      propertyPath: m_SizeDelta.y
-      value: 0
+      propertyPath: m_Name
+      value: UIText
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: eddbad569603930428e01e3d21da4542, type: 3}

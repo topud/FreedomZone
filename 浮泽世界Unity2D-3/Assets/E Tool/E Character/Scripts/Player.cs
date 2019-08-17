@@ -82,6 +82,7 @@ public class Player : Character
         float horizontal = Input.GetAxis("Horizontal");
         float vertical = Input.GetAxis("Vertical");
 
+        int currentSpeed = 0;
         if (horizontal != 0 || vertical != 0)
         {
             Vector2 direction = new Vector2(horizontal, vertical);
@@ -89,7 +90,6 @@ public class Player : Character
                 direction = direction.normalized;
 
             //是否跑步
-            int currentSpeed;
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 currentSpeed = DynamicData.MaxSpeed;
@@ -100,17 +100,27 @@ public class Player : Character
             }
             Rigidbody.velocity = direction * currentSpeed;
 
-            Animator.SetTrigger("Walk");
-
             // 绘制动线
             Debug.DrawLine(transform.position, transform.position + (Vector3)direction * currentSpeed, Color.green, 0, false);
         }
         else
         {
             Rigidbody.velocity = Vector2.zero;
-
-            Animator.SetTrigger("Idle");
         }
+
+        //朝向
+        if (horizontal >= 0.01f)
+        {
+            IsFaceRight = false;
+            SpriteController.transform.localScale = new Vector3(-1, 1, 1);
+        }
+        else if (horizontal <= -0.01f)
+        {
+            IsFaceRight = true;
+            SpriteController.transform.localScale = new Vector3(1, 1, 1);
+        }
+        //动画
+        Animator.SetInteger("Speed", currentSpeed);
     }
     private void CheckPickUp()
     {

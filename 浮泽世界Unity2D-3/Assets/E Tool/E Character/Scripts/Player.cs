@@ -28,8 +28,7 @@ public class Player : Character
         base.Update();
         if (State != CharacterState.Dead && State != CharacterState.Talk)
         {
-            CheckPickUp();
-            CheckTalk();
+            CheckNearby();
         }
     }
     protected override void FixedUpdate()
@@ -54,29 +53,6 @@ public class Player : Character
         Myself = null;
     }
 
-    public void UsedItem(Item item)
-    {
-    }
-    public void UseInventoryItem(int index)
-    {
-        //// validate
-        //if (InventoryOperationsAllowed() &&
-        //    0 <= index && index < inventory.Count && inventory[index].amount > 0 &&
-        //    inventory[index].item.Data is UsableItem)
-        //{
-        //    // use item
-        //    // note: we don't decrease amount / destroy in all cases because
-        //    // some items may swap to other slots in .Use()
-        //    UsableItem itemData = (UsableItem)inventory[index].item.Data;
-        //    if (itemData.CanUse(this, index))
-        //    {
-        //        // .Use might clear the slot, so we backup the Item first for the Rpc
-        //        Item item = inventory[index].item;
-        //        itemData.Use(this, index);
-        //        RpcUsedItem(item);
-        //    }
-        //}
-    }
     private void CheckMove()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -108,70 +84,90 @@ public class Player : Character
             Rigidbody.velocity = Vector2.zero;
         }
 
-        //朝向
-        if (horizontal >= 0.01f)
-        {
-            IsFaceRight = false;
-            SpriteController.transform.localScale = new Vector3(-1, 1, 1);
-        }
-        else if (horizontal <= -0.01f)
-        {
-            IsFaceRight = true;
-            SpriteController.transform.localScale = new Vector3(1, 1, 1);
-        }
+        //朝向（角色面朝鼠标位置）
+        Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        IsFaceRight = mousePositionInWorld.x < transform.position.x ? true : false;
         //动画
         Animator.SetInteger("Speed", currentSpeed);
     }
-    private void CheckPickUp()
+    private void CheckNearby()
     {
-        if (NearbyItems.Count == 0) return;
-
-        List<float> diss = new List<float>();
-        for (int i = 0; i < NearbyItems.Count; i++)
+        Item nearistItem = null;
+        if (NearbyItems.Count != 0)
         {
-            diss.Add(Vector2.Distance(NearbyItems[i].GetComponent<Transform>().position, transform.position));
-        }
-        Item item = NearbyItems[Utility.Min(diss)];
-        foreach (Item it in NearbyItems)
-        {
-            it.TargetUI.SetNameColor(Color.white);
-        }
-        item.TargetUI.SetNameColor(Color.yellow);
-
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            if (Vector2.Distance(item.GetComponent<Transform>().position, transform.position) <= 1.4)
+            //计算所有附近物品离自己的距离
+            List<float> diss = new List<float>();
+            for (int i = 0; i < NearbyItems.Count; i++)
             {
-                item.gameObject.SetActive(false);
-                DynamicData.Items.Add(item);
-                //UIManager.Singleton.UIInventory.RefreshContent();
-                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+                diss.Add(Vector2.Distance(NearbyItems[i].transform.position, transform.position));
+            }
+            //获取离自己最近的物品
+            nearistItem = NearbyItems[Utility.Min(diss)];
+            foreach (Item it in NearbyItems)
+            {
+                if (nearistItem != it)
+                {
+                    it.TargetUI.HideHelp();
+                }
             }
         }
-    }
-    private void CheckTalk()
-    {
-        if (NearbyCharacters.Count == 0) return;
 
-        List<float> diss = new List<float>();
-        for (int i = 0; i < NearbyCharacters.Count; i++)
+        Character nearistCharacter = null;
+        if (NearbyCharacters.Count != 0)
         {
-            diss.Add(Vector2.Distance(NearbyCharacters[i].GetComponent<Transform>().position, transform.position));
-        }
-        Character target = NearbyCharacters[Utility.Min(diss)];
-        foreach (Character it in NearbyCharacters)
-        {
-            it.TargetUI.SetNameColor(Color.white);
-        }
-        target.TargetUI.SetNameColor(Color.yellow);
-
-        if (Input.GetKeyUp(KeyCode.F))
-        {
-            if (Vector2.Distance(target.GetComponent<Transform>().position, transform.position) <= 1.4)
+            //计算所有附近角色离自己的距离
+            List<float> diss = new List<float>();
+            for (int i = 0; i < NearbyCharacters.Count; i++)
             {
-                //target.gameObject.SetActive(false);
-                //DynamicData.Inventory.Add(target);
-                Debug.Log(string.Format("与 {0} 交谈", target.StaticData.Name));
+                diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
+            }
+            //获取离自己最近的角色
+            nearistCharacter = NearbyCharacters[Utility.Min(diss)];
+            foreach (Character it in NearbyCharacters)
+            {
+                if (nearistCharacter != it)
+                {
+                    it.TargetUI.HideHelp();
+                }
+            }
+        }
+
+        float ni = nearistItem ? Vector2.Distance(nearistItem.transform.position, transform.position) : -1;
+        float nc = nearistCharacter ? Vector2.Distance(nearistCharacter.transform.position, transform.position) : -1;
+        if (ni > nc)
+        {
+            if (nearistItem)
+            {
+                if (!nearistItem.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
+                {
+                    nearistItem.TargetUI.ShowHelp();
+                }
+                //检测是否按键拾取
+                if (Input.GetKeyUp(KeyCode.F)) PickUp(nearistItem);
+                //检测是否按键调查
+                if (Input.GetKeyUp(KeyCode.G)) Survey(nearistItem);
+            }
+            if (nearistCharacter)
+            {
+                nearistCharacter.TargetUI.HideHelp();
+            }
+        }
+        else if (ni < nc)
+        {
+            if (nearistItem)
+            {
+                nearistItem.TargetUI.HideHelp();
+            }
+            if (nearistCharacter)
+            {
+                if (!nearistCharacter.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
+                {
+                    nearistCharacter.TargetUI.ShowHelp();
+                }
+                //检测是否按键对话
+                if (Input.GetKeyUp(KeyCode.F)) ChatWith(nearistCharacter);
+                //检测是否按键调查
+                if (Input.GetKeyUp(KeyCode.G)) Survey(nearistCharacter);
             }
         }
     }

@@ -15,6 +15,7 @@ namespace E.Tool
         [Header("×èÄá")]
         public float damp = 5;
 
+        [ExecuteInEditMode]
         private void Update()
         {
             //Ä¬ÈÏ¸úËæÍæ¼Ò

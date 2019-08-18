@@ -48,19 +48,16 @@ namespace E.Tool
             base.OnDestroy();
         }
 
-
         private void CheckMove()
         {
             //朝向
             if (AIPath.desiredVelocity.x >= 0.01f)
             {
                 IsFaceRight = false;
-                SpriteController.transform.localScale = new Vector3(-1, 1, 1);
             }
             else if (AIPath.desiredVelocity.x < -0.01f)
             {
                 IsFaceRight = true;
-                SpriteController.transform.localScale = new Vector3(1, 1, 1);
             }
             //动画
             Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));

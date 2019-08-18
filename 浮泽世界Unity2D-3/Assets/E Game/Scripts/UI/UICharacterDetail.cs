@@ -34,13 +34,16 @@ namespace E.Tool
         }
         private void Start()
         {
-            Target = Player.Myself;
+            if (!Target) Target = Player.Myself;
             UpdateInventory();
         }
         private void Update()
         {
             if (Target)
             {
+                uiCharacterInfo.txtName.text = Target.StaticData.Name;
+                uiCharacterInfo.txtDes.text = Target.StaticData.Describe;
+
                 uiCharacterInfo.txtBirthday.text = Target.StaticData.Birthday.ToString("yyyy 年 M 月 d 日");
                 uiCharacterInfo.txtGender.text = Target.StaticData.Gender.ToString();
                 uiCharacterInfo.txtHeight.text = Target.StaticData.Height.ToString() + " cm";
@@ -178,6 +181,9 @@ namespace E.Tool
     {
         public GameObject scrInfo;
         public GameObject panInfoDetail;
+        [Space(5)]
+        public Text txtName;
+        public Text txtDes;
         [Space(5)]
         public Text txtBirthday;
         public Text txtGender;

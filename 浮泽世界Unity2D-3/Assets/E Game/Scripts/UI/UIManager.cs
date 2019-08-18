@@ -146,6 +146,14 @@ namespace E.Tool
                 {
                     UICharacterDetail.gameObject.SetActive(false);
                 }
+                if (UISetting.gameObject.activeInHierarchy)
+                {
+                    UISetting.gameObject.SetActive(false);
+                }
+                if (UISave.gameObject.activeInHierarchy)
+                {
+                    UISave.gameObject.SetActive(false);
+                }
                 UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
             }
         }

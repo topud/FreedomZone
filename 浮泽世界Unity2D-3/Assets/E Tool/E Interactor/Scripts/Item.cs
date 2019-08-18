@@ -7,6 +7,5 @@ namespace E.Tool
 {
     public class Item : Interactor
     {
-
     }
 }

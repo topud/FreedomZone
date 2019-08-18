@@ -40,7 +40,7 @@ namespace E.Tool
             Rigidbody.mass = StaticData.Weight;
             TargetUI.SetName(StaticData.Name);
             TargetUI.HideName();
-            TargetUI.HideTalk();
+            TargetUI.HideChat();
         }
         protected virtual void Start()
         {
@@ -69,35 +69,6 @@ namespace E.Tool
             StaticData = (InteractorStaticData)InteractorStaticData.GetValue(gameObject.name);
             ResetData();
             SetComponents();
-        }
-        private void OnMouseEnter()
-        {
-            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
-            TargetUI.ShowName();
-        }
-        private void OnMouseOver()
-        {
-            if (Input.GetMouseButtonUp(1))
-            {
-                //UIManager.Singleton.uiCharacterInfo.SetCharacterEntity(this);
-            }
-        }
-        private void OnMouseDown()
-        {
-            SpriteController.SetColor(new Color(0.6f, 0.6f, 0.6f));
-        }
-        private void OnMouseDrag()
-        {
-
-        }
-        private void OnMouseUp()
-        {
-            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
-        }
-        private void OnMouseExit()
-        {
-            SpriteController.SetColor(new Color(1, 1, 1));
-            TargetUI.HideName();
         }
 
         /// <summary>

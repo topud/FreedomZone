@@ -14,13 +14,13 @@ using E.Tool;
 namespace E.Tool
 {
     [Serializable]
-    public class StoryEditorWindowSetting : StaticData
+    public class StoryEditorWindowSetting : StaticDataDictionary<StoryEditorWindowSetting>
     {
-        [Header("【资源文件夹】")]
+        [Header("资源文件夹")]
         [Tooltip("在故事编辑窗口内点击右键创建的资源将会在此目录下创建对应文件")]
         public string StoryResourcesFolder = "Assets/E.Tool/E Story/Resources/Example Storys";
 
-        [Header("【个性化界面】")]
+        [Header("个性化界面")]
         public int ViewWidth = 3000;
         public int ViewHeight = 3000;
         public Vector2Int DefaultNodeSize = new Vector2Int(250, 90);

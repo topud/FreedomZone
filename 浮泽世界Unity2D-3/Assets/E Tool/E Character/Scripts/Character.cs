@@ -18,11 +18,21 @@ namespace E.Tool
 
         [Header("角色状态")]
         [ReadOnly] public CharacterState State = CharacterState.Idle;
-        [ReadOnly] public bool IsFaceRight = true;
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public Character Target;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
+        public bool IsFaceRight
+        {
+            get
+            {
+                return SpriteController.transform.localScale.x < 0;
+            }
+            set
+            {
+                SpriteController.transform.localScale = new Vector3(value ? 1:-1, 1, 1);
+            }
+        }
 
         [Header("组件")]
         [ReadOnly] public Collider2D Collider;
@@ -47,7 +57,7 @@ namespace E.Tool
             Rigidbody.mass = StaticData.Weight;
             TargetUI.SetName(StaticData.Name);
             TargetUI.HideName();
-            TargetUI.HideTalk();
+            TargetUI.HideChat();
         }
         protected virtual void Start()
         {
@@ -87,35 +97,6 @@ namespace E.Tool
             StaticData = (CharacterStaticData)CharacterStaticData.GetValue(gameObject.name);
             ResetData();
             SetComponents();
-        }
-        private void OnMouseEnter()
-        {
-            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
-            TargetUI.ShowName();
-        }
-        private void OnMouseOver()
-        {
-            if (Input.GetMouseButtonUp(1))
-            {
-                UICharacterDetail.Target = this;
-            }
-        }
-        private void OnMouseDown()
-        {
-            SpriteController.SetColor(new Color(0.6f, 0.6f, 0.6f));
-        }
-        private void OnMouseDrag()
-        {
-
-        }
-        private void OnMouseUp()
-        {
-            SpriteController.SetColor(new Color(0.8f, 0.8f, 0.8f));
-        }
-        private void OnMouseExit()
-        {
-            SpriteController.SetColor(new Color(1, 1, 1));
-            TargetUI.HideName();
         }
 
         /// <summary>
@@ -264,6 +245,146 @@ namespace E.Tool
                 DynamicData.Mind += DynamicData.MindRecoveryCoefficient * 1;
                 DynamicData.Power += DynamicData.PowerRecoveryCoefficient * 1;
             }
+        }
+
+
+        /// <summary>
+        /// 拾取物品
+        /// </summary>
+        /// <param name="item"></param>
+        public void PickUp(Item item)
+        {
+            if (IsNearby(item))
+            {
+                item.gameObject.SetActive(false);
+                DynamicData.Items.Add(item);
+                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+            }
+            else
+            {
+                Debug.LogError(string.Format("无法拾取 {0}，因距离过远", item.StaticData.Name));
+            }
+        }
+        /// <summary>
+        /// 调查物品
+        /// </summary>
+        /// <param name="item"></param>
+        public void Survey(Item item)
+        {
+            if (IsNearby(item))
+            {
+                item.TargetUI.HideAll();
+                TargetUI.ShowChat();
+                TargetUI.SetChat(item.StaticData.Describe);
+            }
+            else
+            {
+                Debug.LogError(string.Format("无法调查 {0}，因距离过远", item.StaticData.Name));
+            }
+        }
+        /// <summary>
+        /// 丢弃物品
+        /// </summary>
+        /// <param name="item"></param>
+        public void Discard(Item item)
+        {
+            if (IsOwning(item))
+            {
+                item.transform.position = transform.position;
+                item.gameObject.SetActive(true);
+                DynamicData.Items.Remove(item);
+                Debug.Log(string.Format("已丢弃 {0}", item.StaticData.Name));
+            }
+            else
+            {
+                Debug.LogError(string.Format("无法丢弃 {0}，因未携带该物品", item.StaticData.Name));
+            }
+            //UIManager.Singleton.UIInventory.RefreshContent();
+        }
+        /// <summary>
+        /// 使用物品
+        /// </summary>
+        /// <param name="item"></param>
+        public void Use(Item item)
+        {
+        }
+        /// <summary>
+        /// 投掷物品
+        /// </summary>
+        /// <param name="item"></param>
+        public void Throw(Item item)
+        {
+        }
+        /// <summary>
+        /// 检测物品是否在拾取范围
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool IsNearby(Item item)
+        {
+            return NearbyItems.Contains(item);
+        }
+        /// <summary>
+        /// 检测玩家是否拥有物品
+        /// </summary>
+        /// <returns></returns>
+        public bool IsOwning(Item item)
+        {
+            return DynamicData.Items.Contains(item);
+        }
+
+
+        /// <summary>
+        /// 与角色对话
+        /// </summary>
+        /// <param name="target"></param>
+        public void ChatWith(Character target)
+        {
+            if (IsNearby(target))
+            {
+                if (target.StaticData.RandomStorys.Count>0)
+                {
+                    target.TargetUI.HideName();
+                    target.TargetUI.ShowChat();
+                    string content = target.StaticData.RandomStorys[new System.Random().Next(0, target.StaticData.RandomStorys.Count)];
+                    target.TargetUI.SetChat(content);
+                    Debug.Log(string.Format("正在与 {0} 对话", target.StaticData.Name));
+                }
+                else
+                {
+                    Debug.Log(string.Format("{0} 没有什么想说的", target.StaticData.Name));
+                }
+            }
+            else
+            {
+                Debug.LogError(string.Format("无与 {0} 对话，因距离过远", target.StaticData.Name));
+            }
+        }
+        /// <summary>
+        /// 调查角色
+        /// </summary>
+        /// <param name="item"></param>
+        public void Survey(Character target)
+        {
+            if (IsNearby(target))
+            {
+                target.TargetUI.HideAll();
+                TargetUI.ShowChat();
+                TargetUI.SetChat(target.StaticData.Describe);
+            }
+            else
+            {
+                Debug.LogError(string.Format("无法调查 {0}，因距离过远", target.StaticData.Name));
+            }
+        }
+        /// <summary>
+        /// 检测角色是否在对话范围
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool IsNearby(Character target)
+        {
+            return NearbyCharacters.Contains(target);
         }
     }
 

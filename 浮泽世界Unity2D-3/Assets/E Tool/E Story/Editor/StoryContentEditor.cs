@@ -14,14 +14,14 @@ using E.Tool;
 
 namespace E.Tool
 {
-    [CustomEditor(typeof(ScriptableContent))]
+    [CustomEditor(typeof(StoryContent))]
     public class StoryContentEditor : Editor
     {
-        private ScriptableContent Target;
+        private StoryContent Target;
 
         private void OnEnable()
         {
-            Target = (ScriptableContent)target;
+            Target = (StoryContent)target;
         }
 
         public override void OnInspectorGUI()
@@ -57,7 +57,7 @@ namespace E.Tool
                     {
                         for (int i = 0; i < Target.Sentences.Count; i++)
                         {
-                            ScriptableContent.Sentence item = Target.Sentences[i];
+                            StoryContent.Sentence item = Target.Sentences[i];
 
                             string temp = item.Expression == null ? "旁白" : "未命名角色";
                             string temp1 = item.Speaker.Length > 0 ? item.Speaker : temp;
@@ -94,7 +94,7 @@ namespace E.Tool
                     EditorGUILayout.LabelField("");
                     if (GUILayout.Button("+"))
                     {
-                        Target.Sentences.Add(new ScriptableContent.Sentence());
+                        Target.Sentences.Add(new StoryContent.Sentence());
                     }
                     EditorGUILayout.EndHorizontal();
                     break;

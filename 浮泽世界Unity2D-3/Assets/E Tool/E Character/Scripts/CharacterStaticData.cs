@@ -43,6 +43,8 @@ namespace E.Tool
         [SerializeField, Tooltip("初始发布的任务")] private List<Quest> publishedQuests = new List<Quest>();
         [SerializeField, Tooltip("初始人际关系")] private List<Relationship> relationships = new List<Relationship>();
 
+        [SerializeField, Tooltip("随机对话内容")] private List<string> randomStorys = new List<string>();
+        
         /// <summary>
         /// 生日
         /// </summary>
@@ -170,6 +172,11 @@ namespace E.Tool
         /// 初始人际关系
         /// </summary>
         public List<Relationship> Relationships { get => relationships; }
+
+        /// <summary>
+        /// 随机对话内容
+        /// </summary>
+        public List<string> RandomStorys { get => randomStorys; }
     }
 
     [Serializable]

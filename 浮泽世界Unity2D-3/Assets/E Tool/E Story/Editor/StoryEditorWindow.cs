@@ -16,9 +16,35 @@ namespace E.Tool
     public class StoryEditorWindow : EditorWindow
     {
         //运行数据
+        /// <summary>
+        /// 故事编辑器窗口
+        /// </summary>
         public static StoryEditorWindow instance;
+        /// <summary>
+        /// 窗口配置信息
+        /// </summary>
         private static StoryEditorWindowSetting config;
-        private static List<ScriptableStory> storys;
+        /// <summary>
+        /// 故事列表
+        /// </summary>
+        private static List<Story> storys;
+        /// <summary>
+        /// 当前故事
+        /// </summary>
+        private static Story CurrentStory;
+        /// <summary>
+        /// 当前节点
+        /// </summary>
+        private static Node CurrentNode;
+        /// <summary>
+        /// 上节点
+        /// </summary>
+        private static Node UpNode;
+        /// <summary>
+        /// 下节点
+        /// </summary>
+        private static Node DownNode;
+
         /// <summary>
         /// 窗口实例
         /// </summary>
@@ -50,33 +76,17 @@ namespace E.Tool
         /// <summary>
         /// 故事集和
         /// </summary>
-        public static List<ScriptableStory> Storys
+        public static List<Story> Storys
         {
             get
             {
                 if (storys == null)
                 {
-                    storys = ScriptableStory.GetValues();
+                    storys = Story.GetValues();
                 }
                 return storys;
             }
         }
-        /// <summary>
-        /// 当前故事
-        /// </summary>
-        private static ScriptableStory CurrentStory;
-        /// <summary>
-        /// 当前节点
-        /// </summary>
-        private static Node CurrentNode;
-        /// <summary>
-        /// 上节点
-        /// </summary>
-        private static Node UpNode;
-        /// <summary>
-        /// 下节点
-        /// </summary>
-        private static Node DownNode;
 
         //窗口样式
         /// <summary>
@@ -105,7 +115,7 @@ namespace E.Tool
         /// <summary>
         /// 打开窗口
         /// </summary>
-        [MenuItem("E Tool/E Story/打开编辑器窗口 %#w", false, 0)]
+        [MenuItem("Tools/E Story/打开编辑器窗口 %#w", false, 0)]
         public static void Open()
         {
             Initialize();
@@ -116,7 +126,7 @@ namespace E.Tool
         /// 打开故事
         /// </summary>
         /// <param name="story"></param>
-        private static void OpenStory(ScriptableStory story)
+        private static void OpenStory(Story story)
         {
             if (story != null)
             {
@@ -191,7 +201,7 @@ namespace E.Tool
         /// </summary>
         private static void RefreshStorys()
         {
-            storys = ScriptableStory.ReGetValues();
+            storys = Story.ReGetValues();
         }
         /// <summary>
         /// 刷新鼠标坐标
@@ -237,20 +247,20 @@ namespace E.Tool
         }
 
         //创建
-        [MenuItem("E Tool/E Story/创建故事", false, 1)]
+        [MenuItem("Tools/E Story/创建故事", false, 1)]
         /// <summary>
         /// 创建故事
         /// </summary>
         private static void CreateStory()
         {
-            ScriptableStory story = AssetCreator<ScriptableStory>.CreateAsset(Config.StoryResourcesFolder, "Story");
+            Story story = AssetCreator<Story>.CreateAsset(Config.StoryResourcesFolder, "Story");
             if (story != null)
             {
                 OpenStory(story);
                 AssetDatabase.Refresh();
             }
         }
-        [MenuItem("E Tool/E Story/创建节点", false, 2)]
+        [MenuItem("Tools/E Story/创建节点", false, 2)]
         /// <summary>
         /// 创建故事节点
         /// </summary>
@@ -265,7 +275,7 @@ namespace E.Tool
                 Instance.ShowNotification(new GUIContent("未指定故事"));
             }
         }
-        [MenuItem("E Tool/E Story/创建节点内容", false, 3)]
+        [MenuItem("Tools/E Story/创建节点内容", false, 3)]
         /// <summary>
         /// 创建节点内容
         /// </summary>
@@ -274,7 +284,7 @@ namespace E.Tool
         {
             if (CurrentStory.Nodes.Contains(CurrentNode))
             {
-                ScriptableContent storyContent = AssetCreator<ScriptableContent>.CreateAsset(Config.StoryResourcesFolder, "Content");
+                StoryContent storyContent = AssetCreator<StoryContent>.CreateAsset(Config.StoryResourcesFolder, "Content");
                 if (storyContent != null)
                 {
                     CurrentNode.Content = storyContent;
@@ -639,7 +649,7 @@ namespace E.Tool
             {
                 currenStoryPath = "无";
             }
-            EditorGUI.LabelField(new Rect(115, Instance.position.height - 20, Instance.position.width, 20), "当前打开的故事：" + currenStoryPath);
+            EditorGUI.LabelField(new Rect(115, Instance.position.height - 20, Instance.position.width, 20), "当前故事：" + currenStoryPath);
         }
         /// <summary>
         /// 绘制右键菜单
@@ -773,8 +783,8 @@ namespace E.Tool
 
                 //内容
                 EditorGUI.LabelField(new Rect(rect.x + 5, rect.y + 45, 40, 16), "内容");
-                node.Content = (ScriptableContent)EditorGUI.ObjectField(new Rect(rect.x + 40, rect.y + 45, 153, 16), node.Content, typeof(ScriptableContent));
-                ScriptableContent sc = node.Content;
+                node.Content = (StoryContent)EditorGUI.ObjectField(new Rect(rect.x + 40, rect.y + 45, 135, 16), node.Content, typeof(StoryContent));
+                StoryContent sc = node.Content;
                 if (sc != null)
                 {
                     //形式

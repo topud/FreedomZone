@@ -20,6 +20,7 @@ MonoBehaviour:
   movable: 1
   stackable: 0
   accommodatable: 1
+  perishable: 0
   weight: 50
   volume: 10
   rmbPrice: 10
@@ -28,5 +29,4 @@ MonoBehaviour:
   buffs: []
   stack: 1
   maxHealth: 10
-  items:
-  - {fileID: 1011689643633065698, guid: a1b418d3ba6ef5143be895b4b6e8b93f, type: 3}
+  items: []

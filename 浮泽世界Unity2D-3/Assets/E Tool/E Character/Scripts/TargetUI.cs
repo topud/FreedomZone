@@ -9,6 +9,7 @@ namespace E.Tool
     {
         [SerializeField] private GameObject PanName;
         [SerializeField] private GameObject PanTalk;
+        [SerializeField] private GameObject PanHelp;
 
         public void SetName(string str)
         {
@@ -21,24 +22,51 @@ namespace E.Tool
         public void ShowName()
         {
             PanName.SetActive(true);
+            HideChat();
+            HideHelp();
         }
         public void HideName()
         {
             PanName.SetActive(false);
         }
 
-        public void SetTalk(string str)
+        public bool IsShowChat()
+        {
+            return PanTalk.gameObject.activeInHierarchy;
+        }
+        public void SetChat(string str)
         {
             PanTalk.GetComponentInChildren<Text>().text = str;
+            //CancelInvoke();
+            //Invoke("HideChat", (float)str.Length / 5 + 2);
         }
-        public void ShowTalk()
+        public void ShowChat()
         {
             PanTalk.SetActive(true);
+            HideName();
+            HideHelp();
         }
-        public void HideTalk()
+        public void HideChat()
         {
             PanTalk.SetActive(false);
         }
 
+        public void ShowHelp()
+        {
+            PanHelp.SetActive(true);
+            HideName();
+            HideChat();
+        }
+        public void HideHelp()
+        {
+            PanHelp.SetActive(false);
+        }
+
+        public void HideAll()
+        {
+            HideName();
+            HideChat();
+            HideHelp();
+        }
     }
 }

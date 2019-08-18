@@ -14,14 +14,14 @@ using E.Tool;
 
 namespace E.Tool
 {
-    [CustomEditor(typeof(ScriptableStory))]
+    [CustomEditor(typeof(Story))]
     public class StoryEditor : Editor
     {
-        private ScriptableStory Target;
+        private Story Target;
 
         private void OnEnable()
         {
-            Target = (ScriptableStory)target;
+            Target = (Story)target;
         }
         public override void OnInspectorGUI()
         {
@@ -79,7 +79,7 @@ namespace E.Tool
                         NodeType type = (NodeType)EditorGUILayout.EnumPopup("节点类型", item.Type);
                         Target.SetNodeType(item, type);
                         //节点内容
-                        item.Content = (ScriptableContent)EditorGUILayout.ObjectField("节点内容", item.Content, typeof(ScriptableContent));
+                        item.Content = (StoryContent)EditorGUILayout.ObjectField("节点内容", item.Content, typeof(StoryContent));
                         //是否已通过
                         item.IsPassed = EditorGUILayout.Toggle("是否已通过", item.IsPassed);
                         //是否为主线

@@ -39,29 +39,6 @@ namespace E.Tool
         private void Reset()
         {
             Renderers = GetComponentsInChildren<SpriteRenderer>();
-
-            //BodyParts = new List<SpriteRenderer>();
-            //ItemParts = new List<SpriteRenderer>();
-            //foreach (SpriteRenderer item in Renderers)
-            //{
-            //    CharacterPart part = item.GetComponent<CharacterPart>();
-            //    if (!part)
-            //    {
-            //        Debug.LogError("未给 " + item.name + " 添加 CharacterPart 组件");
-            //        continue;
-            //    }
-            //    switch (part.PartType)
-            //    {
-            //        case PartType.身体:
-            //            BodyParts.Add(item);
-            //            break;
-            //        case PartType.物品:
-            //            ItemParts.Add(item);
-            //            break;
-            //        default:
-            //            break;
-            //    }
-            //}
         }
 
         /// <summary>
@@ -87,33 +64,5 @@ namespace E.Tool
                 item.color = color;
             }
         }
-        /// <summary>
-        /// 设置身体部件颜色
-        /// </summary>
-        ///// <param name="color"></param>
-        //public void SetColor(Color color, BodyType bodyType)
-        //{
-        //    foreach (SpriteRenderer item in BodyParts)
-        //    {
-        //        if (item.GetComponent<CharacterPart>().BodyType == bodyType)
-        //        {
-        //            item.color = color;
-        //        }
-        //    }
-        //}
-        ///// <summary>
-        ///// 设置物品部件颜色
-        ///// </summary>
-        ///// <param name="color"></param>
-        //public void SetColor(Color color, ItemType bodyType)
-        //{
-        //    foreach (SpriteRenderer item in ItemParts)
-        //    {
-        //        if (item.GetComponent<CharacterPart>().ItemType == bodyType)
-        //        {
-        //            item.color = color;
-        //        }
-        //    }
-        //}
     }
 }

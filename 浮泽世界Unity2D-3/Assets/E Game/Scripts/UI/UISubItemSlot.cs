@@ -5,7 +5,6 @@ namespace E.Tool
 {
     public class UISubItemSlot : UISlotBase
     {
-        public UIDragAndDropable dragAndDropable;
         public Image imgIcon;
         public Text txtName;
 

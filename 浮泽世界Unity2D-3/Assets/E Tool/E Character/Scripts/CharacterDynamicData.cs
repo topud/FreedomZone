@@ -7,7 +7,7 @@ using E.Tool;
 namespace E.Tool
 {
     [Serializable]
-    public class CharacterDynamicData : DynamicData
+    public class CharacterDynamicData : EntityDynamicData
     {
         [SerializeField, Tooltip("当前生机上限")] private int maxHealth = 20;
         [SerializeField, Tooltip("当前脑力上限")] private int maxMind = 20;

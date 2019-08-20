@@ -13,7 +13,7 @@ namespace E.Tool
     public class Utility
     {
         /// <summary>
-        /// ÏŞ¶¨Êı×Ö·¶Î§£¬½ö°üº¬×îĞ¡Öµ
+        /// é™å®šæ•°å­—èŒƒå›´ï¼Œä»…åŒ…å«æœ€å°å€¼
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -24,7 +24,7 @@ namespace E.Tool
             return value;
         }
         /// <summary>
-        /// ÏŞ¶¨Êı×Ö·¶Î§£¬½ö°üº¬×î´óÖµ
+        /// é™å®šæ•°å­—èŒƒå›´ï¼Œä»…åŒ…å«æœ€å¤§å€¼
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -36,7 +36,7 @@ namespace E.Tool
             return value;
         }
         /// <summary>
-        /// ÏŞ¶¨Êı×Ö·¶Î§£¬°üº¬×îĞ¡ÖµºÍ×î´óÖµ
+        /// é™å®šæ•°å­—èŒƒå›´ï¼ŒåŒ…å«æœ€å°å€¼å’Œæœ€å¤§å€¼
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -49,10 +49,10 @@ namespace E.Tool
             return value;
         }
         /// <summary>
-        /// »ñÈ¡Êı×éÖĞ×îĞ¡ÖµµÄË÷Òı
+        /// è·å–æ•°ç»„ä¸­æœ€å°å€¼çš„ç´¢å¼•
         /// </summary>
-        /// <param name="array">Êı×é</param>
-        /// <returns>×îĞ¡ÖµµÄË÷Òı</returns>
+        /// <param name="array">æ•°ç»„</param>
+        /// <returns>æœ€å°å€¼çš„ç´¢å¼•</returns>
         public static int Min(List<float> array)
         {
             float value = 0;
@@ -80,7 +80,7 @@ namespace E.Tool
 
 
         /// <summary>
-        /// ÊÇ·ñÓĞ¼üÌ§Æğ
+        /// æ˜¯å¦æœ‰é”®æŠ¬èµ·
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
@@ -89,7 +89,7 @@ namespace E.Tool
             return keys.Any(k => Input.GetKeyUp(k));
         }
         /// <summary>
-        /// ÊÇ·ñÓĞ¼ü°´ÏÂ
+        /// æ˜¯å¦æœ‰é”®æŒ‰ä¸‹
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>
@@ -98,7 +98,7 @@ namespace E.Tool
             return keys.Any(k => Input.GetKeyDown(k));
         }
         /// <summary>
-        /// ÊÇ·ñÓĞ¼ü°´ÏÂ°´×¡
+        /// æ˜¯å¦æœ‰é”®æŒ‰ä¸‹æŒ‰ä½
         /// </summary>
         /// <param name="keys"></param>
         /// <returns></returns>

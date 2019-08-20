@@ -5,7 +5,6 @@ namespace E.Tool
 {
     public class UISlotItem : UISlotBase
     {
-        public UIDragAndDropable dragAndDropable;
         public Text txtName;
         public Image imgIcon;
         public GameObject panCapacity;

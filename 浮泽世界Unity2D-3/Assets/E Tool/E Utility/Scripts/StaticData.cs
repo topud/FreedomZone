@@ -12,7 +12,6 @@ namespace E.Tool
         [SerializeField, Tooltip("描述"), TextArea(1, 30)] protected string describe = "";
         [SerializeField, Tooltip("图标")] protected Sprite icon = null;
         [SerializeField, Tooltip("预制体")] protected GameObject prefab = null;
-        [SerializeField, Tooltip("是否无敌")] protected bool invincible = false;
 
         /// <summary>
         /// 名称
@@ -30,10 +29,6 @@ namespace E.Tool
         /// 预制体
         /// </summary>
         public GameObject Prefab { get => prefab; }
-        /// <summary>
-        /// 是否无敌
-        /// </summary>
-        public bool Invincible { get => invincible; }
     }
 
     public abstract class StaticDataDictionary<T> : ScriptableObject where T : ScriptableObject

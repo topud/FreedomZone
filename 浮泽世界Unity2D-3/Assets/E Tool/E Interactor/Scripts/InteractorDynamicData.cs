@@ -6,7 +6,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [Serializable]
-    public class InteractorDynamicData : DynamicData
+    public class InteractorDynamicData : EntityDynamicData
     {
         [SerializeField, Tooltip("当前堆叠数量")] private int stack = 1;
         [SerializeField, Tooltip("当前耐久上限")] private int maxHealth = 10;

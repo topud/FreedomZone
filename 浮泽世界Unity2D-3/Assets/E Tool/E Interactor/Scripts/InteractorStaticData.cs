@@ -6,7 +6,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Interactor")]
-    public class InteractorStaticData : StaticData
+    public class InteractorStaticData : EntityStaticData
     {
         [SerializeField, Tooltip("是否可移动")] private bool movable = true;
         [SerializeField, Tooltip("是否可堆叠")] private bool stackable = false;

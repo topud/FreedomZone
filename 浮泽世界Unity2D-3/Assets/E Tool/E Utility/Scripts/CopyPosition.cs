@@ -9,7 +9,7 @@ namespace E.Tool
 
         private void Update()
         {
-            //Ä¬ÈÏ¸úËæÍæ¼Ò
+            //é»˜è®¤è·Ÿéšç©å®¶
             if (!target) target = Player.Myself.transform;
         }
         private void FixedUpdate()

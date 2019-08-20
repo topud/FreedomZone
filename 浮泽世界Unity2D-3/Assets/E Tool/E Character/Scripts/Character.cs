@@ -7,63 +7,54 @@ using Pathfinding;
 
 namespace E.Tool
 {
-    [RequireComponent(typeof(Collider2D))]
-    [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(AudioSource))]
-    public abstract class Character : MonoBehaviour
+    public abstract class Character : Entity<CharacterStaticData,CharacterDynamicData>
     {
-        [Header("角色数据")]
-        public CharacterStaticData StaticData;
-        public CharacterDynamicData DynamicData;
-
-        [Header("角色状态")]
+        [Header("状态")]
         [ReadOnly] public CharacterState State = CharacterState.Idle;
         [ReadOnly] public float RunBeyondDistance = 5;
-        [ReadOnly] public Character Target;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
+        public Transform FollowTarget
+        {
+            get
+            {
+                return AIDestinationSetter.target;
+            }
+            set
+            {
+                AIDestinationSetter.target = value;
+            }
+        }
         public bool IsFaceRight
         {
             get
             {
-                return SpriteController.transform.localScale.x < 0;
+                return SpriteSorter.transform.localScale.x < 0;
             }
             set
             {
-                SpriteController.transform.localScale = new Vector3(value ? 1:-1, 1, 1);
+                SpriteSorter.transform.localScale = new Vector3(value ? 1:-1, 1, 1);
             }
         }
-
-        [Header("组件")]
-        [ReadOnly] public Collider2D Collider;
-        [ReadOnly] public Rigidbody2D Rigidbody;
-        [ReadOnly] public AudioSource AudioSource;
-        [ReadOnly] public Animator Animator;
-        [ReadOnly] public AIPath AIPath;
-        [ReadOnly] public AIDestinationSetter AIDestinationSetter;
-        [ReadOnly] public TargetUI TargetUI;
-        [ReadOnly] public CharacterSprite SpriteController;
-
-
-        protected virtual void Awake()
+        
+        protected override void Awake()
         {
-            SetComponents();
+            base.Awake();
         }
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
-            //数据载入
-            ResetData();
-            //数据应用，显示更新
+            base.OnEnable();
+            
             Rigidbody.mass = StaticData.Weight;
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
         }
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
         }
-        protected virtual void Update()
+        protected override void Update()
         {
+            base.Update();
+
             if (AIDestinationSetter.target)
             {
                 if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
@@ -76,64 +67,43 @@ namespace E.Tool
                 }
             }
         }
-        protected virtual void FixedUpdate()
+        protected override void FixedUpdate()
         {
-
+            base.FixedUpdate();
         }
-        protected virtual void LateUpdate()
+        protected override void LateUpdate()
         {
-
+            base.LateUpdate();
         }
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-
+            base.OnDisable();
         }
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
-
+            base.OnDestroy();
         }
-        protected virtual void Reset()
+        protected override void Reset()
         {
-            StaticData = (CharacterStaticData)CharacterStaticData.GetValue(gameObject.name);
-            ResetData();
-            SetComponents();
+            base.Reset();
         }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
-        public virtual void SetData(CharacterDynamicData data)
+        public override void SetData(CharacterDynamicData data)
         {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
-
-            if (data.Name == StaticData.Name)
-            {
-                DynamicData = data;
-            }
-            else
-            {
-                Debug.LogError(string.Format("对象名称不匹配，无法设置数据。当前指定对象是 {0}，目标数据指定对象是 {1}",
-                    StaticData.Name, data.Name));
-            }
+            base.SetData(data);
         }
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        protected virtual void ResetData()
+        protected override void ResetData()
         {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
+            base.ResetData();
 
-            DynamicData.Name = StaticData.Name;
-            DynamicData.Invincible = StaticData.Invincible;
+            if (!StaticData) return;
 
             DynamicData.MaxHealth = StaticData.MaxHealth;
             DynamicData.MaxMind = StaticData.MaxMind;
@@ -162,19 +132,9 @@ namespace E.Tool
         /// <summary>
         /// 设置组件
         /// </summary>
-        protected virtual void SetComponents()
+        protected override void SetComponents()
         {
-            //自带组件
-            Collider = GetComponent<Collider2D>();
-            Rigidbody = GetComponent<Rigidbody2D>();
-            AudioSource = GetComponent<AudioSource>();
-            Animator = GetComponentInChildren<Animator>();
-            //插件组件
-            AIPath = GetComponent<AIPath>();
-            AIDestinationSetter = GetComponent<AIDestinationSetter>();
-            //E 组件
-            TargetUI = GetComponentInChildren<TargetUI>();
-            SpriteController = GetComponentInChildren<CharacterSprite>();
+            base.SetComponents();
         }
 
         /// <summary>
@@ -246,8 +206,7 @@ namespace E.Tool
                 DynamicData.Power += DynamicData.PowerRecoveryCoefficient * 1;
             }
         }
-
-
+        
         /// <summary>
         /// 拾取物品
         /// </summary>
@@ -332,8 +291,7 @@ namespace E.Tool
         {
             return DynamicData.Items.Contains(item);
         }
-
-
+    
         /// <summary>
         /// 与角色对话
         /// </summary>

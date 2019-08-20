@@ -11,6 +11,11 @@ namespace E.Tool
         [SerializeField] private GameObject PanTalk;
         [SerializeField] private GameObject PanHelp;
 
+        private void Awake()
+        {
+            HideAll();
+        }
+
         public void SetName(string str)
         {
             PanName.GetComponentInChildren<Text>().text = str;
@@ -37,8 +42,6 @@ namespace E.Tool
         public void SetChat(string str)
         {
             PanTalk.GetComponentInChildren<Text>().text = str;
-            //CancelInvoke();
-            //Invoke("HideChat", (float)str.Length / 5 + 2);
         }
         public void ShowChat()
         {

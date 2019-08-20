@@ -5,7 +5,6 @@ namespace E.Tool
 {
     public class UISlotEquipment : UISlotBase
     {
-        public UIDragAndDropable dragAndDropable;
         public Image imgIcon;
         public Image imgHealth;
 

@@ -5,107 +5,65 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    [RequireComponent(typeof(Collider2D))]
-    [RequireComponent(typeof(Rigidbody2D))]
-    [RequireComponent(typeof(AudioSource))]
-    public abstract class Interactor : MonoBehaviour
+    public abstract class Interactor : Entity<InteractorStaticData, InteractorDynamicData>
     {
-        [Header("物品数据")]
-        public InteractorStaticData StaticData;
-        public InteractorDynamicData DynamicData;
-
-        [Header("物品状态")]
-        [ReadOnly] public bool IsFaceRight = true;
-
-        [Header("组件")]
-        [ReadOnly] public Collider2D Collider;
-        [ReadOnly] public Rigidbody2D Rigidbody;
-        [ReadOnly] public AudioSource AudioSource;
-        [ReadOnly] public Animator Animator;
-        [ReadOnly] public TargetUI TargetUI;
-        [ReadOnly] public InteractorSprite SpriteController;
-
-
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            SetComponents();
+            base.Awake();
         }
-        protected virtual void OnEnable()
+        protected override void OnEnable()
         {
-            //数据载入
-            ResetData();
-            //数据应用，显示更新
+            base.OnEnable();
+            
             gameObject.layer = StaticData.Movable ? 9 : 10;
             Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
             Rigidbody.mass = StaticData.Weight;
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
         }
-        protected virtual void Start()
+        protected override void Start()
         {
+            base.Start();
         }
-        protected virtual void Update()
+        protected override void Update()
         {
+            base.Update();
         }
-        protected virtual void FixedUpdate()
+        protected override void FixedUpdate()
         {
-
+            base.FixedUpdate();
         }
-        protected virtual void LateUpdate()
+        protected override void LateUpdate()
         {
-
+            base.LateUpdate();
         }
-        protected virtual void OnDisable()
+        protected override void OnDisable()
         {
-
+            base.OnDisable();
         }
-        protected virtual void OnDestroy()
+        protected override void OnDestroy()
         {
-
+            base.OnDestroy();
         }
-        protected virtual void Reset()
+        protected override void Reset()
         {
-            StaticData = (InteractorStaticData)InteractorStaticData.GetValue(gameObject.name);
-            ResetData();
-            SetComponents();
+            base.Reset();
         }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
-        public virtual void SetData(InteractorDynamicData data)
+        public override void SetData(InteractorDynamicData data)
         {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
-
-            if (data.Name == StaticData.Name)
-            {
-                DynamicData = data;
-            }
-            else
-            {
-                Debug.LogError(string.Format("对象名称不匹配，无法设置数据。当前指定对象是 {0}，目标数据指定对象是 {1}",
-                    StaticData.Name, data.Name));
-            }
+            base.SetData(data);
         }
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        protected virtual void ResetData()
+        protected override void ResetData()
         {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
+            base.ResetData();
 
-            DynamicData.Name = StaticData.Name;
-            DynamicData.Invincible = StaticData.Invincible;
+            if (!StaticData) return;
 
             DynamicData.Stack = StaticData.Stack;
             DynamicData.MaxHealth = StaticData.MaxHealth;
@@ -115,16 +73,9 @@ namespace E.Tool
         /// <summary>
         /// 设置组件
         /// </summary>
-        protected virtual void SetComponents()
+        protected override void SetComponents()
         {
-            //自带组件
-            Collider = GetComponent<Collider2D>();
-            Rigidbody = GetComponent<Rigidbody2D>();
-            AudioSource = GetComponent<AudioSource>();
-            Animator = GetComponent<Animator>();
-            //E 组件
-            TargetUI = GetComponentInChildren<TargetUI>();
-            SpriteController = GetComponent<InteractorSprite>();
+            base.SetComponents();
         }
 
         /// <summary>

@@ -5,7 +5,6 @@ namespace E.Tool
 {
     public class UISlotSkill : UISlotBase
     {
-        public UIDragAndDropable dragAndDropable;
         public Image image;
         public Button button;
         public GameObject cooldownOverlay;

@@ -6,7 +6,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Character")]
-    public class CharacterStaticData : StaticData
+    public class CharacterStaticData : EntityStaticData
     {
         [SerializeField, Tooltip("生日")] private DateTime birthday = new DateTime(2000, 1, 1);
         [SerializeField, Tooltip("性别")] private Gender gender = Gender.无;

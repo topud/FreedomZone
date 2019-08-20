@@ -16,11 +16,11 @@ namespace E.Tool
 
         void Start()
         {
-            plusButton.onClick.SetListener(() =>
+            plusButton.onClick.AddListener(() =>
             {
                 minimapCamera.orthographicSize = Mathf.Max(minimapCamera.orthographicSize - zoomStepSize, zoomMin);
             });
-            minusButton.onClick.SetListener(() =>
+            minusButton.onClick.AddListener(() =>
             {
                 minimapCamera.orthographicSize = Mathf.Min(minimapCamera.orthographicSize + zoomStepSize, zoomMax);
             });

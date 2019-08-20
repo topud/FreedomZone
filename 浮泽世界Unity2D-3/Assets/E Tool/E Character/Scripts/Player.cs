@@ -16,12 +16,14 @@ public class Player : Character
     protected override void OnEnable()
     {
         base.OnEnable();
+
         Myself = this;
-        AIPath.enabled = false;
     }
     protected override void Start()
     {
         base.Start();
+
+        AIPath.enabled = false;
     }
     protected override void Update()
     {

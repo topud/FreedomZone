@@ -28,19 +28,17 @@ namespace E.Tool
 
         protected virtual void Awake()
         {
-            SetComponents();
+            //ResetComponents();
         }
         protected virtual void OnEnable()
         {
-            //数据载入
-            ResetData();
+        }
+        protected virtual void Start()
+        {
             //数据应用，显示更新
             TargetUI.SetName(StaticData.Name);
             TargetUI.HideName();
             TargetUI.HideChat();
-        }
-        protected virtual void Start()
-        {
         }
         protected virtual void Update()
         {
@@ -63,16 +61,16 @@ namespace E.Tool
         }
         protected virtual void Reset()
         {
+            ResetComponents();
             StaticData = (S)EntityStaticData.GetValue(gameObject.name);
-            ResetData();
-            SetComponents();
+            ResetDynamicData();
         }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
-        public virtual void SetData(D data)
+        public virtual void SetDynamicData(D data)
         {
             if (!StaticData)
             {
@@ -93,21 +91,11 @@ namespace E.Tool
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        protected virtual void ResetData()
-        {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
-
-            DynamicData.Name = StaticData.Name;
-            DynamicData.Invincible = StaticData.Invincible;
-        }
+        public abstract void ResetDynamicData();
         /// <summary>
         /// 设置组件
         /// </summary>
-        protected virtual void SetComponents()
+        public virtual void ResetComponents()
         {
             //自身组件
             Collider = GetComponent<Collider2D>();

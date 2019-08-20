@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class StoryManager : SingletonPattern<GameManager>
+public class StoryManager : SingletonPattern<StoryManager>
 {
 
 }

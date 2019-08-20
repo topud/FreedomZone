@@ -19,7 +19,13 @@ namespace E.Tool
         private void Update()
         {
             //Ä¬ÈÏ¸úËæÍæ¼Ò
-            if (!target) target = Player.Myself.transform;
+            if (!target)
+            {
+                if (Player.Myself)
+                {
+                    target = Player.Myself.transform;
+                }
+            }
         }
         [ExecuteInEditMode]
         private void FixedUpdate()

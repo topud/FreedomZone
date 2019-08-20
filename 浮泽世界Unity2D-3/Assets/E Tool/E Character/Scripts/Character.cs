@@ -44,12 +44,12 @@ namespace E.Tool
         protected override void OnEnable()
         {
             base.OnEnable();
-            
-            Rigidbody.mass = StaticData.Weight;
         }
         protected override void Start()
         {
             base.Start();
+            
+            Rigidbody.mass = StaticData.Weight;
         }
         protected override void Update()
         {
@@ -92,49 +92,57 @@ namespace E.Tool
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
-        public override void SetData(CharacterDynamicData data)
+        public override void SetDynamicData(CharacterDynamicData data)
         {
-            base.SetData(data);
+            base.SetDynamicData(data);
         }
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        protected override void ResetData()
+        public override void ResetDynamicData()
         {
-            base.ResetData();
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据不存在，无法设置数据");
+                return;
+            }
 
-            if (!StaticData) return;
+            DynamicData = new CharacterDynamicData
+            {
+                Name = StaticData.Name,
+                Invincible = StaticData.Invincible,
 
-            DynamicData.MaxHealth = StaticData.MaxHealth;
-            DynamicData.MaxMind = StaticData.MaxMind;
-            DynamicData.MaxPower = StaticData.MaxPower;
-            DynamicData.Health = StaticData.MaxHealth;
-            DynamicData.Mind = StaticData.MaxMind;
-            DynamicData.Power = StaticData.MaxPower;
-            DynamicData.HealthRecoveryCoefficient = StaticData.HealthRecoveryCoefficient;
-            DynamicData.MindRecoveryCoefficient = StaticData.MindRecoveryCoefficient;
-            DynamicData.PowerRecoveryCoefficient = StaticData.PowerRecoveryCoefficient;
-            DynamicData.MaxSpeed = StaticData.MaxSpeed;
-            DynamicData.BaseSpeed = StaticData.BaseSpeed;
-            DynamicData.Intelligence = StaticData.Intelligence;
-            DynamicData.Strength = StaticData.Strength;
-            DynamicData.Defense = StaticData.Defense;
+                MaxHealth = StaticData.MaxHealth,
+                MaxMind = StaticData.MaxMind,
+                MaxPower = StaticData.MaxPower,
+                Health = StaticData.MaxHealth,
+                Mind = StaticData.MaxMind,
+                Power = StaticData.MaxPower,
+                HealthRecoveryCoefficient = StaticData.HealthRecoveryCoefficient,
+                MindRecoveryCoefficient = StaticData.MindRecoveryCoefficient,
+                PowerRecoveryCoefficient = StaticData.PowerRecoveryCoefficient,
+                MaxSpeed = StaticData.MaxSpeed,
+                BaseSpeed = StaticData.BaseSpeed,
+                Intelligence = StaticData.Intelligence,
+                Strength = StaticData.Strength,
+                Defense = StaticData.Defense,
 
-            DynamicData.RMB = StaticData.RMB;
-            DynamicData.FZB = StaticData.FZB;
-            DynamicData.Items = new List<Item>(StaticData.Items);
-            DynamicData.Skills = new List<Skill>(StaticData.Skills);
-            DynamicData.Buffs = StaticData.Buffs;
-            DynamicData.AcceptedQuests = StaticData.AcceptedQuests;
-            DynamicData.PublishedQuests = StaticData.PublishedQuests;
-            DynamicData.Relationships = StaticData.Relationships;
+                RMB = StaticData.RMB,
+                FZB = StaticData.FZB,
+                Items = new List<Item>(StaticData.Items),
+                Skills = new List<Skill>(StaticData.Skills),
+                Buffs = StaticData.Buffs,
+                AcceptedQuests = StaticData.AcceptedQuests,
+                PublishedQuests = StaticData.PublishedQuests,
+                Relationships = StaticData.Relationships
+            };
         }
         /// <summary>
         /// 设置组件
         /// </summary>
-        protected override void SetComponents()
+        public override void ResetComponents()
         {
-            base.SetComponents();
+            base.ResetComponents();
         }
 
         /// <summary>

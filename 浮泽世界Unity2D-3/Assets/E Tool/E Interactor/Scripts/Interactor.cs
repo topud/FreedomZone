@@ -14,14 +14,14 @@ namespace E.Tool
         protected override void OnEnable()
         {
             base.OnEnable();
-            
-            gameObject.layer = StaticData.Movable ? 9 : 10;
-            Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
-            Rigidbody.mass = StaticData.Weight;
         }
         protected override void Start()
         {
             base.Start();
+            
+            gameObject.layer = StaticData.Movable ? 9 : 10;
+            Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
+            Rigidbody.mass = StaticData.Weight;
         }
         protected override void Update()
         {
@@ -52,30 +52,37 @@ namespace E.Tool
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
         /// <param name="data"></param>
-        public override void SetData(InteractorDynamicData data)
+        public override void SetDynamicData(InteractorDynamicData data)
         {
-            base.SetData(data);
+            base.SetDynamicData(data);
         }
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        protected override void ResetData()
+        public override void ResetDynamicData()
         {
-            base.ResetData();
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据不存在，无法设置数据");
+                return;
+            }
+            DynamicData = new InteractorDynamicData
+            {
+                Name = StaticData.Name,
+                Invincible = StaticData.Invincible,
 
-            if (!StaticData) return;
-
-            DynamicData.Stack = StaticData.Stack;
-            DynamicData.MaxHealth = StaticData.MaxHealth;
-            DynamicData.Health = StaticData.MaxHealth;
-            DynamicData.Items = StaticData.Items;
+                Stack = StaticData.Stack,
+                MaxHealth = StaticData.MaxHealth,
+                Health = StaticData.MaxHealth,
+                Items = StaticData.Items
+            };
         }
         /// <summary>
         /// 设置组件
         /// </summary>
-        protected override void SetComponents()
+        public override void ResetComponents()
         {
-            base.SetComponents();
+            base.ResetComponents();
         }
 
         /// <summary>

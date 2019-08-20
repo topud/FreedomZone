@@ -10,8 +10,15 @@ namespace E.Tool
         private void Update()
         {
             //默认跟随玩家
-            if (!target) target = Player.Myself.transform;
+            if (!target)
+            {
+                if (Player.Myself)
+                {
+                    target = Player.Myself.transform;
+                }
+            }
         }
+
         private void FixedUpdate()
         {
             if (!target) return;

@@ -38,10 +38,7 @@ namespace E.Tool
         {
             get
             {
-                if (dictionary == null)
-                {
-                    LoadDictionary();
-                }
+                LoadDictionary();
                 return dictionary;
             }
         }
@@ -67,15 +64,7 @@ namespace E.Tool
                 }
             }
         }
-        /// <summary>
-        /// 重新获取资源字典
-        /// </summary>
-        /// <returns></returns>
-        public static Dictionary<int, T> ReGetDictionary()
-        {
-            LoadDictionary();
-            return Dictionary;
-        }
+        
         /// <summary>
         /// 获取资源字典指定名称的值
         /// </summary>
@@ -98,14 +87,6 @@ namespace E.Tool
         public static List<T> GetValues()
         {
             return Dictionary.Values.ToList();
-        }
-        /// <summary>
-        /// 重新获取资源字典的值
-        /// </summary>
-        /// <returns></returns>
-        public static List<T> ReGetValues()
-        {
-            return ReGetDictionary().Values.ToList();
         }
     }
 }

@@ -35,7 +35,13 @@ public class GameManager : SingletonPattern<GameManager>
                 }
                 break;
             case GameState.Game:
-                if (Input.GetKeyUp(KeyCode.LeftBracket))
+                if (Input.GetKeyUp(KeyCode.KeypadEnter))
+                {
+                    Player player = SpawnManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
+                    Npc npc = SpawnManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
+                    npc.FollowTarget = player.transform;
+                }
+                else if(Input.GetKeyUp(KeyCode.LeftBracket))
                 {
                     SaveManager.Singleton.SaveGame();
                 }

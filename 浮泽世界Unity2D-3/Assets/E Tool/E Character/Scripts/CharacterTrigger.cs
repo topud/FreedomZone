@@ -7,11 +7,14 @@ namespace E.Tool
 {
     public class CharacterTrigger : MonoBehaviour
     {
-        [ReadOnly, SerializeField] private Character character;
+        private Character character;
 
-        private void Awake()
+        private void Update()
         {
-            character = transform.GetComponentInParent<Character>();
+            if (!character)
+            {
+                character = transform.GetComponentInParent<Character>();
+            }
         }
         private void OnTriggerEnter2D(Collider2D col)
         {

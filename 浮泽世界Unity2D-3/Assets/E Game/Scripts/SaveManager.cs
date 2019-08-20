@@ -59,7 +59,7 @@ public class SaveManager : SingletonPattern<SaveManager>
             string json = File.ReadAllText(CurrentSaveFilePath);
             Save save = JsonUtility.FromJson<Save>(json);
 
-            Player.Myself.SetData(save.PlayerDynamicData);
+            Player.Myself.SetDynamicData(save.PlayerDynamicData);
             Player.Myself.transform.position = save.PlayerPosition;
 
             Debug.Log("读档成功：" + CurrentSaveFilePath);

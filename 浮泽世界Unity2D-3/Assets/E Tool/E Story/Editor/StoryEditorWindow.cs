@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using E.Tool;
+using System.Linq;
 
 namespace E.Tool
 {
@@ -201,7 +202,7 @@ namespace E.Tool
         /// </summary>
         private static void RefreshStorys()
         {
-            storys = Story.ReGetValues();
+            storys = Story.Dictionary.Values.ToList();
         }
         /// <summary>
         /// 刷新鼠标坐标

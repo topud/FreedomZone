@@ -6,6 +6,7 @@ using E.Tool;
 
 public class GameManager : SingletonPattern<GameManager>
 {
+    [Header("状态")]
     public GameState GameState = GameState.Lobby;
     public UIAndIOState UIAndIOState = UIAndIOState.ShowUIAndUseIO;
 
@@ -20,6 +21,10 @@ public class GameManager : SingletonPattern<GameManager>
         {
             Destroy(gameObject);
         }
+    }
+    private void Start()
+    {
+        
     }
     private void Update()
     {
@@ -56,6 +61,11 @@ public class GameManager : SingletonPattern<GameManager>
 # endif
     }
 
+    /// <summary>
+    /// 加载场景
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="useLoadUI"></param>
     public void LoadScene(string name, bool useLoadUI = false)
     {
         if (SceneManager.GetSceneByName(name) == null)
@@ -64,9 +74,12 @@ public class GameManager : SingletonPattern<GameManager>
             return;
         }
         
-        UIManager.Singleton.LoadUI.SetActive(useLoadUI);
+        //UIManager.Singleton.LoadUI.SetActive(useLoadUI);
         SceneManager.LoadScene(name);
     }
+    /// <summary>
+    /// 更新游戏状态
+    /// </summary>
     private void UpdateGameState()
     {
         string sceneName = SceneManager.GetActiveScene().name;

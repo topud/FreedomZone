@@ -24,7 +24,7 @@ public class GameManager : SingletonPattern<GameManager>
     }
     private void Start()
     {
-        
+
     }
     private void Update()
     {
@@ -46,7 +46,7 @@ public class GameManager : SingletonPattern<GameManager>
                     Npc npc = SpawnManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
                     npc.FollowTarget = player.transform;
                 }
-                else if(Input.GetKeyUp(KeyCode.LeftBracket))
+                else if (Input.GetKeyUp(KeyCode.LeftBracket))
                 {
                     SaveManager.Singleton.SaveGame();
                 }
@@ -73,7 +73,7 @@ public class GameManager : SingletonPattern<GameManager>
             Debug.LogError("请求加载的场景不存在");
             return;
         }
-        
+
         //UIManager.Singleton.LoadUI.SetActive(useLoadUI);
         SceneManager.LoadScene(name);
     }
@@ -91,6 +91,20 @@ public class GameManager : SingletonPattern<GameManager>
         {
             GameState = GameState.Game;
         }
+    }
+
+
+    public void StartNewSave()
+    {
+    }
+    public void ContinueLastSave()
+    {
+    }
+    public void ShowSetting()
+    {
+    }
+    public void ShowHelp()
+    {
     }
 }
 

@@ -50,8 +50,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b674f01cf81d4cf4a8230e92c1d366ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GameState: 0
-  UIAndIOState: 0
+  IsInLobby: 1
+  IsShowUIInGame: 1
+  IsAcceptInputInGame: 1
 --- !u!114 &5309478699992813278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -88,9 +89,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a18eca1481ff366448638a81fabc8cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SaveFolder: 
-  CurrentSaveFilePath: /1.save
   CurrentSaveFile: 1.save
+  SaveFolder: "C:/Users/Administrator/AppData/LocalLow/\u6D6E\u6CFD/\u6D6E\u6CFD\u4E16\u754C"
+  CurrentSaveFilePath: "C:/Users/Administrator/AppData/LocalLow/\u6D6E\u6CFD/\u6D6E\u6CFD\u4E16\u754C/1.save"
 --- !u!114 &5309478699992813276
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -103,7 +104,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 24d4ceba4450ab24bb33a475bbee57b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_IsShowVersionInfo: 0
+  IsShowVersionInfo: 1
 --- !u!114 &566097046285043382
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -504,7 +505,7 @@ PrefabInstance:
     - target: {fileID: 3135017763232818071, guid: ead3f7d736bf3ac499cee1ad32bef85d,
         type: 3}
       propertyPath: orthographic size
-      value: 4.935
+      value: 0.115
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ead3f7d736bf3ac499cee1ad32bef85d, type: 3}

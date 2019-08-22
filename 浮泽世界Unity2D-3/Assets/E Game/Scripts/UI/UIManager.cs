@@ -33,157 +33,141 @@ namespace E.Tool
         }
         private void Update()
         {
-            switch (GameManager.Singleton.UIAndIOState)
+            if (GameManager.Singleton.IsInLobby)
             {
-                case UIAndIOState.ShowUIAndUseIO:
-                    break;
-                case UIAndIOState.ShowUIAndUnuseIO:
-                    break;
-                case UIAndIOState.HideUIAndUseIO:
-                    break;
-                case UIAndIOState.HideUIAndUnuseIO:
-                    break;
-                default:
-                    break;
+                if (!LobbyUI.gameObject.activeInHierarchy)
+                {
+                    LobbyUI.gameObject.SetActive(true);
+                }
+                if (GameUI.gameObject.activeInHierarchy)
+                {
+                    GameUI.gameObject.SetActive(false);
+                }
             }
-            switch (GameManager.Singleton.GameState)
+            else
             {
-                case GameState.Lobby:
-                    if (!LobbyUI.gameObject.activeInHierarchy)
-                    {
-                        LobbyUI.gameObject.SetActive(true);
-                    }
-                    if (GameUI.gameObject.activeInHierarchy)
-                    {
-                        GameUI.gameObject.SetActive(false);
-                    }
-                    break;
-                case GameState.Game:
-                    if (LobbyUI.gameObject.activeInHierarchy)
-                    {
-                        LobbyUI.gameObject.SetActive(false);
-                    }
-                    if (!GameUI.gameObject.activeInHierarchy)
-                    {
-                        GameUI.gameObject.SetActive(true);
-                    }
-                    
-                    if (Input.GetKeyUp(KeyCode.I))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
-                        {
-                            if (!UICharacterDetail.TogInfo.isOn)
-                            {
-                                UICharacterDetail.TogInfo.isOn = true;
+                if (LobbyUI.gameObject.activeInHierarchy)
+                {
+                    LobbyUI.gameObject.SetActive(false);
+                }
+                if (!GameUI.gameObject.activeInHierarchy)
+                {
+                    GameUI.gameObject.SetActive(true);
+                }
 
-                                UICharacterDetail.TogGroup.NotifyToggleOn(UICharacterDetail.TogInfo);
-                            }
-                            else
-                            {
-                                UICharacterDetail.gameObject.SetActive(false);
-                            }
-                        }
-                        else
+                if (Input.GetKeyUp(KeyCode.I))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        if (!UICharacterDetail.TogInfo.isOn)
                         {
-                            UICharacterDetail.gameObject.SetActive(true);
                             UICharacterDetail.TogInfo.isOn = true;
-                        }
-                    }
-                    else if (Input.GetKeyUp(KeyCode.O))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
-                        {
-                            if (!UICharacterDetail.TogInventory.isOn)
-                            {
-                                UICharacterDetail.TogInventory.isOn = true;
-                            }
-                            else
-                            {
-                                UICharacterDetail.gameObject.SetActive(false);
-                            }
+
+                            UICharacterDetail.TogGroup.NotifyToggleOn(UICharacterDetail.TogInfo);
                         }
                         else
-                        {
-                            UICharacterDetail.gameObject.SetActive(true);
-                            UICharacterDetail.TogInventory.isOn = true;
-                        }
-                    }
-                    else if (Input.GetKeyUp(KeyCode.P))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
-                        {
-                            if (!UICharacterDetail.TogEquipment.isOn)
-                            {
-                                UICharacterDetail.TogEquipment.isOn = true;
-                            }
-                            else
-                            {
-                                UICharacterDetail.gameObject.SetActive(false);
-                            }
-                        }
-                        else
-                        {
-                            UICharacterDetail.gameObject.SetActive(true);
-                            UICharacterDetail.TogEquipment.isOn = true;
-                        }
-                    }
-                    else if (Input.GetKeyUp(KeyCode.K))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
-                        {
-                            if (!UICharacterDetail.TogSkill.isOn)
-                            {
-                                UICharacterDetail.TogSkill.isOn = true;
-                            }
-                            else
-                            {
-                                UICharacterDetail.gameObject.SetActive(false);
-                            }
-                        }
-                        else
-                        {
-                            UICharacterDetail.gameObject.SetActive(true);
-                            UICharacterDetail.TogSkill.isOn = true;
-                        }
-                    }
-                    else if (Input.GetKeyUp(KeyCode.L))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
-                        {
-                            if (!UICharacterDetail.TogQuest.isOn)
-                            {
-                                UICharacterDetail.TogQuest.isOn = true;
-                            }
-                            else
-                            {
-                                UICharacterDetail.gameObject.SetActive(false);
-                            }
-                        }
-                        else
-                        {
-                            UICharacterDetail.gameObject.SetActive(true);
-                            UICharacterDetail.TogQuest.isOn = true;
-                        }
-                    }
-                    else if (Input.GetKeyUp(KeyCode.Escape))
-                    {
-                        if (UICharacterDetail.gameObject.activeInHierarchy)
                         {
                             UICharacterDetail.gameObject.SetActive(false);
                         }
-                        if (UISetting.gameObject.activeInHierarchy)
-                        {
-                            UISetting.gameObject.SetActive(false);
-                        }
-                        if (UISave.gameObject.activeInHierarchy)
-                        {
-                            UISave.gameObject.SetActive(false);
-                        }
-                        UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
                     }
-                    break;
-                default:
-                    break;
+                    else
+                    {
+                        UICharacterDetail.gameObject.SetActive(true);
+                        UICharacterDetail.TogInfo.isOn = true;
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.O))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        if (!UICharacterDetail.TogInventory.isOn)
+                        {
+                            UICharacterDetail.TogInventory.isOn = true;
+                        }
+                        else
+                        {
+                            UICharacterDetail.gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        UICharacterDetail.gameObject.SetActive(true);
+                        UICharacterDetail.TogInventory.isOn = true;
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.P))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        if (!UICharacterDetail.TogEquipment.isOn)
+                        {
+                            UICharacterDetail.TogEquipment.isOn = true;
+                        }
+                        else
+                        {
+                            UICharacterDetail.gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        UICharacterDetail.gameObject.SetActive(true);
+                        UICharacterDetail.TogEquipment.isOn = true;
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.K))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        if (!UICharacterDetail.TogSkill.isOn)
+                        {
+                            UICharacterDetail.TogSkill.isOn = true;
+                        }
+                        else
+                        {
+                            UICharacterDetail.gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        UICharacterDetail.gameObject.SetActive(true);
+                        UICharacterDetail.TogSkill.isOn = true;
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.L))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        if (!UICharacterDetail.TogQuest.isOn)
+                        {
+                            UICharacterDetail.TogQuest.isOn = true;
+                        }
+                        else
+                        {
+                            UICharacterDetail.gameObject.SetActive(false);
+                        }
+                    }
+                    else
+                    {
+                        UICharacterDetail.gameObject.SetActive(true);
+                        UICharacterDetail.TogQuest.isOn = true;
+                    }
+                }
+                else if (Input.GetKeyUp(KeyCode.Escape))
+                {
+                    if (UICharacterDetail.gameObject.activeInHierarchy)
+                    {
+                        UICharacterDetail.gameObject.SetActive(false);
+                    }
+                    if (UISetting.gameObject.activeInHierarchy)
+                    {
+                        UISetting.gameObject.SetActive(false);
+                    }
+                    if (UISave.gameObject.activeInHierarchy)
+                    {
+                        UISave.gameObject.SetActive(false);
+                    }
+                    UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
+                }
             }
         }
         private void Reset()

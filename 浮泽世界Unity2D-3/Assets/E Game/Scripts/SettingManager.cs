@@ -1,10 +1,4 @@
-// ========================================================
-// 作者：E Star
-// 创建时间：2019-01-27 01:46:58
-// 当前版本：1.0
-// 作用描述：
-// 挂载目标：
-// ========================================================
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,14 +6,25 @@ using E.Tool;
 
 public class SettingManager : SingletonPattern<SettingManager>
 {
-    [SerializeField] private bool m_IsShowVersionInfo;
+    public bool IsShowVersionInfo = true;
+    public bool IsFullScreen = true;
 
-
-    private void Start()
+    private void OnEnable()
     {
-        //PlayerPrefs.SetInt("music", 1);
+        if (PlayerPrefs.HasKey("IsShowVersionInfo")) IsShowVersionInfo = PlayerPrefs.GetInt("IsShowVersionInfo") == 1 ? true : false;
+        else IsShowVersionInfo = true;
+        if (PlayerPrefs.HasKey("IsFullScreen")) IsFullScreen = PlayerPrefs.GetInt("IsFullScreen") == 1 ? true : false;
+        else IsFullScreen = true;
     }
-    private void Update()
+    private void OnDisable()
     {
+        SaveSetting();
+    }
+
+    public void SaveSetting()
+    {
+        PlayerPrefs.SetInt("IsShowVersionInfo", IsShowVersionInfo ? 1 : 0);
+        PlayerPrefs.SetInt("IsFullScreen", IsFullScreen ? 1 : 0);
+        PlayerPrefs.Save();
     }
 }

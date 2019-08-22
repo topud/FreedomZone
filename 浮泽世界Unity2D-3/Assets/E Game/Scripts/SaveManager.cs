@@ -1,10 +1,3 @@
-// ========================================================
-// 作者：E Star
-// 创建时间：2019-01-27 01:41:08
-// 当前版本：1.0
-// 作用描述：
-// 挂载目标：
-// ========================================================
 using System;
 using System.IO;
 using System.Collections;
@@ -17,12 +10,15 @@ using E.Tool;
 
 public class SaveManager : SingletonPattern<SaveManager>
 {
-    [SerializeField, ReadOnly] private string SaveFolder;
-    [SerializeField, ReadOnly] string CurrentSaveFilePath;
     public string CurrentSaveFile = "1.save";
-
-
+    [SerializeField, ReadOnly] private string SaveFolder;
+    [SerializeField, ReadOnly] private string CurrentSaveFilePath;
+    
     private void Start()
+    {
+        Reset();
+    }
+    private void Reset()
     {
         SaveFolder = Application.persistentDataPath;
         CurrentSaveFilePath = SaveFolder + "/" + CurrentSaveFile;

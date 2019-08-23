@@ -13,21 +13,89 @@ public class SaveManager : SingletonPattern<SaveManager>
     public string CurrentSaveFile = "1.save";
     [SerializeField, ReadOnly] private string SaveFolder;
     [SerializeField, ReadOnly] private string CurrentSaveFilePath;
-    
+
+    private void OnEnable()
+    {
+        SaveFolder = Application.persistentDataPath;
+    }
     private void Start()
     {
-        Reset();
+        //选择当前存档文件
+        string lastSaveFile = "";
+        if (PlayerPrefs.HasKey("CurrentSaveFile")) lastSaveFile = PlayerPrefs.GetString("CurrentSaveFile");
+        if (!IsSaveFileExists(lastSaveFile))
+        {
+            List<string> ss = GetSaveFiles();
+            if (ss.Count > 0)
+            {
+                lastSaveFile = ss[0];
+            }
+            else
+            {
+                lastSaveFile = "1.save";
+            }
+        }
+        CurrentSaveFile = lastSaveFile;
+        OnValidate();
     }
     private void Reset()
     {
+        CurrentSaveFile = "1.save";
         SaveFolder = Application.persistentDataPath;
-        CurrentSaveFilePath = SaveFolder + "/" + CurrentSaveFile;
+        OnValidate();
     }
     private void OnValidate()
     {
         CurrentSaveFilePath = SaveFolder + "/" + CurrentSaveFile;
     }
 
+    /// <summary>
+    /// 获取所有存档的文件名
+    /// </summary>
+    /// <returns></returns>
+    public List<string> GetSaveFiles()
+    {
+        List<string> saves = new List<string>();
+
+        //设置当前存档
+        string fullPath = SaveFolder + "/";
+        if (Directory.Exists(fullPath))
+        {
+            //获取指定路径下面的所有资源文件
+            DirectoryInfo direction = new DirectoryInfo(fullPath);
+            FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+            for (int i = 0; i < files.Length; i++)
+            {
+                if (files[i].Name.EndsWith(".save"))
+                {
+                    saves.Add(files[i].Name);
+                }
+            }
+            Debug.Log(string.Format("已检测到 {0} 个存档", saves.Count));
+        }
+        return saves;
+    }
+    /// <summary>
+    /// 检测存档是否存在
+    /// </summary>
+    /// <param name="save"></param>
+    /// <returns></returns>
+    public bool IsSaveFileExists(string save)
+    {
+        foreach (string item in GetSaveFiles())
+        {
+            if (item == save)
+            {
+                return true;
+            }
+        }
+        Debug.Log(save + " 存档不存在");
+        return false;
+    }
+
+    /// <summary>
+    /// 保存游戏
+    /// </summary>
     public void SaveGame()
     {
         if (!Directory.Exists(SaveFolder))
@@ -48,6 +116,9 @@ public class SaveManager : SingletonPattern<SaveManager>
         Debug.Log("存档成功：" + CurrentSaveFilePath + " 时间：" + save.Time);
         Debug.Log("存档内容：" + json);
     }
+    /// <summary>
+    /// 载入游戏
+    /// </summary>
     public void LoadGame()
     {
         if (File.Exists(CurrentSaveFilePath))

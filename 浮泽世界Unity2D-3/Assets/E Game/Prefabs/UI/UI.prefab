@@ -2616,10 +2616,10 @@ MonoBehaviour:
   GameUI: {fileID: 822305136668034079}
   PublicUI: {fileID: 4761403269734860811}
   UILobbyMenu: {fileID: 7097780759051060784}
+  UIGameMenu: {fileID: 8594209139089750906}
   UICharacterStatus: {fileID: 772433649347161727}
   UICharacterDetail: {fileID: 5539153505253451665}
   UIMinimap: {fileID: 7905510332653039671}
-  UIGameMenu: {fileID: 8594209139089750906}
   UIPopup: {fileID: 9006424937630272720}
   UISave: {fileID: 5473759496017577288}
   UISetting: {fileID: 6079596764246600779}
@@ -15604,7 +15604,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
@@ -16278,7 +16278,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
@@ -16701,7 +16701,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
@@ -18504,7 +18504,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
@@ -18654,7 +18654,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
@@ -19353,7 +19353,7 @@ PrefabInstance:
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6281105993229653749, guid: 3eb4ad633f04af44a8f3fd0706213889,
         type: 3}

@@ -23,9 +23,12 @@ public class GameManager : SingletonPattern<GameManager>
             Destroy(gameObject);
         }
     }
+    private void OnEnable()
+    {
+        IsInLobby = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
+    }
     private void Start()
     {
-
     }
     private void Update()
     {
@@ -77,10 +80,10 @@ public class GameManager : SingletonPattern<GameManager>
     }
 
 
-    public void StartNewSave()
+    public void StartNewGame()
     {
     }
-    public void ContinueLastSave()
+    public void ContinueLastGame()
     {
     }
     public void ShowSetting()

@@ -14,10 +14,12 @@ namespace E.Tool
         public GameObject PublicUI;
         [Space(5)]
         public UILobbyMenu UILobbyMenu;
+        [Space(5)]
+        public UIGameMenu UIGameMenu;
         public UICharacterStatus UICharacterStatus;
         public UICharacterDetail UICharacterDetail;
         public UIMinimap UIMinimap;
-        public UIGameMenu UIGameMenu;
+        [Space(5)]
         public UIPopup UIPopup;
         public UISave UISave;
         public UISetting UISetting;
@@ -28,6 +30,21 @@ namespace E.Tool
         }
         private void Start()
         {
+            if (GameManager.Singleton.IsInLobby)
+            {
+                LobbyUI.SetActive(true);
+                LoadUI.SetActive(false);
+                GameUI.SetActive(false);
+                PublicUI.SetActive(true);
+            }
+            else
+            {
+                LobbyUI.SetActive(false);
+                LoadUI.SetActive(false);
+                GameUI.SetActive(true);
+                PublicUI.SetActive(true);
+            }
+
             UICharacterDetail.gameObject.SetActive(false);
             UIMinimap.gameObject.SetActive(false);
         }
@@ -35,25 +52,17 @@ namespace E.Tool
         {
             if (GameManager.Singleton.IsInLobby)
             {
-                if (!LobbyUI.gameObject.activeInHierarchy)
-                {
-                    LobbyUI.gameObject.SetActive(true);
-                }
-                if (GameUI.gameObject.activeInHierarchy)
-                {
-                    GameUI.gameObject.SetActive(false);
-                }
+                if (!LobbyUI.gameObject.activeInHierarchy) LobbyUI.gameObject.SetActive(true);
+                if (LoadUI.gameObject.activeInHierarchy) LoadUI.gameObject.SetActive(false);
+                if (GameUI.gameObject.activeInHierarchy) GameUI.gameObject.SetActive(false);
+                if (!PublicUI.gameObject.activeInHierarchy) PublicUI.gameObject.SetActive(true);
             }
             else
             {
-                if (LobbyUI.gameObject.activeInHierarchy)
-                {
-                    LobbyUI.gameObject.SetActive(false);
-                }
-                if (!GameUI.gameObject.activeInHierarchy)
-                {
-                    GameUI.gameObject.SetActive(true);
-                }
+                if (LobbyUI.gameObject.activeInHierarchy) LobbyUI.gameObject.SetActive(false);
+                if (LoadUI.gameObject.activeInHierarchy) LoadUI.gameObject.SetActive(false);
+                if (!GameUI.gameObject.activeInHierarchy)GameUI.gameObject.SetActive(true);
+                if (!PublicUI.gameObject.activeInHierarchy) PublicUI.gameObject.SetActive(true);
 
                 if (Input.GetKeyUp(KeyCode.I))
                 {

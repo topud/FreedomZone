@@ -53,7 +53,7 @@ namespace E.Tool
         /// </summary>
         /// <param name="array">数组</param>
         /// <returns>最小值的索引</returns>
-        public static int Min(List<float> array)
+        public static int IndexMin(List<float> array)
         {
             float value = 0;
             int index = 0;
@@ -63,6 +63,35 @@ namespace E.Tool
                 if (hasValue)
                 {
                     if (array[i] < value)
+                    {
+                        value = array[i];
+                        index = i;
+                    }
+                }
+                else
+                {
+                    value = array[i];
+                    index = i;
+                    hasValue = true;
+                }
+            }
+            return index;
+        }
+        /// <summary>
+        /// 获取时间数组中最新值的索引
+        /// </summary>
+        /// <param name="array">数组</param>
+        /// <returns>最新值的索引</returns>
+        public static int IndexLatest(List<DateTime> array)
+        {
+            DateTime value = DateTime.MinValue;
+            int index = 0;
+            bool hasValue = false;
+            for (int i = 0; i < array.Count; i++)
+            {
+                if (hasValue)
+                {
+                    if (array[i] > value)
                     {
                         value = array[i];
                         index = i;

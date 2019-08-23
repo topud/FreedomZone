@@ -10,55 +10,34 @@ using E.Tool;
 
 public class SaveManager : SingletonPattern<SaveManager>
 {
-    public string CurrentSaveFile = "1.save";
-    [SerializeField, ReadOnly] private string SaveFolder;
-    [SerializeField, ReadOnly] private string CurrentSaveFilePath;
-
-    private void OnEnable()
-    {
-        SaveFolder = Application.persistentDataPath;
-    }
+    [SerializeField, ReadOnly, Tooltip("存档文件名列表")] List<string> SaveFileNames = new List<string>();
     private void Start()
     {
-        //选择当前存档文件
-        string lastSaveFile = "";
-        if (PlayerPrefs.HasKey("CurrentSaveFile")) lastSaveFile = PlayerPrefs.GetString("CurrentSaveFile");
-        if (!IsSaveFileExists(lastSaveFile))
-        {
-            List<string> ss = GetSaveFiles();
-            if (ss.Count > 0)
-            {
-                lastSaveFile = ss[0];
-            }
-            else
-            {
-                lastSaveFile = "1.save";
-            }
-        }
-        CurrentSaveFile = lastSaveFile;
-        OnValidate();
+        Refresh();
     }
     private void Reset()
     {
-        CurrentSaveFile = "1.save";
-        SaveFolder = Application.persistentDataPath;
-        OnValidate();
+        Refresh();
     }
-    private void OnValidate()
+    private void Refresh()
     {
-        CurrentSaveFilePath = SaveFolder + "/" + CurrentSaveFile;
+        SaveFileNames.Clear();
+        foreach (FileInfo item in GetSaveFiles())
+        {
+            SaveFileNames.Add(item.Name);
+        }
     }
 
     /// <summary>
     /// 获取所有存档的文件名
     /// </summary>
     /// <returns></returns>
-    public List<string> GetSaveFiles()
+    public static List<FileInfo> GetSaveFiles(bool showLog = true)
     {
-        List<string> saves = new List<string>();
+        List<FileInfo> saveFiles = new List<FileInfo>();
 
         //设置当前存档
-        string fullPath = SaveFolder + "/";
+        string fullPath = Application.persistentDataPath;
         if (Directory.Exists(fullPath))
         {
             //获取指定路径下面的所有资源文件
@@ -68,41 +47,74 @@ public class SaveManager : SingletonPattern<SaveManager>
             {
                 if (files[i].Name.EndsWith(".save"))
                 {
-                    saves.Add(files[i].Name);
+                    saveFiles.Add(files[i]);
                 }
             }
-            Debug.Log(string.Format("已检测到 {0} 个存档", saves.Count));
+            if (showLog) Debug.Log(string.Format("已检测到 {0} 个存档", saveFiles.Count));
         }
-        return saves;
+        else
+        {
+            if (showLog) Debug.LogError("目录不存在 " + fullPath);
+        }
+        return saveFiles;
     }
     /// <summary>
-    /// 检测存档是否存在
+    /// 获取最近更改的存档文件
     /// </summary>
-    /// <param name="save"></param>
     /// <returns></returns>
-    public bool IsSaveFileExists(string save)
+    public static FileInfo GetLatestSaveFile()
     {
-        foreach (string item in GetSaveFiles())
+        List<FileInfo> saveFiles = GetSaveFiles();
+        if (saveFiles.Count > 0)
         {
-            if (item == save)
+            List<DateTime> times = new List<DateTime>();
+            for (int i = 0; i < saveFiles.Count; i++)
             {
-                return true;
+                times.Add(saveFiles[i].LastWriteTime);
             }
+            FileInfo fileInfo = saveFiles[Utility.IndexLatest(times)];
+            Debug.Log(string.Format("已获取存档 {0}", fileInfo.FullName));
+            return fileInfo;
         }
-        Debug.Log(save + " 存档不存在");
-        return false;
+        else
+        {
+            Debug.Log("未检测到任何存档");
+            return null;
+        }
     }
 
     /// <summary>
-    /// 保存游戏
+    /// 创建存档文件
     /// </summary>
-    public void SaveGame()
+    /// <returns></returns>
+    public static FileInfo CreateSaveFile()
     {
-        if (!Directory.Exists(SaveFolder))
-        {
-            Directory.CreateDirectory(SaveFolder);
-        }
-
+        List<FileInfo> fls = GetSaveFiles(false);
+        FileInfo fileInfo = new FileInfo(Application.persistentDataPath + "/" + fls.Count + ".save");
+        fileInfo.Create();
+        Debug.Log(string.Format("已创建存档文件 {0}", fileInfo.FullName));
+        Singleton.Refresh();
+        return fileInfo;
+    }
+    /// <summary>
+    /// 删除存档文件
+    /// </summary>
+    public static void RemoveSaveFile(FileInfo fileInfo)
+    {
+        fileInfo.Delete();
+        Singleton.Refresh();
+        Debug.Log(string.Format("已删除存档文件 {0}", fileInfo.FullName));
+    }
+    /// <summary>
+    /// 保存游戏到指定文件
+    /// </summary>
+    public static void SaveTo(FileInfo fileInfo)
+    {
+        //if (!Directory.Exists(Application.persistentDataPath))
+        //{
+        //    Directory.CreateDirectory(Application.persistentDataPath);
+        //}
+        if (!fileInfo.Exists) fileInfo.Create();
         Save save = new Save
         {
             Time = DateTime.Now,
@@ -110,32 +122,46 @@ public class SaveManager : SingletonPattern<SaveManager>
             PlayerPosition = Player.Myself.transform.position,
         };
         string json = JsonUtility.ToJson(save);
-        File.WriteAllText(CurrentSaveFilePath, json);
+        File.WriteAllText(fileInfo.FullName, json);
 
         AssetDatabase.Refresh();
-        Debug.Log("存档成功：" + CurrentSaveFilePath + " 时间：" + save.Time);
+        Debug.Log("存档成功：" + fileInfo.FullName + " 时间：" + save.Time);
         Debug.Log("存档内容：" + json);
     }
     /// <summary>
-    /// 载入游戏
+    /// 从指定文件载入游戏
     /// </summary>
-    public void LoadGame()
+    public static void LoadFrom(FileInfo fileInfo)
     {
-        if (File.Exists(CurrentSaveFilePath))
+        if (fileInfo.Exists)
         {
-            string json = File.ReadAllText(CurrentSaveFilePath);
+            string json = File.ReadAllText(fileInfo.FullName);
             Save save = JsonUtility.FromJson<Save>(json);
 
             Player.Myself.SetDynamicData(save.PlayerDynamicData);
             Player.Myself.transform.position = save.PlayerPosition;
 
-            Debug.Log("读档成功：" + CurrentSaveFilePath);
+            Debug.Log("读档成功：" + fileInfo.FullName);
             Debug.Log("读档内容" + json);
         }
         else
         {
-            Debug.Log("读档失败，存档文件不存在：" + CurrentSaveFilePath);
+            Debug.Log("读档失败，存档文件不存在：" + fileInfo.FullName);
         }
+    }
+    /// <summary>
+    /// 保存游戏
+    /// </summary>
+    public static void Save()
+    {
+        SaveTo(GetLatestSaveFile());
+    }
+    /// <summary>
+    /// 载入游戏
+    /// </summary>
+    public static void Load()
+    {
+        //LoadFrom();
     }
 }
 

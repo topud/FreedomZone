@@ -104,7 +104,7 @@ public class Player : Character
                 diss.Add(Vector2.Distance(NearbyItems[i].transform.position, transform.position));
             }
             //获取离自己最近的物品
-            nearistItem = NearbyItems[Utility.Min(diss)];
+            nearistItem = NearbyItems[Utility.IndexMin(diss)];
             foreach (Item it in NearbyItems)
             {
                 if (nearistItem != it)
@@ -124,7 +124,7 @@ public class Player : Character
                 diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
             }
             //获取离自己最近的角色
-            nearistCharacter = NearbyCharacters[Utility.Min(diss)];
+            nearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
             foreach (Character it in NearbyCharacters)
             {
                 if (nearistCharacter != it)

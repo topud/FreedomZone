@@ -41,6 +41,14 @@ public class GameManager : SingletonPattern<GameManager>
             {
                 LoadScene("Game", true);
             }
+            if (Input.GetKeyUp(KeyCode.LeftBracket))
+            {
+                SaveManager.CreateSaveFile();
+            }
+            else if (Input.GetKeyUp(KeyCode.RightBracket))
+            {
+                SaveManager.Save();
+            }
         }
         else
         {
@@ -52,11 +60,11 @@ public class GameManager : SingletonPattern<GameManager>
             }
             else if (Input.GetKeyUp(KeyCode.LeftBracket))
             {
-                SaveManager.Singleton.SaveGame();
+                SaveManager.CreateSaveFile();
             }
             else if (Input.GetKeyUp(KeyCode.RightBracket))
             {
-                SaveManager.Singleton.LoadGame();
+                //SaveManager.Singleton.LoadGame();
             }
         }
 # endif

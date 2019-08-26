@@ -5,5 +5,5 @@ using E.Tool;
 
 public class StoryManager : SingletonPattern<StoryManager>
 {
-
+    public NodeID NodeID;
 }

@@ -7,7 +7,8 @@ namespace E.Tool
 {
     public abstract class UISlotBase<T> : MonoBehaviour
     {
-        private T data;
+        [Header("数据")]
+        [SerializeField] private T data;
         public T Data { get => data; protected set => data = value; }
 
         public virtual void SetData(T data)

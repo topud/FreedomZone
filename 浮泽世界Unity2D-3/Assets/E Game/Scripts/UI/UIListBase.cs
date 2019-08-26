@@ -6,22 +6,26 @@ namespace E.Tool
 {
     public abstract class UIListBase<D, S> : UIBase where S : UISlotBase<D>
     {
-        [SerializeField] protected Transform content;
-        [SerializeField] protected S slotPrefab;
-        public List<D> Datas;
+        [Header("组件")]
+        [SerializeField] protected Transform tsfParent;
+        [SerializeField] protected S pfbSlot;
+
+        [Header("数据")]
+        public List<D> Datas = new List<D>();
 
         private void Start()
         {
-            slotPrefab.gameObject.SetActive(false);
+            pfbSlot.gameObject.SetActive(false);
             Refresh();
         }
+
         public virtual void Clear()
         {
             Datas.Clear();
-            for (int i = 0; i < content.childCount; i++)
+            for (int i = 0; i < tsfParent.childCount; i++)
             {
-                Transform transform = content.GetChild(i);
-                if (transform == slotPrefab.transform)
+                Transform transform = tsfParent.GetChild(i);
+                if (transform == pfbSlot.transform)
                 {
                     continue;
                 }
@@ -31,16 +35,13 @@ namespace E.Tool
                 }
             }
         }
-        public virtual void LoadData()
-        {
-            Datas = new List<D>();
-        }
+        public abstract void LoadData();
         public virtual void SetPanel()
         {
             if (Datas == null) return;
             foreach (D item in Datas)
             {
-                GameObject go = Instantiate(slotPrefab.gameObject, content);
+                GameObject go = Instantiate(pfbSlot.gameObject, tsfParent);
                 S slot = go.GetComponent<S>();
                 slot.SetData(item);
             }

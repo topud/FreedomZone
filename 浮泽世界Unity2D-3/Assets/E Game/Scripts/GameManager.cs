@@ -88,19 +88,4 @@ public class GameManager : SingletonPattern<GameManager>
     }
 
 
-    public void StartNewGame()
-    {
-    }
-    public void ContinueLastGame()
-    {
-    }
-    public void ShowSetting()
-    {
-    }
-    public void ShowHelp()
-    {
-    }
-    public void ShowSave()
-    {
-    }
 }

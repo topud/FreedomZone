@@ -8,15 +8,17 @@ namespace E.Tool
 {
     public class UIListSave : UIListBase<FileInfo, UISlotSave>
     {
+        public OpenMode OpenMode = OpenMode.Load;
+
         public override void LoadData()
         {
             //base.LoadData();
             Datas = SaveManager.GetSaveFiles();
         }
-
+        
         public void Create()
         {
-            SaveManager.CreateSaveFile();
+            SaveManager.SaveTo(SaveManager.CreateSaveFile());
             Refresh();
         }
         public void Load(UISlotSave slot)
@@ -26,10 +28,19 @@ namespace E.Tool
         public void Save(UISlotSave slot)
         {
             SaveManager.SaveTo(slot.Data);
+            Refresh();
         }
         public void Delete(UISlotSave slot)
         {
             SaveManager.RemoveSaveFile(slot.Data);
+            Refresh();
         }
+    }
+
+    public enum OpenMode
+    {
+        Save,
+        Load,
+        Both
     }
 }

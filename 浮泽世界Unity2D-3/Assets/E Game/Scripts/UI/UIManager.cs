@@ -20,9 +20,10 @@ namespace E.Tool
         public UICharacterDetail UICharacterDetail;
         public UIMinimap UIMinimap;
         [Space(5)]
-        public UIPopup UIPopup;
         public UIListSave UISave;
         public UISetting UISetting;
+        public UIHelp UIHelp;
+        public UIPopup UIPopup;
 
         protected override void Awake()
         {
@@ -36,6 +37,7 @@ namespace E.Tool
                 LoadUI.SetActive(false);
                 GameUI.SetActive(false);
                 PublicUI.SetActive(true);
+                UILobbyMenu.gameObject.SetActive(true);
             }
             else
             {
@@ -43,10 +45,15 @@ namespace E.Tool
                 LoadUI.SetActive(false);
                 GameUI.SetActive(true);
                 PublicUI.SetActive(true);
+                UILobbyMenu.gameObject.SetActive(false);
             }
-
+            UIGameMenu.gameObject.SetActive(false);
             UICharacterDetail.gameObject.SetActive(false);
             UIMinimap.gameObject.SetActive(false);
+            UISave.gameObject.SetActive(false);
+            UISetting.gameObject.SetActive(false);
+            UIHelp.gameObject.SetActive(false);
+            UIPopup.gameObject.SetActive(false);
         }
         private void Update()
         {
@@ -209,6 +216,42 @@ namespace E.Tool
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
+        }
+
+        public void StartNewGame()
+        {
+        }
+        public void ContinueLastGame()
+        {
+        }
+        public void ShowSetting()
+        {
+            UISetting.gameObject.SetActive(true);
+        }
+        public void HideSetting()
+        {
+            UISetting.gameObject.SetActive(false);
+        }
+        public void ShowHelp()
+        {
+            UIHelp.gameObject.SetActive(true);
+        }
+        public void HideHelp()
+        {
+            UIHelp.gameObject.SetActive(false);
+        }
+        public void ShowSave(int mode)
+        {
+            UISave.OpenMode = (OpenMode)mode;
+            UISave.gameObject.SetActive(true);
+        }
+        public void HideSave()
+        {
+            UISave.gameObject.SetActive(false);
+        }
+        public void Quit()
+        {
+            Application.Quit();
         }
     }
 }

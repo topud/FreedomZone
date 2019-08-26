@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotSkill : UISlotBase
+    public class UISlotSkill : UISlotBase<Skill>
     {
         public Image image;
         public Button button;
@@ -12,6 +12,12 @@ namespace E.Tool
         public Image cooldownCircle;
         public Text descriptionText;
         public Button upgradeButton;
+
+        public override void SetData(Skill data)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public override void UpdateData()
         {
             throw new System.NotImplementedException();

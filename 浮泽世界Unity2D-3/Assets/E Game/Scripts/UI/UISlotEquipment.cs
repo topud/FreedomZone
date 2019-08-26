@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotEquipment : UISlotBase
+    public class UISlotEquipment : UISlotBase<Item>
     {
         public Image imgIcon;
         public Image imgHealth;
 
         [SerializeField, ReadOnly] private Item item;
 
-        public void SetData(Item item)
+        public override void SetData(Item item)
         {
             this.item = item;
             UpdateData();

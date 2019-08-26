@@ -3,14 +3,14 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISubItemSlot : UISlotBase
+    public class UISubItemSlot : UISlotBase<Item>
     {
         public Image imgIcon;
         public Text txtName;
 
         [SerializeField, ReadOnly] private Item item;
 
-        public void SetData(Item item)
+        public override void SetData(Item item)
         {
             this.item = item;
             UpdateData();

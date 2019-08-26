@@ -21,7 +21,7 @@ namespace E.Tool
         public UIMinimap UIMinimap;
         [Space(5)]
         public UIPopup UIPopup;
-        public UISave UISave;
+        public UIListSave UISave;
         public UISetting UISetting;
 
         protected override void Awake()
@@ -188,7 +188,7 @@ namespace E.Tool
             UICharacterDetail = GetComponentInChildren<UICharacterDetail>(true);
             UIMinimap = GetComponentInChildren<UIMinimap>(true);
             UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
-            UISave = GetComponentInChildren<UISave>(true);
+            UISave = GetComponentInChildren<UIListSave>(true);
             UISetting = GetComponentInChildren<UISetting>(true);
             UIPopup = GetComponentInChildren<UIPopup>(true);
             UILobbyMenu = GetComponentInChildren<UILobbyMenu>(true);

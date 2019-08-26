@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotItem : UISlotBase
+    public class UISlotItem : UISlotBase<Item>
     {
         public Text txtName;
         public Image imgIcon;
@@ -13,11 +13,12 @@ namespace E.Tool
 
         [SerializeField, ReadOnly] private Item item;
 
-        public void SetData(Item item)
+        public override void SetData(Item item)
         {
             this.item = item;
             UpdateData();
         }
+
         public override void UpdateData()
         {
             if (item.StaticData.Accommodatable)

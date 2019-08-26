@@ -82,6 +82,29 @@ public class SaveManager : SingletonPattern<SaveManager>
             return null;
         }
     }
+    /// <summary>
+    /// 获取所有存档
+    /// </summary>
+    /// <returns></returns>
+    public static List<Save> GetSaves()
+    {
+        List<Save> saves = new List<Save>();
+        foreach (FileInfo item in GetSaveFiles(false))
+        {
+            saves.Add(GetSave(item));
+        }
+        return saves;
+    }
+    /// <summary>
+    /// 获取存档
+    /// </summary>
+    /// <param name="fileInfo"></param>
+    /// <returns></returns>
+    public static Save GetSave(FileInfo fileInfo)
+    {
+        string json = File.ReadAllText(fileInfo.FullName);
+        return JsonUtility.FromJson<Save>(json);
+    }
 
     /// <summary>
     /// 创建存档文件
@@ -105,6 +128,7 @@ public class SaveManager : SingletonPattern<SaveManager>
         Singleton.Refresh();
         Debug.Log(string.Format("已删除存档文件 {0}", fileInfo.FullName));
     }
+
     /// <summary>
     /// 保存游戏到指定文件
     /// </summary>
@@ -135,14 +159,13 @@ public class SaveManager : SingletonPattern<SaveManager>
     {
         if (fileInfo.Exists)
         {
-            string json = File.ReadAllText(fileInfo.FullName);
-            Save save = JsonUtility.FromJson<Save>(json);
-
+            //获取存档信息
+            Save save = GetSave(fileInfo);
+            //配置对应游戏对象
             Player.Myself.SetDynamicData(save.PlayerDynamicData);
             Player.Myself.transform.position = save.PlayerPosition;
 
             Debug.Log("读档成功：" + fileInfo.FullName);
-            Debug.Log("读档内容" + json);
         }
         else
         {
@@ -161,7 +184,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// </summary>
     public static void Load()
     {
-        //LoadFrom();
+        LoadFrom(GetLatestSaveFile());
     }
 }
 

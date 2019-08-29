@@ -23,7 +23,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     private void RefreshNames()
     {
         SaveFileNames.Clear();
-        foreach (FileInfo item in GetSaveFiles())
+        foreach (FileInfo item in GetSaveFiles(false))
         {
             SaveFileNames.Add(item.Name);
         }
@@ -65,7 +65,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// <returns></returns>
     public static FileInfo GetLatestSaveFile()
     {
-        List<FileInfo> saveFiles = GetSaveFiles();
+        List<FileInfo> saveFiles = GetSaveFiles(false);
         if (saveFiles.Count > 0)
         {
             List<DateTime> times = new List<DateTime>();
@@ -79,7 +79,7 @@ public class SaveManager : SingletonPattern<SaveManager>
         }
         else
         {
-            Debug.Log("未检测到任何存档");
+            Debug.Log("没有最近更改的存档");
             return null;
         }
     }
@@ -104,7 +104,8 @@ public class SaveManager : SingletonPattern<SaveManager>
     public static Save GetSave(FileInfo fileInfo)
     {
         string json = File.ReadAllText(fileInfo.FullName);
-        return JsonUtility.FromJson<Save>(json);
+        Save save = JsonUtility.FromJson<Save>(json);
+        return save;
     }
 
     /// <summary>
@@ -139,6 +140,13 @@ public class SaveManager : SingletonPattern<SaveManager>
         Debug.Log(string.Format("已删除存档文件 {0}", fileInfo.FullName));
     }
 
+    /// <summary>
+    /// 快捷保存游戏到最近存档
+    /// </summary>
+    public static void Save()
+    {
+        SaveTo(GetLatestSaveFile());
+    }
     /// <summary>
     /// 保存游戏到指定文件
     /// </summary>
@@ -190,14 +198,6 @@ public class SaveManager : SingletonPattern<SaveManager>
             Debug.LogError("读档失败，指定文件不存在：" + fileInfo.FullName);
         }
     }
-
-    /// <summary>
-    /// 快捷保存游戏到最近存档
-    /// </summary>
-    public static void Save()
-    {
-        SaveTo(GetLatestSaveFile());
-    }
     /// <summary>
     /// 快捷载入游戏从最近存档
     /// </summary>
@@ -205,12 +205,25 @@ public class SaveManager : SingletonPattern<SaveManager>
     {
         LoadFrom(GetLatestSaveFile());
     }
+
+    [MenuItem("Tools/E Save/打开存档文件夹")]
+    public static void OpenSaveFolder()
+    {
+        string path = Application.persistentDataPath;
+        if (!Directory.Exists(path))
+        {
+            Directory.CreateDirectory(path);
+        }
+        Debug.Log("打开存档文件夹 " + path);
+        path = path.Replace("/", "\\");
+        System.Diagnostics.Process.Start("explorer.exe", path);
+    }
 }
 
 [Serializable]
-public struct Save
+public class Save
 {
-    public NodeID NodeID;
-    public Vector2 PlayerPosition;
-    public CharacterDynamicData PlayerDynamicData;
+    public NodeID NodeID = new NodeID(0,0,0,0,0);
+    public Vector2 PlayerPosition = new Vector2(0,0);
+    public CharacterDynamicData PlayerDynamicData = new CharacterDynamicData();
 }

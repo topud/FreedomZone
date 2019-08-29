@@ -31,7 +31,7 @@ namespace E.Tool
                 }
                 else
                 {
-                    Destroy(transform);
+                    Destroy(transform.gameObject);
                 }
             }
         }
@@ -42,6 +42,7 @@ namespace E.Tool
             foreach (D item in Datas)
             {
                 GameObject go = Instantiate(pfbSlot.gameObject, tsfParent);
+                go.SetActive(true);
                 S slot = go.GetComponent<S>();
                 slot.SetData(item);
             }

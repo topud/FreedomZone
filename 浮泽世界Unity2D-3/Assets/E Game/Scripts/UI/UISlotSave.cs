@@ -21,6 +21,8 @@ namespace E.Tool
         public override void UpdateData()
         {
             Save save = SaveManager.GetSave(Data);
+            if (save == null) return;
+
             imgIcon = null;
             txtTitle.text = save.NodeID.ToString();
             txtTime.text = Data.LastWriteTime.ToLongDateString();

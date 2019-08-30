@@ -65,7 +65,7 @@ namespace E.Tool
             get => health;
             set
             {
-                if (!invincible)
+                if (!Invincible)
                 { health = Utility.Clamp(value, 0, MaxHealth); }
             }
         }

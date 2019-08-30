@@ -24,8 +24,9 @@ namespace E.Tool
             if (save == null) return;
 
             imgIcon = null;
-            txtTitle.text = save.NodeID.ToString();
-            txtTime.text = Data.LastWriteTime.ToLongDateString();
+            NodeID id = save.NodeID;
+            txtTitle.text =string.Format("{0}-{1}-{2}-{3}-{4}",id.Round,id.Chapter,id.Scene,id.Part,id.Branch);
+            txtTime.text = Data.LastWriteTime.ToString();
             
             switch (GetComponentInParent<UIListSave>().OpenMode)
             {

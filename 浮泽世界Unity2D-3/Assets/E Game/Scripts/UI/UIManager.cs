@@ -8,9 +8,6 @@ namespace E.Tool
     public class UIManager : SingletonPattern<UIManager>
     {
         [Header("组件")]
-        public GameObject LobbyUI;
-        public GameObject GameUI;
-        [Space(5)]
         public UILobbyMenu UILobbyMenu;
         [Space(5)]
         public UIGameMenu UIGameMenu;
@@ -18,7 +15,7 @@ namespace E.Tool
         public UICharacterDetail UICharacterDetail;
         public UIMinimap UIMinimap;
         [Space(5)]
-        public UIListSave UISave;
+        public UIListSave UIListSave;
         public UISetting UISetting;
         public UIHelp UIHelp;
         public UILoading UILoading;
@@ -32,36 +29,31 @@ namespace E.Tool
         {
             if (GameManager.Singleton.IsInLobby)
             {
-                LobbyUI.SetActive(true);
-                GameUI.SetActive(false);
                 UILobbyMenu.gameObject.SetActive(true);
+                UICharacterStatus.gameObject.SetActive(false);
             }
             else
             {
-                LobbyUI.SetActive(false);
-                GameUI.SetActive(true);
                 UILobbyMenu.gameObject.SetActive(false);
+                UICharacterStatus.gameObject.SetActive(true);
             }
             UIGameMenu.gameObject.SetActive(false);
             UICharacterDetail.gameObject.SetActive(false);
             UIMinimap.gameObject.SetActive(false);
-            UISave.gameObject.SetActive(false);
+
+            UIListSave.gameObject.SetActive(false);
             UISetting.gameObject.SetActive(false);
             UIHelp.gameObject.SetActive(false);
+            UILoading.gameObject.SetActive(false);
             UIPopup.gameObject.SetActive(false);
         }
         private void Update()
         {
             if (GameManager.Singleton.IsInLobby)
             {
-                if (!LobbyUI.gameObject.activeInHierarchy) LobbyUI.gameObject.SetActive(true);
-                if (GameUI.gameObject.activeInHierarchy) GameUI.gameObject.SetActive(false);
             }
             else
             {
-                if (LobbyUI.gameObject.activeInHierarchy) LobbyUI.gameObject.SetActive(false);
-                if (!GameUI.gameObject.activeInHierarchy)GameUI.gameObject.SetActive(true);
-
                 if (Input.GetKeyUp(KeyCode.I))
                 {
                     if (UICharacterDetail.gameObject.activeInHierarchy)
@@ -169,9 +161,9 @@ namespace E.Tool
                     {
                         UISetting.gameObject.SetActive(false);
                     }
-                    if (UISave.gameObject.activeInHierarchy)
+                    if (UIListSave.gameObject.activeInHierarchy)
                     {
-                        UISave.gameObject.SetActive(false);
+                        UIListSave.gameObject.SetActive(false);
                     }
                     UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
                 }
@@ -179,12 +171,10 @@ namespace E.Tool
         }
         private void Reset()
         {
-            LobbyUI = transform.Find("LobbyUI").gameObject;
-            GameUI = transform.Find("GameUI").gameObject;
             UICharacterDetail = GetComponentInChildren<UICharacterDetail>(true);
             UIMinimap = GetComponentInChildren<UIMinimap>(true);
             UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
-            UISave = GetComponentInChildren<UIListSave>(true);
+            UIListSave = GetComponentInChildren<UIListSave>(true);
             UISetting = GetComponentInChildren<UISetting>(true);
             UIPopup = GetComponentInChildren<UIPopup>(true);
             UILobbyMenu = GetComponentInChildren<UILobbyMenu>(true);
@@ -221,6 +211,34 @@ namespace E.Tool
         public void HideLoading()
         {
             UILoading.gameObject.SetActive(false);
+        }
+        /// <summary>
+        /// 显示当前菜单面板
+        /// </summary>
+        public void ShowMenu()
+        {
+            if (GameManager.Singleton.IsInLobby)
+            {
+                UILobbyMenu.gameObject.SetActive(true);
+            }
+            else
+            {
+                UIGameMenu.gameObject.SetActive(true);
+            }
+        }
+        /// <summary>
+        /// 显示当前菜单面板
+        /// </summary>
+        public void HideMenu()
+        {
+            if (GameManager.Singleton.IsInLobby)
+            {
+                UILobbyMenu.gameObject.SetActive(false);
+            }
+            else
+            {
+                UIGameMenu.gameObject.SetActive(false);
+            }
         }
         /// <summary>
         /// 显示大厅内菜单面板
@@ -283,15 +301,15 @@ namespace E.Tool
         /// </summary>
         public void ShowSave(int mode = 1)
         {
-            UISave.OpenMode = (OpenMode)mode;
-            UISave.gameObject.SetActive(true);
+            UIListSave.OpenMode = (OpenMode)mode;
+            UIListSave.gameObject.SetActive(true);
         }
         /// <summary>
         /// 隐藏存档面板
         /// </summary>
         public void HideSave()
         {
-            UISave.gameObject.SetActive(false);
+            UIListSave.gameObject.SetActive(false);
         }
     }
 }

@@ -7,25 +7,25 @@ using E.Tool;
 public class GameManager : SingletonPattern<GameManager>
 {
     [Header("状态")]
-    public bool IsInLobby = true;
+    [ReadOnly] public bool IsInLobby = true;
     public bool IsShowUIInGame = true;
     public bool IsAcceptInputInGame = true;
 
-    private AsyncOperation sceneAsyncOperation;
+    public AsyncOperation SsceneAsyncOperation;
     public float SceneLoadProcess
     {
         get
         {
-            if (sceneAsyncOperation != null)
+            if (SsceneAsyncOperation != null)
             {
                 //progress的值最大为0.9  
-                if (sceneAsyncOperation.progress >= 0.9f)
+                if (SsceneAsyncOperation.progress >= 0.9f)
                 {
                     return 1.0f;
                 }
                 else
                 {
-                    return sceneAsyncOperation.progress;
+                    return SsceneAsyncOperation.progress;
                 }
             }
             else
@@ -34,6 +34,7 @@ public class GameManager : SingletonPattern<GameManager>
             }
         }
     }
+    private bool isNewGame = false;
 
     protected override void Awake()
     {
@@ -61,17 +62,27 @@ public class GameManager : SingletonPattern<GameManager>
 # if UNITY_EDITOR
         if (IsInLobby)
         {
-            //大厅内
-            if (Input.GetKeyUp(KeyCode.KeypadEnter))
-            {
-                StartNewGame();
-            }
         }
         else
         {
             //游戏内
             if (Input.GetKeyUp(KeyCode.KeypadEnter))
             {
+                if (isNewGame)
+                {
+                    if (Player.Myself == null)
+                    {
+                        EntityManager.Singleton.CheckSceneEntity();
+                        Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
+                        Npc npc = EntityManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
+                        npc.FollowTarget = player.transform;
+                        Debug.Log("游戏初始化");
+                    }
+                }
+                else
+                {
+                    SaveManager.Load();
+                }
             }
             else if (Input.GetKeyUp(KeyCode.LeftBracket))
             {
@@ -81,13 +92,6 @@ public class GameManager : SingletonPattern<GameManager>
             }
         }
 #endif
-        
-        if ((int)(SceneLoadProcess * 100) == 100)
-        {
-            //允许异步加载完毕后自动切换场景  
-            sceneAsyncOperation.allowSceneActivation = true;
-            UIManager.Singleton.HideLoading();
-        }
     }
 
     /// <summary>
@@ -102,34 +106,29 @@ public class GameManager : SingletonPattern<GameManager>
             Debug.LogError("请求加载的场景不存在");
             return;
         }
+        if (useLoadUI)
+        {
+            UIManager.Singleton.ShowLoading();
+        }
         StartCoroutine(AsyncLoading(name));
-        UIManager.Singleton.ShowLoading();
     }
     private IEnumerator AsyncLoading(string name)
     {
-        sceneAsyncOperation = SceneManager.LoadSceneAsync(name);
-        sceneAsyncOperation.allowSceneActivation = false;
+        SsceneAsyncOperation = SceneManager.LoadSceneAsync(name);
+        SsceneAsyncOperation.allowSceneActivation = false;
 
-        yield return sceneAsyncOperation;
+        yield return SsceneAsyncOperation;
     }
 
     public void StartNewGame()
     {
         LoadScene("Game", true);
-
-        Player player = SpawnManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
-        Npc npc = SpawnManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
-        npc.FollowTarget = player.transform;
+        isNewGame = true;
     }
     public void ContinueLastGame()
     {
         LoadScene("Game", true);
-
-        Player player = SpawnManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
-        Npc npc = SpawnManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
-        npc.FollowTarget = player.transform;
-
-        SaveManager.Load();
+        isNewGame = false;
     }
     public void BackToLobby()
     {

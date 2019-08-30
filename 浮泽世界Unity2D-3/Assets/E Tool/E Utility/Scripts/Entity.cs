@@ -42,6 +42,7 @@ namespace E.Tool
         }
         protected virtual void Update()
         {
+            DynamicData.Position = transform.position;
         }
         protected virtual void FixedUpdate()
         {
@@ -81,6 +82,7 @@ namespace E.Tool
             if (data.Name == StaticData.Name)
             {
                 DynamicData = data;
+                transform.position = data.Position;
             }
             else
             {

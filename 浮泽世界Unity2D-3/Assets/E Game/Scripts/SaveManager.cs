@@ -23,7 +23,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     private void RefreshNames()
     {
         SaveFileNames.Clear();
-        foreach (FileInfo item in GetSaveFiles(false))
+        foreach (FileInfo item in GetSaveFiles())
         {
             SaveFileNames.Add(item.Name);
         }
@@ -33,7 +33,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// 获取所有存档文件
     /// </summary>
     /// <returns></returns>
-    public static List<FileInfo> GetSaveFiles(bool showLog = true)
+    public static List<FileInfo> GetSaveFiles()
     {
         List<FileInfo> saveFiles = new List<FileInfo>();
 
@@ -51,11 +51,10 @@ public class SaveManager : SingletonPattern<SaveManager>
                     saveFiles.Add(files[i]);
                 }
             }
-            if (showLog) Debug.Log(string.Format("已检测到 {0} 个存档", saveFiles.Count));
         }
         else
         {
-            if (showLog) Debug.LogError("目录不存在 " + fullPath);
+            Debug.LogError("目录不存在 " + fullPath);
         }
         return saveFiles;
     }
@@ -65,7 +64,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// <returns></returns>
     public static FileInfo GetLatestSaveFile()
     {
-        List<FileInfo> saveFiles = GetSaveFiles(false);
+        List<FileInfo> saveFiles = GetSaveFiles();
         if (saveFiles.Count > 0)
         {
             List<DateTime> times = new List<DateTime>();
@@ -90,7 +89,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     public static List<Save> GetSaves()
     {
         List<Save> saves = new List<Save>();
-        foreach (FileInfo item in GetSaveFiles(false))
+        foreach (FileInfo item in GetSaveFiles())
         {
             saves.Add(GetSave(item));
         }
@@ -114,7 +113,7 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// <returns></returns>
     public static FileInfo CreateSaveFile()
     {
-        List<FileInfo> fls = GetSaveFiles(false);
+        List<FileInfo> fls = GetSaveFiles();
         int n = 0;
         string path;
         do
@@ -124,7 +123,7 @@ public class SaveManager : SingletonPattern<SaveManager>
         }
         while (new FileInfo(path).Exists);
         FileInfo fileInfo = new FileInfo(path);
-        fileInfo.Create();
+        fileInfo.Create().Dispose();
         Debug.Log(string.Format("已创建存档文件 {0}", fileInfo.FullName));
         Singleton.RefreshNames();
         return fileInfo;
@@ -152,51 +151,98 @@ public class SaveManager : SingletonPattern<SaveManager>
     /// </summary>
     public static void SaveTo(FileInfo fileInfo)
     {
-        //if (!Directory.Exists(Application.persistentDataPath))
-        //{
-        //    Directory.CreateDirectory(Application.persistentDataPath);
-        //}
-        Save save;
-        if (fileInfo.Exists)
+        if (!fileInfo.Exists)
         {
-            save = new Save
-            {
-                NodeID = StoryManager.Singleton.NodeID,
-                PlayerPosition = Player.Myself.transform.position,
-                PlayerDynamicData = Player.Myself.DynamicData,
-            };
-            string json = JsonUtility.ToJson(save);
-            File.WriteAllText(fileInfo.FullName, json);
+            Debug.LogError("存档失败，指定文件不存在 " + fileInfo.FullName);
+            return;
+        }
+        if (!Player.Myself)
+        {
+            Debug.LogError("存档失败，玩家对象没有生成");
+            return;
+        }
 
-            AssetDatabase.Refresh();
-            Debug.Log("存档成功：" + fileInfo.FullName + " 时间：" + save.NodeID);
-            Debug.Log("存档内容：" + json);
-        }
-        else
+        Save save;
+        save = new Save
         {
-            Debug.LogError("存档失败，指定文件不存在：" + fileInfo.FullName);
+            NodeID = StoryManager.Singleton.NodeID,
+            PlayerDynamicData = Player.Myself.DynamicData,
+        };
+        foreach (Character item in EntityManager.Singleton.Characters)
+        {
+            save.CharacterDynamicDatas.Add(item.DynamicData);
         }
+        foreach (Interactor item in EntityManager.Singleton.Interactors)
+        {
+            save.InteractorDynamicDatas.Add(item.DynamicData);
+        }
+        
+        string json = JsonUtility.ToJson(save);
+        //FileStream fs = fileInfo.OpenWrite();
+        //StreamWriter sw = new StreamWriter(fs);
+        //sw.Write(json);
+        //sw.Close();
+        //fs.Close();
+        File.WriteAllText(fileInfo.FullName, json);
+
+        AssetDatabase.Refresh();
+        Debug.Log("存档成功：" + fileInfo.FullName + " 时间：" + save.NodeID);
+        Debug.Log("存档内容：" + json);
     }
     /// <summary>
     /// 载入游戏从指定文件
     /// </summary>
     public static void LoadFrom(FileInfo fileInfo)
     {
-        if (fileInfo.Exists)
+        if (!fileInfo.Exists)
         {
-            //获取存档信息
-            Save save = GetSave(fileInfo);
-            //配置对应游戏对象
-            StoryManager.Singleton.NodeID = save.NodeID;
-            Player.Myself.transform.position = save.PlayerPosition;
-            Player.Myself.SetDynamicData(save.PlayerDynamicData);
+            Debug.LogError("读档失败，指定文件不存在：" + fileInfo.FullName);
+            return;
+        }
+        if (GameManager.Singleton.IsInLobby)
+        {
+            Debug.LogError("读档失败，不在游戏场景内");
+            return;
+        }
 
-            Debug.Log("读档成功：" + fileInfo.FullName);
+        //获取存档信息
+        Save save = GetSave(fileInfo);
+        //配置对应游戏对象
+        StoryManager.Singleton.NodeID = save.NodeID;
+        if (Player.Myself)
+        {
+            Player.Myself.SetDynamicData(save.PlayerDynamicData);
         }
         else
         {
-            Debug.LogError("读档失败，指定文件不存在：" + fileInfo.FullName);
+            EntityManager.Singleton.SpawnPlayer(save.PlayerDynamicData);
         }
+        foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
+        {
+            Character cha = EntityManager.Singleton.GetCharacter(item.Name);
+            if (cha)
+            {
+                cha.SetDynamicData(item);
+            }
+            else
+            {
+                EntityManager.Singleton.SpawnNpc(item);
+            }
+        }
+        foreach (InteractorDynamicData item in save.InteractorDynamicDatas)
+        {
+            Interactor inte = EntityManager.Singleton.GetInteractor(item.Name);
+            if (inte)
+            {
+                inte.SetDynamicData(item);
+            }
+            else
+            {
+                EntityManager.Singleton.SpawnInteractor(item);
+            }
+        }
+
+        Debug.Log("读档成功：" + fileInfo.FullName);
     }
     /// <summary>
     /// 快捷载入游戏从最近存档
@@ -224,6 +270,7 @@ public class SaveManager : SingletonPattern<SaveManager>
 public class Save
 {
     public NodeID NodeID = new NodeID(0,0,0,0,0);
-    public Vector2 PlayerPosition = new Vector2(0,0);
     public CharacterDynamicData PlayerDynamicData = new CharacterDynamicData();
+    public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
+    public List<InteractorDynamicData> InteractorDynamicDatas = new List<InteractorDynamicData>();
 }

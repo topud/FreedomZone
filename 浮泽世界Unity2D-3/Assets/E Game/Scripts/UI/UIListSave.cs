@@ -10,10 +10,23 @@ namespace E.Tool
     {
         public OpenMode OpenMode = OpenMode.Load;
 
+        private void Update()
+        {
+            if (Input.GetKeyUp(KeyCode.C))
+            {
+                Create();
+            }
+            else if(Input.GetKeyUp(KeyCode.L))
+            {
+                SaveManager.Load();
+            }
+        }
+
         public override void LoadData()
         {
             //base.LoadData();
             Datas = SaveManager.GetSaveFiles();
+            Debug.Log("存档数量 " + Datas.Count);
         }
         
         public void Create()

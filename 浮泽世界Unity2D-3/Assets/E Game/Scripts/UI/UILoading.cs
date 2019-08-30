@@ -7,25 +7,38 @@ namespace E.Tool
 {
     public class UILoading : MonoBehaviour
     {
-        [SerializeField] private Slider loadingSlider;
-        [SerializeField] private Text loadingText;
+        [SerializeField] private Text txtProcess;
+        [SerializeField] private Slider sldProcess;
+        [SerializeField] private Text txtTip;
 
         private void Update()
         {
             float pro = GameManager.Singleton.SceneLoadProcess;
             if (pro < 0)
             {
+                txtTip.enabled = false;
                 return;
             }
-            if (pro != loadingSlider.value)
+            if (pro >= 0.9f)
+            {
+                //txtTip.enabled = true;
+
+                //允许异步加载完毕后自动切换场景  
+                GameManager.Singleton.SsceneAsyncOperation.allowSceneActivation = true;
+                UIManager.Singleton.HideLoading();
+            }
+            if (pro != sldProcess.value)
             {
                 //插值运算  
-                loadingSlider.value = Mathf.Lerp(loadingSlider.value, pro, Time.deltaTime * 1);
-                if (Mathf.Abs(loadingSlider.value - pro) < 0.01f)
-                {
-                    loadingSlider.value = pro;
-                }
-                loadingText.text = ((int)(loadingSlider.value * 100)).ToString() + "%";
+                //sldProcess.value = Mathf.Lerp(sldProcess.value, pro, Time.deltaTime * 1);
+                //if (Mathf.Abs(sldProcess.value - pro) < 0.01f)
+                //{
+                //    sldProcess.value = pro;
+                //}
+                //txtProcess.text = ((int)(sldProcess.value * 100)).ToString() + "%";
+                float v = pro * (10 / 9);
+                txtProcess.text = (int)(v * 100) + "%";
+                sldProcess.value = v;
             }
         }
     }

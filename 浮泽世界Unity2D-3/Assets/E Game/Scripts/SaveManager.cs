@@ -73,7 +73,6 @@ public class SaveManager : SingletonPattern<SaveManager>
                 times.Add(saveFiles[i].LastWriteTime);
             }
             FileInfo fileInfo = saveFiles[Utility.IndexLatest(times)];
-            Debug.Log(string.Format("已获取存档 {0}", fileInfo.FullName));
             return fileInfo;
         }
         else
@@ -137,6 +136,19 @@ public class SaveManager : SingletonPattern<SaveManager>
         fileInfo.Delete();
         Singleton.RefreshNames();
         Debug.Log(string.Format("已删除存档文件 {0}", fileInfo.FullName));
+    }
+    /// <summary>
+    /// 删除所有存档文件
+    /// </summary>
+    public static void RemoveAllSaveFile()
+    {
+        List<FileInfo> saveFiles = new List<FileInfo>();
+        foreach (FileInfo item in saveFiles)
+        {
+            item.Delete();
+        }
+        Singleton.RefreshNames();
+        Debug.Log(string.Format("已删除所有存档文件，共计 {0} 个", saveFiles.Count));
     }
 
     /// <summary>

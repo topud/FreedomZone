@@ -12,7 +12,11 @@ namespace E.Tool
         /// <summary>
         /// 坐标
         /// </summary>
-        public Vector2 Position { get => position; set => position = value; }
+        public Vector2 Position
+        {
+            get => position;
+            set => position = value;
+        }
         /// <summary>
         /// 当前是否无敌
         /// </summary>

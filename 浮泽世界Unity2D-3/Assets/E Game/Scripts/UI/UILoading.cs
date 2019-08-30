@@ -19,14 +19,6 @@ namespace E.Tool
                 txtTip.enabled = false;
                 return;
             }
-            if (pro >= 0.9f)
-            {
-                //txtTip.enabled = true;
-
-                //允许异步加载完毕后自动切换场景  
-                GameManager.Singleton.SsceneAsyncOperation.allowSceneActivation = true;
-                UIManager.Singleton.HideLoading();
-            }
             if (pro != sldProcess.value)
             {
                 //插值运算  

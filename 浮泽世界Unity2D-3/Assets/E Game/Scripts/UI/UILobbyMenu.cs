@@ -16,8 +16,16 @@ namespace E.Tool
 
         private void Start()
         {
-            btnContinue.gameObject.SetActive(SaveManager.GetLatestSaveFile() == null ? false : true);
+            Refresh();
         }
+
+        public void Refresh()
+        {
+            btnContinue.gameObject.SetActive(SaveManager.GetLatestSaveFile() == null ? false : true);
+            btnSave.gameObject.SetActive(SaveManager.GetSaveFiles().Count == 0 ? false : true);
+        }
+
+
         public enum MenuState
         {
             NoSave,

@@ -26,6 +26,18 @@ namespace E.Tool
         public S StaticData;
         public D DynamicData;
 
+        public Transform FollowTarget
+        {
+            get
+            {
+                return AIDestinationSetter.target;
+            }
+            set
+            {
+                AIDestinationSetter.target = value;
+            }
+        }
+
         protected virtual void Awake()
         {
             //ResetComponents();

@@ -11,22 +11,18 @@ public class GameManager : SingletonPattern<GameManager>
     public bool IsShowUIInGame = true;
     public bool IsAcceptInputInGame = true;
 
-    public AsyncOperation SsceneAsyncOperation;
+    private bool isStartGame = false;
+    private bool isNewGame = false;
+
+    private AsyncOperation sceneAsyncOperation;
     public float SceneLoadProcess
     {
         get
         {
-            if (SsceneAsyncOperation != null)
+            if (sceneAsyncOperation != null)
             {
                 //progress的值最大为0.9  
-                if (SsceneAsyncOperation.progress >= 0.9f)
-                {
-                    return 1.0f;
-                }
-                else
-                {
-                    return SsceneAsyncOperation.progress;
-                }
+                return sceneAsyncOperation.progress >= 0.9f ? 1.0f :sceneAsyncOperation.progress;
             }
             else
             {
@@ -34,7 +30,6 @@ public class GameManager : SingletonPattern<GameManager>
             }
         }
     }
-    private bool isNewGame = false;
 
     protected override void Awake()
     {
@@ -59,14 +54,12 @@ public class GameManager : SingletonPattern<GameManager>
     {
         IsInLobby = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
 
-# if UNITY_EDITOR
-        if (IsInLobby)
+        if (SceneLoadProcess >= 0.9f)
         {
-        }
-        else
-        {
-            //游戏内
-            if (Input.GetKeyUp(KeyCode.KeypadEnter))
+            //允许异步加载完毕后自动切换场景  
+            sceneAsyncOperation.allowSceneActivation = true;
+            UIManager.Singleton.HideLoading();
+            if (isStartGame && sceneAsyncOperation.isDone)
             {
                 if (isNewGame)
                 {
@@ -76,18 +69,27 @@ public class GameManager : SingletonPattern<GameManager>
                         Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
                         Npc npc = EntityManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
                         npc.FollowTarget = player.transform;
-                        Debug.Log("游戏初始化");
+                        Debug.Log("新存档初始化");
                     }
                 }
                 else
                 {
+                    EntityManager.Singleton.CheckSceneEntity();
                     SaveManager.Load();
+                    Debug.Log("载入存档初始化");
                 }
+                isStartGame = false;
             }
-            else if (Input.GetKeyUp(KeyCode.LeftBracket))
-            {
-            }
-            else if (Input.GetKeyUp(KeyCode.RightBracket))
+        }
+
+# if UNITY_EDITOR
+        if (IsInLobby)
+        {
+        }
+        else
+        {
+            //游戏内
+            if (Input.GetKeyUp(KeyCode.KeypadEnter))
             {
             }
         }
@@ -114,20 +116,22 @@ public class GameManager : SingletonPattern<GameManager>
     }
     private IEnumerator AsyncLoading(string name)
     {
-        SsceneAsyncOperation = SceneManager.LoadSceneAsync(name);
-        SsceneAsyncOperation.allowSceneActivation = false;
+        sceneAsyncOperation = SceneManager.LoadSceneAsync(name);
+        sceneAsyncOperation.allowSceneActivation = false;
 
-        yield return SsceneAsyncOperation;
+        yield return sceneAsyncOperation;
     }
 
     public void StartNewGame()
     {
         LoadScene("Game", true);
+        isStartGame = true;
         isNewGame = true;
     }
     public void ContinueLastGame()
     {
         LoadScene("Game", true);
+        isStartGame = true;
         isNewGame = false;
     }
     public void BackToLobby()

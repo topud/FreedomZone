@@ -14,17 +14,6 @@ namespace E.Tool
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
-        public Transform FollowTarget
-        {
-            get
-            {
-                return AIDestinationSetter.target;
-            }
-            set
-            {
-                AIDestinationSetter.target = value;
-            }
-        }
         public bool IsFaceRight
         {
             get

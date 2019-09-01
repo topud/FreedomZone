@@ -43,6 +43,16 @@ public class GameManager : SingletonPattern<GameManager>
         {
             Destroy(gameObject);
         }
+
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            if (Player.Myself == null)
+            {
+                EntityManager.Singleton.CheckSceneEntity();
+                Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5));
+                Debug.Log("本次调试先启动了游戏场景，已自动添加可控制角色");
+            }
+        }
     }
     private void OnEnable()
     {
@@ -69,8 +79,8 @@ public class GameManager : SingletonPattern<GameManager>
                     if (Player.Myself == null)
                     {
                         EntityManager.Singleton.CheckSceneEntity();
-                        Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(5, 5));
-                        Npc npc = EntityManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(10, 5));
+                        Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5));
+                        Npc npc = EntityManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(170, 10));
                         npc.FollowTarget = player.transform;
                         Debug.Log("新存档初始化");
                     }

@@ -13,7 +13,7 @@ namespace E.Tool
     public class Utility
     {
         /// <summary>
-        /// 限定数字范围，仅包含最小值
+        /// 限定整型数字范围，仅包含最小值
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -24,7 +24,18 @@ namespace E.Tool
             return value;
         }
         /// <summary>
-        /// 限定数字范围，仅包含最大值
+        /// 限定浮点数字范围，仅包含最小值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <returns></returns>
+        public static float ClampMin(float value, float min)
+        {
+            if (value < min) return min;
+            return value;
+        }
+        /// <summary>
+        /// 限定整型数字范围，仅包含最大值
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -36,7 +47,19 @@ namespace E.Tool
             return value;
         }
         /// <summary>
-        /// 限定数字范围，包含最小值和最大值
+        /// 限定浮点数字范围，仅包含最大值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float ClampMax(float value, float max)
+        {
+            if (value > max) return max;
+            return value;
+        }
+        /// <summary>
+        /// 限定整型数字范围，包含最小值和最大值
         /// </summary>
         /// <param name="value"></param>
         /// <param name="min"></param>
@@ -48,6 +71,20 @@ namespace E.Tool
             if (value > max) return max;
             return value;
         }
+        /// <summary>
+        /// 限定浮点数字范围，包含最小值和最大值
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="min"></param>
+        /// <param name="max"></param>
+        /// <returns></returns>
+        public static float Clamp(float value, float min, float max)
+        {
+            if (value < min) return min;
+            if (value > max) return max;
+            return value;
+        }
+
         /// <summary>
         /// 获取数组中最小值的索引
         /// </summary>
@@ -106,7 +143,6 @@ namespace E.Tool
             }
             return index;
         }
-
 
         /// <summary>
         /// 是否有键抬起

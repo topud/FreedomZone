@@ -15,14 +15,15 @@ MonoBehaviour:
   Collider: {fileID: 2625215137945290371}
   Rigidbody: {fileID: 8277306590650899652}
   AudioSource: {fileID: 8307264154319569382}
-  Animator: {fileID: 2458981357567954892}
+  Animator: {fileID: 4222998860993175816}
   AIPath: {fileID: 6104175146455090969}
   AIDestinationSetter: {fileID: 3229689075312592128}
   TargetUI: {fileID: 4131028127012493227}
-  SpriteSorter: {fileID: 2369144032979251208}
+  SpriteSorter: {fileID: 4061110384809156300}
   StaticData: {fileID: 11400000, guid: e7fd61b1b12f7ed4c891edf2904596a5, type: 2}
   DynamicData:
     name: "\u5F81\u4E5F"
+    position: {x: 0, y: 0}
     invincible: 0
     maxHealth: 20
     maxMind: 20
@@ -287,15 +288,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9caf493b2898b0a49a4bce636d710df3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!95 &2458981357567954892 stripped
+--- !u!95 &4222998860993175816 stripped
 Animator:
-  m_CorrespondingSourceObject: {fileID: 5786023937099137738, guid: bbad61fa72774544488c15ef6e35939a,
+  m_CorrespondingSourceObject: {fileID: 5257675005847038990, guid: bbad61fa72774544488c15ef6e35939a,
     type: 3}
   m_PrefabInstance: {fileID: 8244992064552881414}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2369144032979251208 stripped
+--- !u!114 &4061110384809156300 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5948405646253636878, guid: bbad61fa72774544488c15ef6e35939a,
+  m_CorrespondingSourceObject: {fileID: 5348005838284248010, guid: bbad61fa72774544488c15ef6e35939a,
     type: 3}
   m_PrefabInstance: {fileID: 8244992064552881414}
   m_PrefabAsset: {fileID: 0}

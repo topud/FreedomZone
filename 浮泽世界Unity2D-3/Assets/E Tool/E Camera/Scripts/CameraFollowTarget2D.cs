@@ -26,6 +26,8 @@ namespace E.Tool
                     target = Player.Myself.transform;
                 }
             }
+            float f = Input.GetAxis("Mouse ScrollWheel");
+            pixelDensity.zoom = Utility.ClampMin(pixelDensity.zoom + f, 0.1f);
         }
         [ExecuteInEditMode]
         private void FixedUpdate()

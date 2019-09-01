@@ -341,6 +341,14 @@ namespace E.Tool
         {
             return NearbyCharacters.Contains(target);
         }
+
+        /// <summary>
+        /// 攻击
+        /// </summary>
+        public void Attack()
+        {
+            Animator.SetTrigger("Attack");
+        }
     }
 
     public enum CharacterState

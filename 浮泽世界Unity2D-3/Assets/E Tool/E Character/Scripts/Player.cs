@@ -31,6 +31,7 @@ public class Player : Character
         if (State != CharacterState.Dead && State != CharacterState.Talk)
         {
             CheckNearby();
+            CheckAttack();
         }
     }
     protected override void FixedUpdate()
@@ -171,6 +172,13 @@ public class Player : Character
                 //检测是否按键调查
                 if (Input.GetKeyUp(KeyCode.G)) Survey(nearistCharacter);
             }
+        }
+    }
+    private void CheckAttack()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            Attack();
         }
     }
 }

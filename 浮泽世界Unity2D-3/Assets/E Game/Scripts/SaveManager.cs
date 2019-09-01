@@ -211,11 +211,6 @@ public class SaveManager : SingletonPattern<SaveManager>
             Debug.LogError("读档失败，指定文件不存在：" + fileInfo.FullName);
             return;
         }
-        if (GameManager.Singleton.IsInLobby)
-        {
-            Debug.LogError("读档失败，不在游戏场景内");
-            return;
-        }
 
         //获取存档信息
         Save save = GetSave(fileInfo);

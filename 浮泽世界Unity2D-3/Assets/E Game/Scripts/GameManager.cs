@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,7 +13,7 @@ public class GameManager : SingletonPattern<GameManager>
     public bool IsAcceptInputInGame = true;
 
     private bool isStartGame = false;
-    private bool isNewGame = false;
+    private FileInfo selectSave;
 
     private AsyncOperation sceneAsyncOperation;
     public float SceneLoadProcess
@@ -59,9 +60,11 @@ public class GameManager : SingletonPattern<GameManager>
             //允许异步加载完毕后自动切换场景  
             sceneAsyncOperation.allowSceneActivation = true;
             UIManager.Singleton.HideLoading();
+            //开始游戏
             if (isStartGame && sceneAsyncOperation.isDone)
             {
-                if (isNewGame)
+                //未选择存档时开始新存档
+                if (selectSave == null)
                 {
                     if (Player.Myself == null)
                     {
@@ -72,10 +75,11 @@ public class GameManager : SingletonPattern<GameManager>
                         Debug.Log("新存档初始化");
                     }
                 }
+                //否则载入存档
                 else
                 {
                     EntityManager.Singleton.CheckSceneEntity();
-                    SaveManager.Load();
+                    SaveManager.LoadFrom(selectSave);
                     Debug.Log("载入存档初始化");
                 }
                 isStartGame = false;
@@ -122,17 +126,28 @@ public class GameManager : SingletonPattern<GameManager>
         yield return sceneAsyncOperation;
     }
 
-    public void StartNewGame()
+    public void StartNewSave()
     {
         LoadScene("Game", true);
         isStartGame = true;
-        isNewGame = true;
+        selectSave = null;
     }
-    public void ContinueLastGame()
+    public void ContinueLastSave()
     {
         LoadScene("Game", true);
         isStartGame = true;
-        isNewGame = false;
+        selectSave = SaveManager.GetLatestSaveFile();
+    }
+    public void ContinueSelectSave(FileInfo fileInfo)
+    {
+        if (fileInfo == null)
+        {
+            Debug.LogError("未指定存档文件");
+            return;
+        }
+        LoadScene("Game", true);
+        isStartGame = true;
+        selectSave = fileInfo;
     }
     public void BackToLobby()
     {

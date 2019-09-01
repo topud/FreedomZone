@@ -61,7 +61,15 @@ namespace E.Tool
         }
         public void Load(UISlotSave slot)
         {
-            SaveManager.LoadFrom(slot.Data);
+            if (GameManager.Singleton.IsInLobby)
+            {
+                GameManager.Singleton.ContinueSelectSave(slot.Data);
+            }
+            else
+            {
+                SaveManager.LoadFrom(slot.Data);
+            }
+            UIManager.Singleton.HideSave();
         }
         public void Save(UISlotSave slot)
         {
@@ -73,7 +81,7 @@ namespace E.Tool
             SaveManager.RemoveSaveFile(slot.Data);
             Refresh();
         }
-        public void Clear()
+        public void DeleteAll()
         {
             SaveManager.RemoveAllSaveFile();
             Refresh();

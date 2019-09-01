@@ -14,6 +14,14 @@ namespace E.Tool
         [SerializeField] private Button btnLoad;
         [SerializeField] private Button btnDelete;
 
+        private void OnEnable()
+        {
+            if (Data != null)
+            {
+                UpdateData();
+            }
+        }
+
         public override void SetData(FileInfo data)
         {
             base.SetData(data);

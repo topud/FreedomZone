@@ -1,6 +1,3 @@
-// Pixel Perfect Rendering in Unity
-// Source: Unity 2014 Unity 2D best practices
-// (modified by noobtuts.com | vis2k (zoom factor))
 using UnityEngine;
 
 namespace E.Tool
@@ -8,13 +5,10 @@ namespace E.Tool
     [ExecuteInEditMode]
     public class CameraPixelDensity : MonoBehaviour
     {
-        // The value that all the Sprites use
-        public float pixelsToUnits = 16;
+        [Tooltip("单位距离像素数量")] public float pixelsToUnits = 16;
+        [Tooltip("缩放系数")] public float zoom = 1;
 
-        // Zoom Factor
-        public int zoom = 1;
-
-        void Update()
+        private void Update()
         {
             GetComponent<Camera>().orthographicSize = Screen.height / pixelsToUnits / zoom / 2;
         }

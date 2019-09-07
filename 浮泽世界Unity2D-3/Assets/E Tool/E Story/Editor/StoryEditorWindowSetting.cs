@@ -18,7 +18,7 @@ namespace E.Tool
     {
         [Header("资源文件夹")]
         [Tooltip("在故事编辑窗口内点击右键创建的资源将会在此目录下创建对应文件")]
-        public string StoryResourcesFolder = "Assets/E.Tool/E Story/Resources/Example Storys";
+        public string StoryResourcesFolder = "Assets/E Tool/E Story/Resources/Example Storys";
 
         [Header("个性化界面")]
         public int ViewWidth = 3000;
@@ -32,7 +32,7 @@ namespace E.Tool
 
         public void Reset()
         {
-            StoryResourcesFolder = "Assets/E.Tool/E Story/Resources/Example Storys";
+            StoryResourcesFolder = "Assets/E Tool/E Story/Resources/Example Storys";
 
             ViewWidth = 3000;
             ViewHeight = 3000;

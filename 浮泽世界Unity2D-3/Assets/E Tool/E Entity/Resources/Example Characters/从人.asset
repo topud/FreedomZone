@@ -45,7 +45,8 @@ MonoBehaviour:
   skills: []
   buffs: []
   acceptedQuests: []
-  publishedQuests: []
+  publishedQuests:
+  - {fileID: 11400000, guid: 364411b2c39ae6b4888ac50a43c3dfdc, type: 2}
   relationships: []
   randomStorys:
   - "\u4F60\u597D\u3002"

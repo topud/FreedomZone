@@ -15,7 +15,7 @@ using E.Tool;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Story/故事内容", order = 2)]
-    public class StoryContent : StaticData
+    public class StoryContent : StaticDataDictionary<StoryContent>
     {
         [Tooltip("是否已阅读")] public bool IsReaded;
         [Tooltip("发生时间")] public DateTime Time;

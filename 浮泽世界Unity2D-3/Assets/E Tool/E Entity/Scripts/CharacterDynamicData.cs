@@ -33,6 +33,8 @@ namespace E.Tool
         [SerializeField, Tooltip("当前发布的任务")] private List<Quest> publishedQuests = new List<Quest>();
         [SerializeField, Tooltip("当前人际关系")] private List<Relationship> relationships = new List<Relationship>();
 
+        [SerializeField, Tooltip("是否为玩家操控角色"), ReadOnly] private bool isPlayer = false;
+
         /// <summary>
         /// 当前生机上限
         /// </summary>
@@ -214,5 +216,11 @@ namespace E.Tool
             get => relationships;
             set => relationships = value;
         }
+
+        /// <summary>
+        /// 是否为玩家操控角色
+        /// </summary>
+        public bool IsPlayer
+        { get => isPlayer; set => isPlayer = value; }
     }
 }

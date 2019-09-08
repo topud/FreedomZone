@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: "\u888B\u5B50"
   describe: "\u8FD9\u662F\u4E00\u4E2A\u888B\u5B50"
-  icon: {fileID: 21300000, guid: c2e8fc5e3559db04eaf990f495aabc75, type: 3}
+  icon: {fileID: 21300000, guid: 6009401d4fd5dda44a020c26002d4fdd, type: 3}
   prefab: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88, type: 3}
   invincible: 0
   movable: 1

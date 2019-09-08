@@ -34,7 +34,7 @@ namespace E.Tool
         }
         private void Start()
         {
-            if (!Target) Target = Player.Myself;
+            if (!Target) Target = Character.Player;
             UpdateInventory();
         }
         private void Update()

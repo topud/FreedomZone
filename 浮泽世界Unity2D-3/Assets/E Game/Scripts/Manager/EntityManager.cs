@@ -33,63 +33,41 @@ public class EntityManager : SingletonClass<EntityManager>
     }
 
     /// <summary>
-    /// 生成NPC
+    /// 生成角色，从静态数据
     /// </summary>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Npc SpawnNpc(CharacterStaticData sData, Vector2 position)
+    public Character SpawnCharacter(CharacterStaticData sData, Vector2 position, bool isPlayer = false)
     {
         Transform parent = GameObject.Find("Characters").transform;
-        GameObject target;
-        Npc npc;
+        GameObject go;
+        Character character;
         if (sData.Prefab)
         {
-            target = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), parent);
-            npc = target.GetComponent<Npc>();
+            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), parent);
+            character = go.GetComponent<Character>();
         }
         else
         {
-            target = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), parent);
-            npc = target.AddComponent<Npc>();
-            npc.StaticData = sData;
-            npc.ResetComponents();
-            npc.ResetDynamicData();
+            go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), parent);
+            character = go.GetComponent<Character>();
+            character.StaticData = sData;
+            character.ResetComponents();
+            character.ResetDynamicData();
         }
-        Characters.Add(npc);
-        return npc;
+        character.IsPlayer = isPlayer;
+        Characters.Add(character);
+        return character;
     }
     /// <summary>
-    /// 生成NPC
+    /// 生成角色，从动态数据（如存档）
     /// </summary>
-    public Npc SpawnNpc(CharacterDynamicData dData)
+    public Character SpawnCharacter(CharacterDynamicData dData, bool isPlayer = false)
     {
         CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(dData.Name);
-        return SpawnNpc(sData, dData.Position);
-    }
-    /// <summary>
-    /// 生成玩家
-    /// </summary>
-    /// <param name="sData"></param>
-    /// <param name="position"></param>
-    /// <returns></returns>
-    public Player SpawnPlayer(CharacterStaticData sData, Vector2 position)
-    {
-        Transform parent = GameObject.Find("Characters").transform;
-        GameObject target = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), parent);
-        Player player = target.AddComponent<Player>();
-        player.StaticData = sData;
-        player.ResetComponents();
-        player.ResetDynamicData();
-        return player;
-    }
-    /// <summary>
-    /// 生成玩家
-    /// </summary>
-    public Player SpawnPlayer(CharacterDynamicData dData)
-    {
-        CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(dData.Name);
-        return SpawnPlayer(sData, dData.Position);
+        Character character = SpawnCharacter(sData, dData.Position, isPlayer);
+        return character;
     }
     /// <summary>
     /// 生成Interactor

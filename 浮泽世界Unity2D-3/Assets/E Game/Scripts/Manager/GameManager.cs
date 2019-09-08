@@ -46,10 +46,10 @@ public class GameManager : SingletonClass<GameManager>
 
         if (SceneManager.GetActiveScene().name == "Game")
         {
-            if (Player.Myself == null)
+            if (Character.Player == null)
             {
                 EntityManager.Singleton.CheckSceneEntity();
-                Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5));
+                Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5), true);
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
         }
@@ -76,11 +76,11 @@ public class GameManager : SingletonClass<GameManager>
                 //未选择存档时开始新存档
                 if (selectSave == null)
                 {
-                    if (Player.Myself == null)
+                    if (Character.Player == null)
                     {
                         EntityManager.Singleton.CheckSceneEntity();
-                        Player player = EntityManager.Singleton.SpawnPlayer((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5));
-                        Npc npc = EntityManager.Singleton.SpawnNpc((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(170, 10));
+                        Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5), true);
+                        Character npc = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(170, 10));
                         npc.FollowTarget = player.transform;
                         Debug.Log("新存档初始化");
                     }

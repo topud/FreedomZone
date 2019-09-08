@@ -168,7 +168,7 @@ public class SaveManager : SingletonClass<SaveManager>
             Debug.LogError("存档失败，指定文件不存在 " + fileInfo.FullName);
             return;
         }
-        if (!Player.Myself)
+        if (!Character.Player)
         {
             Debug.LogError("存档失败，玩家对象没有生成");
             return;
@@ -177,8 +177,7 @@ public class SaveManager : SingletonClass<SaveManager>
         Save save;
         save = new Save
         {
-            NodeID = StoryManager.Singleton.NodeID,
-            PlayerDynamicData = Player.Myself.DynamicData,
+            NodeID = StoryManager.Singleton.NodeID
         };
         foreach (Character item in EntityManager.Singleton.Characters)
         {
@@ -190,11 +189,6 @@ public class SaveManager : SingletonClass<SaveManager>
         }
         
         string json = JsonUtility.ToJson(save);
-        //FileStream fs = fileInfo.OpenWrite();
-        //StreamWriter sw = new StreamWriter(fs);
-        //sw.Write(json);
-        //sw.Close();
-        //fs.Close();
         File.WriteAllText(fileInfo.FullName, json);
 
         AssetDatabase.Refresh();
@@ -216,24 +210,16 @@ public class SaveManager : SingletonClass<SaveManager>
         Save save = GetSave(fileInfo);
         //配置对应游戏对象
         StoryManager.Singleton.NodeID = save.NodeID;
-        if (Player.Myself)
-        {
-            Player.Myself.SetDynamicData(save.PlayerDynamicData);
-        }
-        else
-        {
-            EntityManager.Singleton.SpawnPlayer(save.PlayerDynamicData);
-        }
         foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
         {
-            Character cha = EntityManager.Singleton.GetCharacter(item.Name);
-            if (cha)
+            Character character = EntityManager.Singleton.GetCharacter(item.Name);
+            if (character)
             {
-                cha.SetDynamicData(item);
+                character.SetDynamicData(item);
             }
             else
             {
-                EntityManager.Singleton.SpawnNpc(item);
+                EntityManager.Singleton.SpawnCharacter(item, item.IsPlayer);
             }
         }
         foreach (InteractorDynamicData item in save.InteractorDynamicDatas)
@@ -277,7 +263,6 @@ public class SaveManager : SingletonClass<SaveManager>
 public class Save
 {
     public NodeID NodeID = new NodeID(0,0,0,0,0);
-    public CharacterDynamicData PlayerDynamicData = new CharacterDynamicData();
     public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
     public List<InteractorDynamicData> InteractorDynamicDatas = new List<InteractorDynamicData>();
 }

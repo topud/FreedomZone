@@ -25,7 +25,7 @@ namespace E.Tool
         }
         private void Start()
         {
-            Target = Player.Myself;
+            Target = Character.Player;
         }
         private void Update()
         {

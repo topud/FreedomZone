@@ -13,9 +13,9 @@ namespace E.Tool
             //默认跟随玩家
             if (!target)
             {
-                if (Player.Myself)
+                if (Character.Player)
                 {
-                    target = Player.Myself.transform;
+                    target = Character.Player.transform;
                 }
             }
         }

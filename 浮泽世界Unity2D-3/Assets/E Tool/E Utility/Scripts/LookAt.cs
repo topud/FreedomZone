@@ -18,7 +18,7 @@ namespace E.Tool
                 case LookAtItem.Cursor:
                     mpos = Input.mousePosition;
                     mpos = Camera.main.ScreenToWorldPoint(mpos);
-                    lookPos = new Vector3(mpos.x, mpos.y, -0.55f);
+                    lookPos = new Vector3(mpos.x, mpos.y, 0.1f);
 
                     transform.LookAt(lookPos);
                     transform.Rotate(new Vector3(0, 1, 0), 90);

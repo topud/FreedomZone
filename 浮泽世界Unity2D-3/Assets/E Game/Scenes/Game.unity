@@ -662,6 +662,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1205789136}
     m_Modifications:
+    - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Name
+      value: "\u888B\u5B50"
+      objectReference: {fileID: 0}
     - target: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -716,11 +721,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: m_Name
-      value: "\u888B\u5B50"
       objectReference: {fileID: 0}
     - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -851,6 +851,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 628791910}
     m_Modifications:
+    - target: {fileID: 5093405735280971784, guid: 0ff318bce4c7f264eb053569b8aaa793,
+        type: 3}
+      propertyPath: m_Name
+      value: Freedom Zone
+      objectReference: {fileID: 0}
+    - target: {fileID: 5093405735280971784, guid: 0ff318bce4c7f264eb053569b8aaa793,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 5093405735280971785, guid: 0ff318bce4c7f264eb053569b8aaa793,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -904,16 +914,6 @@ PrefabInstance:
     - target: {fileID: 5093405735280971785, guid: 0ff318bce4c7f264eb053569b8aaa793,
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5093405735280971784, guid: 0ff318bce4c7f264eb053569b8aaa793,
-        type: 3}
-      propertyPath: m_Name
-      value: Freedom Zone
-      objectReference: {fileID: 0}
-    - target: {fileID: 5093405735280971784, guid: 0ff318bce4c7f264eb053569b8aaa793,
-        type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1128,7 +1128,7 @@ PrefabInstance:
     - target: {fileID: 5309478700318060440, guid: bd1572aae5b5b11438be76272064b7c1,
         type: 3}
       propertyPath: orthographic size
-      value: 3.135
+      value: 2.585
       objectReference: {fileID: 0}
     - target: {fileID: 5309478700318060436, guid: bd1572aae5b5b11438be76272064b7c1,
         type: 3}

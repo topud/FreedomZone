@@ -38,7 +38,7 @@ namespace E.Tool
             }
 
             //隐藏名称
-            if (character.GetType() == typeof(Player))
+            if (character.IsPlayer)
             {
                 if (item)
                 {

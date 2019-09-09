@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6826948525920700422}
   - component: {fileID: -6728166461607515686}
   m_Layer: 8
-  m_Name: "\u4EBA"
+  m_Name: "\u4EBA\u7C7B"
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -318,7 +318,7 @@ GameObject:
   - component: {fileID: 1057458588729743483}
   - component: {fileID: 6085896459362168952}
   m_Layer: 8
-  m_Name: R Hand Item
+  m_Name: "\u53F3\u624B\u7269\u54C1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -357,7 +357,7 @@ MonoBehaviour:
   xScale: 1
   yScale: 0
   zScale: 0
-  target: {fileID: 1230406401403271721}
+  target: {fileID: 1772093082451871771}
 --- !u!114 &1057458588729743483
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -397,7 +397,7 @@ PrefabInstance:
     - target: {fileID: 3867857696927918395, guid: 2453a9093fdcc534a93d78ae52ff41dd,
         type: 3}
       propertyPath: m_Name
-      value: Human
+      value: "\u4EBA\u7C7B"
       objectReference: {fileID: 0}
     - target: {fileID: 1291385283188026097, guid: 2453a9093fdcc534a93d78ae52ff41dd,
         type: 3}
@@ -925,15 +925,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59b5fb9ce1492452499576f473de1123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!4 &1230406401403271721 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 1838991647436417339, guid: 2453a9093fdcc534a93d78ae52ff41dd,
-    type: 3}
-  m_PrefabInstance: {fileID: 618718499981333266}
-  m_PrefabAsset: {fileID: 0}
 --- !u!212 &1918103731419267433 stripped
 SpriteRenderer:
   m_CorrespondingSourceObject: {fileID: 1299385373918581371, guid: 2453a9093fdcc534a93d78ae52ff41dd,
+    type: 3}
+  m_PrefabInstance: {fileID: 618718499981333266}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1772093082451871771 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1153375017034128137, guid: 2453a9093fdcc534a93d78ae52ff41dd,
     type: 3}
   m_PrefabInstance: {fileID: 618718499981333266}
   m_PrefabAsset: {fileID: 0}

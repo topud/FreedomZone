@@ -42,17 +42,12 @@ namespace E.Tool
 
         protected virtual void Awake()
         {
-            //ResetComponents();
         }
         protected virtual void OnEnable()
         {
         }
         protected virtual void Start()
         {
-            //数据应用，显示更新
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
         }
         protected virtual void Update()
         {
@@ -77,7 +72,6 @@ namespace E.Tool
         protected virtual void Reset()
         {
             ResetComponents();
-            StaticData = (S)EntityStaticData.GetValue(gameObject.name);
             ResetDynamicData();
         }
 
@@ -107,7 +101,22 @@ namespace E.Tool
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        public abstract void ResetDynamicData();
+        public virtual void ResetDynamicData()
+        {
+            StaticData = (S)EntityStaticData.GetValue(gameObject.name);
+
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据不存在，无法设置数据");
+                return;
+            }
+
+            TargetUI.SetName(StaticData.Name);
+            TargetUI.HideName();
+            TargetUI.HideChat();
+            TargetUI.HideHelp();
+            Rigidbody.mass = StaticData.Weight;
+        }
         /// <summary>
         /// 设置组件
         /// </summary>
@@ -120,9 +129,9 @@ namespace E.Tool
             AIPath = GetComponent<AIPath>();
             AIDestinationSetter = GetComponent<AIDestinationSetter>();
             //子对象组件
-            Animator = GetComponentInChildren<Animator>();
-            TargetUI = GetComponentInChildren<TargetUI>();
-            SpriteSorter = GetComponentInChildren<SpriteSorter>();
+            Animator = GetComponentInChildren<Animator>(true);
+            TargetUI = GetComponentInChildren<TargetUI>(true);
+            SpriteSorter = GetComponentInChildren<SpriteSorter>(true);
 
             if (!Collider) Debug.LogError("未找到 + Collider");
             if (!Rigidbody) Debug.LogError("未找到 Rigidbody");
@@ -132,6 +141,15 @@ namespace E.Tool
             if (!Animator) Debug.LogError("未找到 Animator");
             if (!TargetUI) Debug.LogError("未找到 TargetUI");
             if (!SpriteSorter) Debug.LogError("未找到 SpriteSorter");
+        }
+
+        /// <summary>
+        /// 耐久百分比
+        /// </summary>
+        /// <returns></returns>
+        public virtual float GetHealthPercentage()
+        {
+            return (DynamicData.Health.Max > 0) ? (float)DynamicData.Health.Now / DynamicData.Health.Max : 0;
         }
     }
 }

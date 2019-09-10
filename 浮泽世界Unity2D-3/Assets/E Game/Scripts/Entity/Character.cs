@@ -7,7 +7,7 @@ using Pathfinding;
 
 namespace E.Tool
 {
-    public class Character : Entity<CharacterStaticData,CharacterDynamicData>
+    public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
         [Header("状态")]
         public static Character Player;
@@ -64,8 +64,6 @@ namespace E.Tool
         protected override void Start()
         {
             base.Start();
-            
-            Rigidbody.mass = StaticData.Weight;
         }
         protected override void Update()
         {
@@ -75,11 +73,11 @@ namespace E.Tool
             {
                 if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
                 {
-                    AIPath.maxSpeed = DynamicData.MaxSpeed;
+                    AIPath.maxSpeed = DynamicData.Speed.Max;
                 }
                 else
                 {
-                    AIPath.maxSpeed = DynamicData.BaseSpeed;
+                    AIPath.maxSpeed = DynamicData.Speed.Now;
                 }
             }
             if (State != CharacterState.Dead && State != CharacterState.Talk)
@@ -136,29 +134,18 @@ namespace E.Tool
         /// </summary>
         public override void ResetDynamicData()
         {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据不存在，无法设置数据");
-                return;
-            }
+            base.ResetDynamicData();
+            if (!StaticData) return;
 
             DynamicData = new CharacterDynamicData
             {
                 Name = StaticData.Name,
-                Invincible = StaticData.Invincible,
 
-                MaxHealth = StaticData.MaxHealth,
-                MaxMind = StaticData.MaxMind,
-                MaxPower = StaticData.MaxPower,
-                Health = StaticData.MaxHealth,
-                Mind = StaticData.MaxMind,
-                Power = StaticData.MaxPower,
-                HealthRecoveryCoefficient = StaticData.HealthRecoveryCoefficient,
-                MindRecoveryCoefficient = StaticData.MindRecoveryCoefficient,
-                PowerRecoveryCoefficient = StaticData.PowerRecoveryCoefficient,
-                MaxSpeed = StaticData.MaxSpeed,
-                BaseSpeed = StaticData.BaseSpeed,
-                Intelligence = StaticData.Intelligence,
+                Health = StaticData.Health,
+                Mind = StaticData.Mind,
+                Power = StaticData.Power,
+                Speed = StaticData.Speed,
+                IQ = StaticData.IQ,
                 Strength = StaticData.Strength,
                 Defense = StaticData.Defense,
 
@@ -181,20 +168,12 @@ namespace E.Tool
         }
 
         /// <summary>
-        /// 生机百分比
-        /// </summary>
-        /// <returns></returns>
-        public float GetHealthPercentage()
-        {
-            return (DynamicData.MaxHealth > 0) ? (float)DynamicData.Health / DynamicData.MaxHealth : 0;
-        }
-        /// <summary>
         /// 脑力百分比
         /// </summary>
         /// <returns></returns>
         public float GetMindPercentage()
         {
-            return (DynamicData.MaxMind > 0) ? (float)DynamicData.Mind / DynamicData.MaxMind : 0;
+            return (DynamicData.Mind.Max > 0) ? (float)DynamicData.Mind.Now / DynamicData.Mind.Max : 0;
         }
         /// <summary>
         /// 体力百分比
@@ -202,7 +181,7 @@ namespace E.Tool
         /// <returns></returns>
         public float GetPowerPercentage()
         {
-            return (DynamicData.MaxPower > 0) ? (float)DynamicData.Power / DynamicData.MaxPower : 0;
+            return (DynamicData.Power.Max > 0) ? (float)DynamicData.Power.Now / DynamicData.Power.Max : 0;
         }
         /// <summary>
         /// 是否存活
@@ -210,22 +189,22 @@ namespace E.Tool
         /// <returns></returns>
         public bool IsAlive()
         {
-            return DynamicData.Health > 0;
+            return DynamicData.Health.Now > 0;
         }
 
         /// <summary>
         /// 更改当前生命值上限
         /// </summary>
-        public void ChangeMaxHealth(int value)
+        public void ChangeHealthMax(int value)
         {
-            DynamicData.MaxHealth += value;
+            DynamicData.Health.Max += value;
         }
         /// <summary>
         /// 更改当前生命值
         /// </summary>
-        public void ChangeHealth(int value)
+        public void ChangeHealthNow(int value)
         {
-            DynamicData.Health += value;
+            DynamicData.Health.Now += value;
         }
         /// <summary>
         /// 复活
@@ -233,20 +212,20 @@ namespace E.Tool
         /// <param name="healthP"></param>
         public void Revive(float healthP = 1, float mindP = 1, float powerP = 1)
         {
-            DynamicData.Health = Mathf.RoundToInt(DynamicData.MaxHealth * healthP);
-            DynamicData.Mind = Mathf.RoundToInt(DynamicData.MaxMind * mindP);
-            DynamicData.Power = Mathf.RoundToInt(DynamicData.MaxPower * powerP);
+            DynamicData.Health.Now = (int)(DynamicData.Health.Max * healthP);
+            DynamicData.Mind.Now = (int)(DynamicData.Mind.Max * mindP);
+            DynamicData.Power.Now = (int)(DynamicData.Power.Max * powerP);
         }
         /// <summary>
         /// 恢复
         /// </summary>
         public void Recover()
         {
-            if (enabled && DynamicData.Health > 0)
+            if (enabled && DynamicData.Health.Now > 0)
             {
-                DynamicData.Health += DynamicData.HealthRecoveryCoefficient * 1;
-                DynamicData.Mind += DynamicData.MindRecoveryCoefficient * 1;
-                DynamicData.Power += DynamicData.PowerRecoveryCoefficient * 1;
+                if (DynamicData.Health.AutoChangeable) DynamicData.Health.Now += (int)(0.1 * DynamicData.Health.AutoChangeRate);
+                if (DynamicData.Mind.AutoChangeable) DynamicData.Mind.Now +=(int)(0.1 * DynamicData.Mind.AutoChangeRate);
+                if (DynamicData.Power.AutoChangeable) DynamicData.Power.Now +=(int)(0.1 * DynamicData.Power.AutoChangeRate);
             }
         }
         
@@ -413,11 +392,11 @@ namespace E.Tool
                     //是否跑步
                     if (Input.GetKey(KeyCode.LeftShift))
                     {
-                        currentSpeed = DynamicData.MaxSpeed;
+                        currentSpeed = DynamicData.Speed.Max;
                     }
                     else
                     {
-                        currentSpeed = DynamicData.BaseSpeed;
+                        currentSpeed = DynamicData.Speed.Now;
                     }
                     Rigidbody.velocity = direction * currentSpeed;
 

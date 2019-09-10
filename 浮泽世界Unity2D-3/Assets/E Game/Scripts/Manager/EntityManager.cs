@@ -8,7 +8,7 @@ public class EntityManager : SingletonClass<EntityManager>
 {
     public GameObject HumanPrefab;
     [ReadOnly] public List<Character> Characters = new List<Character>();
-    [ReadOnly] public List<Interactor> Interactors = new List<Interactor>();
+    [ReadOnly] public List<Item> Interactors = new List<Item>();
 
     /// <summary>
     /// 检查场景内的实体
@@ -24,8 +24,8 @@ public class EntityManager : SingletonClass<EntityManager>
         Debug.Log("场景内NPC数量 " + Characters.Count);
         
         Interactors.Clear();
-        Interactor[] interactors = GameObject.Find("Interactors").GetComponentsInChildren<Interactor>();
-        foreach (Interactor item in interactors)
+        Item[] interactors = GameObject.Find("Interactors").GetComponentsInChildren<Item>();
+        foreach (Item item in interactors)
         {
             Interactors.Add(item);
         }
@@ -75,22 +75,22 @@ public class EntityManager : SingletonClass<EntityManager>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Interactor SpawnInteractor(InteractorStaticData sData, Vector2 position)
+    public Item SpawnInteractor(ItemStaticData sData, Vector2 position)
     {
         Transform parent = GameObject.Find("Interactors").transform;
         GameObject target;
-        Interactor inte;
+        Item inte;
         target = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), parent);
-        inte = target.GetComponent<Interactor>();
+        inte = target.GetComponent<Item>();
         Interactors.Add(inte);
         return inte;
     }
     /// <summary>
     /// 生成Interactor
     /// </summary>
-    public Interactor SpawnInteractor(InteractorDynamicData dData)
+    public Item SpawnInteractor(ItemDynamicData dData)
     {
-        InteractorStaticData sData = (InteractorStaticData)InteractorStaticData.GetValue(dData.Name);
+        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
         return SpawnInteractor(sData, dData.Position);
     }
 
@@ -115,9 +115,9 @@ public class EntityManager : SingletonClass<EntityManager>
     /// </summary>
     /// <param name="name">物品名</param>
     /// <returns></returns>
-    public Interactor GetInteractor(string name)
+    public Item GetInteractor(string name)
     {
-        foreach (Interactor item in Interactors)
+        foreach (Item item in Interactors)
         {
             if (item.StaticData.Name == name)
             {

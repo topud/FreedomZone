@@ -8,12 +8,10 @@ namespace E.Tool
     [CreateAssetMenu(menuName = "E Character")]
     public class CharacterStaticData : EntityStaticData
     {
-        [SerializeField, Tooltip("生日")] private DateTime birthday = new DateTime(2000, 1, 1);
+        [Header("角色实体静态数据")]
+        [SerializeField, Tooltip("种族")] private Race race = Race.人类;
         [SerializeField, Tooltip("性别")] private Gender gender = Gender.无;
         [SerializeField, Tooltip("身高")] private int height = 160;
-        [SerializeField, Tooltip("体重")] private int weight = 50;
-        [SerializeField, Tooltip("种族")] private Race race = Race.人类;
-
         [SerializeField, Tooltip("学届")] private int startYear = 2020;
         [SerializeField, Tooltip("学院")] private string college = "设计学院";
         [SerializeField, Tooltip("专业")] private string profession = "视觉传达设计";
@@ -22,18 +20,13 @@ namespace E.Tool
         [SerializeField, Tooltip("班级")] private string @class = "甲";
         [SerializeField, Tooltip("学号")] private string studentID = "F20390052";
 
-        [SerializeField, Tooltip("初始生机上限")] private int maxHealth = 20;
-        [SerializeField, Tooltip("初始脑力上限")] private int maxMind = 20;
-        [SerializeField, Tooltip("初始体力上限")] private int maxPower = 20;
-        [SerializeField, Tooltip("初始生机恢复系数")] private int healthRecoveryCoefficient = 1;
-        [SerializeField, Tooltip("初始脑力恢复系数")] private int mindRecoveryCoefficient = 1;
-        [SerializeField, Tooltip("初始体力恢复系数")] private int powerRecoveryCoefficient = 1;
-        [SerializeField, Tooltip("初始速度上限")] private int maxSpeed = 5;
-        [SerializeField, Tooltip("初始基础速度")] private int baseSpeed = 2;
-        [SerializeField, Tooltip("初始智力")] private int intelligence = 5;
-        [SerializeField, Tooltip("初始力量")] private int strength = 5;
-        [SerializeField, Tooltip("初始防御")] private int defense = 1;
-        
+        [SerializeField, Tooltip("初始脑力")] private IntProperty mind = new IntProperty(20, 20);
+        [SerializeField, Tooltip("初始体力")] private IntProperty power = new IntProperty(20, 20);
+        [SerializeField, Tooltip("初始速度")] private IntProperty speed = new IntProperty(5, 2, 0, false, false, 0);
+        [SerializeField, Tooltip("初始智力")] private IntProperty iq = new IntProperty(100, 5, 0, false, false, 0);
+        [SerializeField, Tooltip("初始力量")] private IntProperty strength = new IntProperty(100, 5, 0, false, false, 0);
+        [SerializeField, Tooltip("初始防御")] private IntProperty defense = new IntProperty(100, 1, 0, false, false, 0);
+
         [SerializeField, Tooltip("初始携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("初始携带的浮泽币")] private int fzb = 0;
         [SerializeField, Tooltip("初始携带的物品")] private List<Item> items = new List<Item>();
@@ -46,9 +39,9 @@ namespace E.Tool
         [SerializeField, Tooltip("随机对话内容")] private List<string> randomStorys = new List<string>();
         
         /// <summary>
-        /// 生日
+        /// 种族
         /// </summary>
-        public DateTime Birthday { get => birthday; }
+        public Race Race { get => race; }
         /// <summary>
         /// 性别
         /// </summary>
@@ -57,15 +50,6 @@ namespace E.Tool
         /// 身高
         /// </summary>
         public int Height { get => height; }
-        /// <summary>
-        /// 体重
-        /// </summary>
-        public int Weight { get => weight; }
-        /// <summary>
-        /// 种族
-        /// </summary>
-        public Race Race { get => race; }
-
         /// <summary>
         /// 学届
         /// </summary>
@@ -96,49 +80,29 @@ namespace E.Tool
         public string StudentID { get => studentID; }
 
         /// <summary>
-        /// 初始生机上限
+        /// 初始脑力
         /// </summary>
-        public int MaxHealth { get => maxHealth; }
+        public IntProperty Mind { get => mind; }
         /// <summary>
-        /// 初始脑力上限
+        /// 初始体力
         /// </summary>
-        public int MaxMind { get => maxMind; }
+        public IntProperty Power { get => power; }
         /// <summary>
-        /// 初始体力上限
+        /// 初始速度
         /// </summary>
-        public int MaxPower { get => maxPower; }
-        /// <summary>
-        /// 初始生机恢复系数
-        /// </summary>
-        public int HealthRecoveryCoefficient { get => healthRecoveryCoefficient; }
-        /// <summary>
-        /// 初始脑力恢复系数
-        /// </summary>
-        public int MindRecoveryCoefficient { get => mindRecoveryCoefficient; }
-        /// <summary>
-        /// 初始体力恢复系数
-        /// </summary>
-        public int PowerRecoveryCoefficient { get => powerRecoveryCoefficient; }
-        /// <summary>
-        /// 初始速度上限
-        /// </summary>
-        public int MaxSpeed { get => maxSpeed; }
-        /// <summary>
-        /// 初始基础速度
-        /// </summary>
-        public int BaseSpeed { get => baseSpeed; }
+        public IntProperty Speed { get => speed; }
         /// <summary>
         /// 初始智力
         /// </summary>
-        public int Intelligence { get => intelligence; }
+        public IntProperty IQ { get => iq; }
         /// <summary>
         /// 初始力量
         /// </summary>
-        public int Strength { get => strength; }
+        public IntProperty Strength { get => strength; }
         /// <summary>
         /// 初始防御
         /// </summary>
-        public int Defense { get => defense; }
+        public IntProperty Defense { get => defense; }
         
         /// <summary>
         /// 初始携带的人民币
@@ -188,7 +152,7 @@ namespace E.Tool
         /// <summary>
         /// 对象
         /// </summary>
-        public CharacterStaticData Character { get => character;  }
+        public CharacterStaticData Character { get => character; }
         /// <summary>
         /// 好感度
         /// </summary>

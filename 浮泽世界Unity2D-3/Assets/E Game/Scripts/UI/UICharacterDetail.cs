@@ -57,11 +57,11 @@ namespace E.Tool
                 uiCharacterInfo.txtClass.text = Target.StaticData.Class.ToString();
                 uiCharacterInfo.txtStudentID.text = Target.StaticData.StudentID.ToString();
 
-                uiCharacterInfo.txtHealth.text = Target.DynamicData.MaxHealth.ToString();
-                uiCharacterInfo.txtMind.text = Target.DynamicData.MaxMind.ToString();
-                uiCharacterInfo.txtPower.text = Target.DynamicData.MaxPower.ToString();
-                uiCharacterInfo.txtIntelligence.text = Target.DynamicData.Intelligence.ToString();
-                uiCharacterInfo.txtSpeed.text = Target.DynamicData.MaxSpeed.ToString();
+                uiCharacterInfo.txtHealth.text = Target.DynamicData.Health.Max.ToString();
+                uiCharacterInfo.txtMind.text = Target.DynamicData.Mind.Max.ToString();
+                uiCharacterInfo.txtPower.text = Target.DynamicData.Power.Max.ToString();
+                uiCharacterInfo.txtIntelligence.text = Target.DynamicData.IQ.ToString();
+                uiCharacterInfo.txtSpeed.text = Target.DynamicData.Speed.ToString();
                 uiCharacterInfo.txtStrength.text = Target.DynamicData.Strength.ToString();
                 uiCharacterInfo.txtDefense.text = Target.DynamicData.Defense.ToString();
             }

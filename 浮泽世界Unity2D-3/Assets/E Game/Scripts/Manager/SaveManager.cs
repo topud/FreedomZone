@@ -183,7 +183,7 @@ public class SaveManager : SingletonClass<SaveManager>
         {
             save.CharacterDynamicDatas.Add(item.DynamicData);
         }
-        foreach (Interactor item in EntityManager.Singleton.Interactors)
+        foreach (Item item in EntityManager.Singleton.Interactors)
         {
             save.InteractorDynamicDatas.Add(item.DynamicData);
         }
@@ -222,9 +222,9 @@ public class SaveManager : SingletonClass<SaveManager>
                 EntityManager.Singleton.SpawnCharacter(item, item.IsPlayer);
             }
         }
-        foreach (InteractorDynamicData item in save.InteractorDynamicDatas)
+        foreach (ItemDynamicData item in save.InteractorDynamicDatas)
         {
-            Interactor inte = EntityManager.Singleton.GetInteractor(item.Name);
+            Item inte = EntityManager.Singleton.GetInteractor(item.Name);
             if (inte)
             {
                 inte.SetDynamicData(item);
@@ -264,5 +264,5 @@ public class Save
 {
     public NodeID NodeID = new NodeID(0,0,0,0,0);
     public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
-    public List<InteractorDynamicData> InteractorDynamicDatas = new List<InteractorDynamicData>();
+    public List<ItemDynamicData> InteractorDynamicDatas = new List<ItemDynamicData>();
 }

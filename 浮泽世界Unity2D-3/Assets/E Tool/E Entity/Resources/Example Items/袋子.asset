@@ -10,20 +10,20 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 06fdcf929144d2f46a65b24b26757a28, type: 3}
-  m_Name: "\u624B\u7535\u7B52"
+  m_Name: "\u888B\u5B50"
   m_EditorClassIdentifier: 
-  name: "\u624B\u7535\u7B52"
-  describe: "\u8FD9\u662F\u4E00\u4E2A\u624B\u7535\u7B52"
-  icon: {fileID: 21300000, guid: 653d5b1bf7c2c3f478af18ff9990bd8d, type: 3}
+  name: "\u888B\u5B50"
+  describe: "\u8FD9\u662F\u4E00\u4E2A\u888B\u5B50"
+  icon: {fileID: 21300000, guid: 8dc6edc5e31a45c4c995289a3da5fcaa, type: 3}
   prefab: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88, type: 3}
   invincible: 0
   movable: 1
   stackable: 0
-  accommodatable: 0
+  accommodatable: 1
   perishable: 0
-  weight: 5
-  volume: 2
-  rmbPrice: 100
+  weight: 50
+  volume: 10
+  rmbPrice: 10
   capacity: 0
   skills: []
   buffs: []

@@ -13,7 +13,7 @@ namespace E.Tool
 
         [Header("任务目标（根据任务类型三选一）")]
         [SerializeField, Tooltip("目标角色")] private CharacterStaticData tartgetCharacter;
-        [SerializeField, Tooltip("目标物品")] private InteractorStaticData tartgetInteractor;
+        [SerializeField, Tooltip("目标物品")] private ItemStaticData tartgetInteractor;
         [SerializeField, Tooltip("目标技能")] private Skill tartgetSkill;
 
         [Header("任务完成情况")]
@@ -24,7 +24,7 @@ namespace E.Tool
         [SerializeField, Tooltip("奖励软妹币")] private int rewardRMB = 0;
         [SerializeField, Tooltip("奖励浮泽币")] private int rewardFZB = 0;
         [SerializeField, Tooltip("奖励技能")] private Skill rewardSkill;
-        [SerializeField, Tooltip("奖励物品")] private List<InteractorStaticData> rewardItems = new List<InteractorStaticData>();
+        [SerializeField, Tooltip("奖励物品")] private List<ItemStaticData> rewardItems = new List<ItemStaticData>();
 
         [Header("前提要求")]
         [SerializeField, Tooltip("要求完成的前一项任务")] private Quest requireQuest;
@@ -50,7 +50,7 @@ namespace E.Tool
         /// <summary>
         /// 目标物品
         /// </summary>
-        public InteractorStaticData TartgetInteractor { get => tartgetInteractor; set => tartgetInteractor = value; }
+        public ItemStaticData TartgetInteractor { get => tartgetInteractor; set => tartgetInteractor = value; }
         /// <summary>
         /// 目标技能
         /// </summary>
@@ -110,7 +110,7 @@ namespace E.Tool
         /// <summary>
         /// 奖励物品
         /// </summary>
-        public List<InteractorStaticData> RewardItems { get => rewardItems; }
+        public List<ItemStaticData> RewardItems { get => rewardItems; }
 
         /// <summary>
         /// 要求完成的前一项任务

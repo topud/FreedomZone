@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,24 +7,8 @@ namespace E.Tool
 {
     public abstract class EntityDynamicData : DynamicData
     {
-        [SerializeField, Tooltip("坐标")] private Vector2 position = new Vector2(0, 0);
-        [SerializeField, Tooltip("当前是否无敌")] private bool invincible = false;
-
-        /// <summary>
-        /// 坐标
-        /// </summary>
-        public Vector2 Position
-        {
-            get => position;
-            set => position = value;
-        }
-        /// <summary>
-        /// 当前是否无敌
-        /// </summary>
-        public bool Invincible
-        {
-            get => invincible;
-            set => invincible = value;
-        }
+        [Header("实体动态数据")]
+        [Tooltip("坐标")] public Vector2 Position = new Vector2(0, 0);
+        [Tooltip("当前生机/耐久")] public IntProperty Health = new IntProperty(20, 20);
     }
 }

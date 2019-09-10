@@ -8,6 +8,7 @@ namespace E.Tool
 {
     public abstract class StaticData : StaticDataDictionary<StaticData>
     {
+        [Header("静态数据")]
         [SerializeField, Tooltip("名称")] protected new string name = "";
         [SerializeField, Tooltip("描述"), TextArea(1, 30)] protected string describe = "";
         [SerializeField, Tooltip("图标")] protected Sprite icon = null;

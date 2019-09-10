@@ -6,15 +6,7 @@ namespace E.Tool
 {
     public abstract class DynamicData
     {
-        [SerializeField, Tooltip("名称"), ReadOnly] protected string name = "";
-       
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string Name
-        {
-            get => name;
-            set => name = value;
-        }
+        [Header("动态数据")]
+        [Tooltip("名称"), ReadOnly] public string Name = "";
     }
 }

@@ -20,7 +20,7 @@ GameObject:
   - component: {fileID: 4617808992948481500}
   - component: {fileID: 1022696305292128388}
   m_Layer: 9
-  m_Name: "\u888B\u5B50"
+  m_Name: "\u7269\u54C1"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,7 +99,7 @@ SpriteRenderer:
   m_SortingLayerID: -1824539169
   m_SortingLayer: -1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 6009401d4fd5dda44a020c26002d4fdd, type: 3}
+  m_Sprite: {fileID: 21300000, guid: c275785b6ab17c4489b53ff266762fef, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -125,7 +125,7 @@ CircleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
-  m_Radius: 0.4
+  m_Radius: 0.5
 --- !u!50 &4000060697525791407
 Rigidbody2D:
   serializedVersion: 4
@@ -346,7 +346,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2443446638038779542}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0d8d630fb035f4c60b8b386fbe6ec778, type: 3}
+  m_Script: {fileID: 11500000, guid: cb8805dcdd8627f46830c08601c6387b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Collider: {fileID: 6353631478210439943}
@@ -357,9 +357,9 @@ MonoBehaviour:
   AIDestinationSetter: {fileID: 4617808992948481500}
   TargetUI: {fileID: 9175615372880370539}
   SpriteSorter: {fileID: 3843289490510987396}
-  StaticData: {fileID: 11400000, guid: 012cbccd87b21cb44866bb7c612991d5, type: 2}
+  StaticData: {fileID: 0}
   DynamicData:
-    name: "\u888B\u5B50"
+    name: 
     position: {x: 0, y: 0}
     invincible: 0
     stack: 1

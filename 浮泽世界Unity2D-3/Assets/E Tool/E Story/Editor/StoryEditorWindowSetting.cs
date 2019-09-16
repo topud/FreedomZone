@@ -1,14 +1,9 @@
-// ========================================================
-// 作者：E Star
-// 创建时间：2019-03-09 23:13:08
-// 当前版本：1.0
-// 作用描述：
-// 挂载目标：
-// ========================================================
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 using System;
+using System.Reflection;
 using E.Tool;
 
 namespace E.Tool
@@ -42,6 +37,36 @@ namespace E.Tool
             MainLine = new Color(0, 0.7f, 0);
             BranchLine = new Color(0.7f, 0, 0);
             BGLine = new Color(0, 0, 0, 0.1f);
+        }
+    }
+
+    public class StoryEditorSettingWindow : EditorWindow
+    {
+        private static StoryEditorWindowSetting setting;
+
+        [PreferenceItem("E Writer")]
+        private static void OnSetting()
+        {
+            if (!setting)
+            {
+                setting = StoryEditorWindowSetting.GetValues()[0];
+            }
+
+            EditorGUILayout.LabelField("布局", EditorStyles.boldLabel);
+            setting.ViewWidth = EditorGUILayout.IntField("画布宽度", setting.ViewWidth);
+            setting.ViewHeight = EditorGUILayout.IntField("画布高度", setting.ViewHeight);
+            setting.DefaultNodeSize = EditorGUILayout.Vector2IntField("默认节点尺寸", setting.DefaultNodeSize);
+
+            EditorGUILayout.LabelField("颜色", EditorStyles.boldLabel);
+            setting.BGLine = EditorGUILayout.ColorField("背景网格", setting.BGLine);
+            setting.NormalNode = EditorGUILayout.ColorField("默认节点", setting.NormalNode);
+            setting.SelectNode = EditorGUILayout.ColorField("选中节点", setting.SelectNode);
+            setting.MainLine = EditorGUILayout.ColorField("主线结点连接线", setting.MainLine);
+            setting.BranchLine = EditorGUILayout.ColorField("支线结点连接线", setting.BranchLine);
+
+
+            //EditorGUI.BeginChangeCheck();
+            //EditorValues.IsProjectOwner = EditorGUILayout.Toggle("Is Owner", EditorValues.IsProjectOwner);
         }
     }
 }

@@ -11,6 +11,8 @@ using UnityEngine;
 using UnityEditor;
 using E.Tool;
 using System.Linq;
+using System.Reflection;
+using System.Collections;
 
 namespace E.Tool
 {
@@ -21,10 +23,6 @@ namespace E.Tool
         /// 故事编辑器窗口
         /// </summary>
         public static StoryEditorWindow instance;
-        /// <summary>
-        /// 窗口配置信息
-        /// </summary>
-        private static StoryEditorWindowSetting config;
         /// <summary>
         /// 故事列表
         /// </summary>
@@ -58,20 +56,6 @@ namespace E.Tool
                     instance = GetWindow<StoryEditorWindow>();
                 }
                 return instance;
-            }
-        }
-        /// <summary>
-        /// 配置信息
-        /// </summary>
-        public static StoryEditorWindowSetting Config
-        {
-            get
-            {
-                if (config == null)
-                {
-                    config = (StoryEditorWindowSetting)StoryEditorWindowSetting.GetValues()[0];
-                }
-                return config;
             }
         }
         /// <summary>
@@ -158,7 +142,7 @@ namespace E.Tool
         {
             Instance.titleContent = new GUIContent("E Story");
 
-            View = new Rect(0, 0, Config.ViewWidth, Config.ViewHeight);
+            View = new Rect(0, 0, StoryEditorWindowPreference.ViewSize.x, StoryEditorWindowPreference.ViewSize.y);
             ScrollPos = Vector2Int.zero;
             MousePos = Vector2Int.zero;
             Xoffset = 0;
@@ -217,7 +201,7 @@ namespace E.Tool
         /// <param name="node"></param>
         private static int RefreshNodeHeight(Node node)
         {
-            int baseHeight = Config.DefaultNodeSize.y;
+            int baseHeight = StoryEditorWindowPreference.NodeSize.y;
             if (node.Content != null)
             {
                 switch (node.Content.Type)
@@ -254,7 +238,7 @@ namespace E.Tool
         /// </summary>
         private static void CreateStory()
         {
-            Story story = AssetCreator<Story>.CreateAsset(Config.StoryResourcesFolder, "Story");
+            Story story = AssetCreator<Story>.CreateAsset(StoryEditorWindowPreference.StoryResourcesFolder, "Story");
             if (story != null)
             {
                 OpenStory(story);
@@ -269,7 +253,7 @@ namespace E.Tool
         {
             if (CurrentStory != null)
             {
-                CurrentStory.CreateNode(new RectInt(MousePos.x, MousePos.y, Config.DefaultNodeSize.x, Config.DefaultNodeSize.y));
+                CurrentStory.CreateNode(new RectInt(MousePos.x, MousePos.y, StoryEditorWindowPreference.NodeSize.x, StoryEditorWindowPreference.NodeSize.y));
             }
             else
             {
@@ -285,7 +269,7 @@ namespace E.Tool
         {
             if (CurrentStory.Nodes.Contains(CurrentNode))
             {
-                StoryContent storyContent = AssetCreator<StoryContent>.CreateAsset(Config.StoryResourcesFolder, "Content");
+                StoryContent storyContent = AssetCreator<StoryContent>.CreateAsset(StoryEditorWindowPreference.StoryResourcesFolder, "Content");
                 if (storyContent != null)
                 {
                     CurrentNode.Content = storyContent;
@@ -606,21 +590,33 @@ namespace E.Tool
             /*************按钮*************/
             if (GUI.Button(new Rect(5, Instance.position.height - 85, 70, 20), "编辑配置"))
             {
-                Selection.activeObject = Config;
+                //Selection.activeObject = Config;{
+                //Assembly assembly = Assembly.GetAssembly(typeof(EditorWindow));
+                //Type type = assembly.GetType("UnityEditor.PreferencesWindow");
+                //type.GetMethod("ShowPreferencesWindow", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, null);
+                //EditorWindow window = EditorWindow.GetWindow(type);
+                //FieldInfo sectionsField = type.GetField("m_Sections", BindingFlags.Instance | BindingFlags.NonPublic);
+                //IList sections = sectionsField.GetValue(window) as IList;
+                //Type sectionType = sectionsField.FieldType.GetGenericArguments()[0];
+                //FieldInfo sectionContentField = sectionType.GetField("content", BindingFlags.Instance | BindingFlags.Public);
+                //for (int i = 0; i < sections.Count; i++)
+                //{
+                //    GUIContent sectionContent = sectionContentField.GetValue(sections[i]) as GUIContent;
+                //    if (sectionContent.text == "Colors")
+                //    {
+                //        FieldInfo sectionIndexField = type.GetField("m_SelectedSectionIndex", BindingFlags.Instance | BindingFlags.NonPublic);
+                //        sectionIndexField.SetValue(window, i); return;
+                //    }
+                //}
             }
-            if (GUI.Button(new Rect(5, Instance.position.height - 60, 70, 20), "重置配置"))
-            {
-                Config.Reset();
-                Refresh();
-                Instance.ShowNotification(new GUIContent("配置已重置"));
-            }
-            View = new Rect(0, 0, Config.ViewWidth, Config.ViewHeight);
+
+            View = new Rect(0, 0, StoryEditorWindowPreference.ViewSize.x, StoryEditorWindowPreference.ViewSize.y);
             /*************故事列表*************/
             Rect box;
             if (Storys.Count == 0)
             {
                 box = new Rect(0, 0, 100, 25 * Storys.Count + 50);
-                EditorGUI.DrawRect(box, Config.NormalNode);
+                EditorGUI.DrawRect(box, StoryEditorWindowPreference.NormalNode);
                 EditorGUI.LabelField(new Rect(box.x + 5, box.y + 25, box.width - 10, 16), "空");
                 if (GUI.Button(new Rect(box.x + 35, box.y + 25, box.width - 45, 16), "刷新"))
                 {
@@ -630,7 +626,7 @@ namespace E.Tool
             else
             {
                 box = new Rect(0, 0, 100, 25 * Storys.Count + 25);
-                EditorGUI.DrawRect(box, Config.NormalNode);
+                EditorGUI.DrawRect(box, StoryEditorWindowPreference.NormalNode);
                 for (int i = 0; i < Storys.Count; i++)
                 {
                     if (GUI.Button(new Rect(box.x + 5, box.y + 25 * i + 25, box.width - 10, 20), Storys[i].name))
@@ -642,7 +638,7 @@ namespace E.Tool
             EditorGUI.LabelField(new Rect(box.x + 5, box.y + 5, box.width - 10, 16), "故事列表");
 
             /*************当前故事*************/
-            EditorGUI.DrawRect(new Rect(0, Instance.position.height - 20, Instance.position.width, 20), Config.NormalNode);
+            EditorGUI.DrawRect(new Rect(0, Instance.position.height - 20, Instance.position.width, 20), StoryEditorWindowPreference.NormalNode);
             string mousePos = "X: " + MousePos.x + "  Y: " + MousePos.y;
             EditorGUI.LabelField(new Rect(5, Instance.position.height - 20, 110, 20), mousePos);
             string currenStoryPath = GetCurrentStoryPath();
@@ -725,16 +721,16 @@ namespace E.Tool
                 {
                     if (CurrentNode == node)
                     {
-                        EditorGUI.DrawRect(rect, Config.SelectNode);
+                        EditorGUI.DrawRect(rect, StoryEditorWindowPreference.SelectNode);
                     }
                     else
                     {
-                        EditorGUI.DrawRect(rect, Config.NormalNode);
+                        EditorGUI.DrawRect(rect, StoryEditorWindowPreference.NormalNode);
                     }
                 }
                 else
                 {
-                    EditorGUI.DrawRect(rect, Config.NormalNode);
+                    EditorGUI.DrawRect(rect, StoryEditorWindowPreference.NormalNode);
                 }
                 //节点类型
                 switch (node.Type)
@@ -934,11 +930,11 @@ namespace E.Tool
             //绘制线条
             if (isMainLine)
             {
-                Handles.DrawBezier(startPos, endPos, startTan, endTan, Config.MainLine, null, 4);
+                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryEditorWindowPreference.MainLine, null, 4);
             }
             else
             {
-                Handles.DrawBezier(startPos, endPos, startTan, endTan, Config.BranchLine, null, 3);
+                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryEditorWindowPreference.BranchLine, null, 3);
             }
         }
         /// <summary>
@@ -948,7 +944,7 @@ namespace E.Tool
         /// <param name="end"></param>
         private static void DrawLine(Vector3 start, Vector3 end)
         {
-            Handles.DrawBezier(start, end, start, end, Config.BGLine, null, 2);
+            Handles.DrawBezier(start, end, start, end, new Color(0, 0, 0, 0.1f), null, 2);
         }
 
         //mono

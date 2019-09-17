@@ -59,7 +59,7 @@ namespace E.Tool
             }
         }
         /// <summary>
-        /// 故事集和
+        /// 故事集合
         /// </summary>
         public static List<Story> Storys
         {
@@ -588,8 +588,9 @@ namespace E.Tool
         private static void DrawFixedPanel()
         {
             /*************按钮*************/
-            if (GUI.Button(new Rect(5, Instance.position.height - 85, 70, 20), "编辑配置"))
+            if (GUI.Button(new Rect(5, Instance.position.height - 60, 70, 20), "编辑配置"))
             {
+                Instance.ShowNotification(new GUIContent("请前往 Edit -> Preferences -> E Writer 进行编辑"));
                 //Selection.activeObject = Config;{
                 //Assembly assembly = Assembly.GetAssembly(typeof(EditorWindow));
                 //Type type = assembly.GetType("UnityEditor.PreferencesWindow");

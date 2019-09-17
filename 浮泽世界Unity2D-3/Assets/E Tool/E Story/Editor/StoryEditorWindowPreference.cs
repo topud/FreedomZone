@@ -12,6 +12,9 @@ namespace E.Tool
 {
     public class StoryEditorWindowPreference : EditorWindow
     {
+        /// <summary>
+        /// 故事资产文件夹路径
+        /// </summary>
         public static string StoryResourcesFolder
         {
             get
@@ -24,6 +27,9 @@ namespace E.Tool
                 EditorPrefs.SetString("StoryResourcesFolder", value);
             }
         }
+        /// <summary>
+        /// 视图尺寸
+        /// </summary>
         public static Vector2Int ViewSize
         {
             get
@@ -38,6 +44,9 @@ namespace E.Tool
                 EditorPrefs.SetInt("ViewHeight", value.y);
             }
         }
+        /// <summary>
+        /// 节点尺寸
+        /// </summary>
         public static Vector2Int NodeSize
         {
             get
@@ -52,6 +61,9 @@ namespace E.Tool
                 EditorPrefs.SetInt("NodeHeight", value.y);
             }
         }
+        /// <summary>
+        /// 默认节点颜色
+        /// </summary>
         public static Color NormalNode
         {
             get
@@ -71,6 +83,9 @@ namespace E.Tool
                 EditorPrefs.SetFloat("NormalNodeA", value.a);
             }
         }
+        /// <summary>
+        /// 选中节点颜色
+        /// </summary>
         public static Color SelectNode
         {
             get
@@ -89,6 +104,9 @@ namespace E.Tool
                 EditorPrefs.SetFloat("SelectNodeA", value.a);
             }
         }
+        /// <summary>
+        /// 主线颜色
+        /// </summary>
         public static Color MainLine
         {
             get
@@ -107,6 +125,9 @@ namespace E.Tool
                 EditorPrefs.SetFloat("MainLineA", value.a);
             }
         }
+        /// <summary>
+        /// 支线颜色
+        /// </summary>
         public static Color BranchLine
         {
             get
@@ -129,6 +150,9 @@ namespace E.Tool
         [PreferenceItem("E Writer")]
         private static void OnPreference()
         {
+            EditorGUILayout.LabelField("路径", EditorStyles.boldLabel);
+            StoryResourcesFolder = EditorGUILayout.TextField("资产文件默认存放路径", StoryResourcesFolder);
+
             EditorGUILayout.LabelField("布局", EditorStyles.boldLabel);
             ViewSize = EditorGUILayout.Vector2IntField("画布尺寸", ViewSize);
             NodeSize = EditorGUILayout.Vector2IntField("节点尺寸", NodeSize);
@@ -138,7 +162,8 @@ namespace E.Tool
             SelectNode = EditorGUILayout.ColorField("选中节点", SelectNode);
             MainLine = EditorGUILayout.ColorField("主线结点连接线", MainLine);
             BranchLine = EditorGUILayout.ColorField("支线结点连接线", BranchLine);
-            
+
+            EditorGUILayout.Space(10);
             if (GUILayout.Button("重置"))
             {
                 Reset();

@@ -183,7 +183,7 @@ public class SaveManager : SingletonClass<SaveManager>
         {
             save.CharacterDynamicDatas.Add(item.DynamicData);
         }
-        foreach (Item item in EntityManager.Singleton.Interactors)
+        foreach (Item item in EntityManager.Singleton.Items)
         {
             save.InteractorDynamicDatas.Add(item.DynamicData);
         }

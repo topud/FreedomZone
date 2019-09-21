@@ -8,7 +8,7 @@ namespace E.Tool
         /// <summary>
         /// 渲染器
         /// </summary>
-        [SerializeField] private SpriteRenderer[] Renderers;
+        public SpriteRenderer[] Renderers;
 
         /// <summary>
         /// 图片精确度

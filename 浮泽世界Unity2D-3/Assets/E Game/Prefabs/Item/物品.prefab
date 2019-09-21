@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 1022696305292128388}
   m_Layer: 9
   m_Name: "\u7269\u54C1"
-  m_TagString: Untagged
+  m_TagString: MovableItem
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -359,13 +359,17 @@ MonoBehaviour:
   SpriteSorter: {fileID: 3843289490510987396}
   StaticData: {fileID: 0}
   DynamicData:
-    name: 
-    position: {x: 0, y: 0}
-    invincible: 0
-    stack: 1
-    maxHealth: 10
-    health: 10
-    items: []
+    Name: 
+    Position: {x: 0, y: 0}
+    Health:
+      changeable: 1
+      autoChangeable: 1
+      autoChangeRate: 1
+      max: 20
+      min: 0
+      now: 20
+    Stack: 1
+    Items: []
 --- !u!1001 &8114693795623519393
 PrefabInstance:
   m_ObjectHideFlags: 0

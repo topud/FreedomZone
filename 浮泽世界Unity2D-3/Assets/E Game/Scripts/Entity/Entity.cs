@@ -14,17 +14,17 @@ namespace E.Tool
     [RequireComponent(typeof(AIDestinationSetter))]
     public abstract class Entity<S,D> : MonoBehaviour where S: EntityStaticData where D: EntityDynamicData
     {
-        [Header("组件")]
+        [Header("实体组件")]
         public Collider2D Collider;
         public Rigidbody2D Rigidbody;
         public AudioSource AudioSource;
         public Animator Animator;
         public AIPath AIPath;
         public AIDestinationSetter AIDestinationSetter;
-        public TargetUI TargetUI;
+        public EntityUI TargetUI;
         public SpriteSorter SpriteSorter;
 
-        [Header("数据")]
+        [Header("实体数据")]
         public S StaticData;
         public D DynamicData;
 
@@ -130,7 +130,7 @@ namespace E.Tool
             AIDestinationSetter = GetComponent<AIDestinationSetter>();
             //子对象组件
             Animator = GetComponentInChildren<Animator>(true);
-            TargetUI = GetComponentInChildren<TargetUI>(true);
+            TargetUI = GetComponentInChildren<EntityUI>(true);
             SpriteSorter = GetComponentInChildren<SpriteSorter>(true);
 
             if (!Collider) Debug.LogError("未找到 + Collider");

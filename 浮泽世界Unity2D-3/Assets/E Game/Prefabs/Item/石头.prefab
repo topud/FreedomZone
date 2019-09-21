@@ -7,6 +7,16 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Name
+      value: "\u77F3\u5934"
+      objectReference: {fileID: 0}
+    - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_TagString
+      value: ImmovableItem
+      objectReference: {fileID: 0}
     - target: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -61,11 +71,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: m_Name
-      value: "\u77F3\u5934"
       objectReference: {fileID: 0}
     - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -209,5 +214,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 11400000, guid: 424acb0b6121c224887ce0e684cae630,
         type: 2}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.Name
+      value: "\u77F3\u5934"
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52d6b4ddbba0a347bd7007ea4060a88, type: 3}

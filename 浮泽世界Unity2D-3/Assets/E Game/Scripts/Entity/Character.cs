@@ -9,8 +9,12 @@ namespace E.Tool
 {
     public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
-        [Header("状态")]
         public static Character Player;
+
+        [Header("角色组件")]
+        [SerializeField] private InHandItemController RightHandItemController;
+
+        [Header("角色状态")]
         [SerializeField] private bool isPlayer = false;
         [ReadOnly] public CharacterState State = CharacterState.Idle;
         [ReadOnly] public float RunBeyondDistance = 5;
@@ -31,7 +35,7 @@ namespace E.Tool
 
                     Player = this;
                     AIPath.enabled = false;
-                    CameraManager.Singleton.FollowCamera.GetComponent<CameraFollowTarget2D>().target = transform;
+                    CameraManager.Singleton.SetFollow(transform);
                 }
                 else
                 {
@@ -84,6 +88,20 @@ namespace E.Tool
             {
                 CheckNearby();
                 CheckAttack();
+                CheckCameraSize();
+
+                if (IsPlayer)
+                {
+                    if (Input.GetKeyUp(KeyCode.LeftBracket))
+                    {
+                        PutInRightHand(DynamicData.Items[0]);
+                    }
+                    if (Input.GetKeyUp(KeyCode.RightBracket))
+                    {
+                        PutInBag();
+                    }
+                }
+
             }
         }
         protected override void FixedUpdate()
@@ -135,8 +153,11 @@ namespace E.Tool
         public override void ResetDynamicData()
         {
             base.ResetDynamicData();
-            if (!StaticData) return;
 
+            gameObject.layer = 8;
+            gameObject.tag = IsPlayer ? "Player" : "NPC";
+
+            if (!StaticData) return;
             DynamicData = new CharacterDynamicData
             {
                 Name = StaticData.Name,
@@ -165,6 +186,7 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
+            RightHandItemController = GetComponentInChildren<InHandItemController>();
         }
 
         /// <summary>
@@ -313,7 +335,30 @@ namespace E.Tool
         {
             return DynamicData.Items.Contains(item);
         }
-    
+        /// <summary>
+        /// 将物品放在右手
+        /// </summary>
+        /// <param name="item"></param>
+        public void PutInRightHand(Item item)
+        {
+            RightHandItemController.SetItem(item, true);
+            item.SetPosition(true);
+            item.gameObject.SetActive(true);
+            Debug.Log(item.StaticData.Name + "已放在手中");
+        }
+        /// <summary>
+        /// 将物品放在背包
+        /// </summary>
+        /// <param name="item"></param>
+        public void PutInBag()
+        {
+            Debug.Log(RightHandItemController.Item.StaticData.Name + "已放入背包");
+
+            RightHandItemController.Item.SetPosition(false);
+            RightHandItemController.Item.gameObject.SetActive(false);
+            RightHandItemController.RemoveItem();
+        }
+
         /// <summary>
         /// 与角色对话
         /// </summary>
@@ -521,6 +566,14 @@ namespace E.Tool
                 {
                     Attack();
                 }
+            }
+        }
+        private void CheckCameraSize()
+        {
+            if (IsPlayer)
+            {
+                float f = Input.GetAxis("Mouse ScrollWheel");
+                CameraManager.Singleton.ChangeOrthographicSize(f);
             }
         }
     }

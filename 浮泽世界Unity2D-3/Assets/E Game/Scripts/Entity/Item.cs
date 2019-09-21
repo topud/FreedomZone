@@ -58,6 +58,9 @@ namespace E.Tool
         public override void ResetDynamicData()
         {
             base.ResetDynamicData();
+
+            gameObject.layer = 9;
+
             if (!StaticData) return;
 
             DynamicData = new ItemDynamicData
@@ -68,8 +71,7 @@ namespace E.Tool
                 Health = StaticData.Health,
                 Items = StaticData.Items
             };
-
-            gameObject.layer = StaticData.Movable ? 9 : 10;
+            gameObject.tag = StaticData.Movable ? "MovableItem" : "ImmovableItem";
             Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
             GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
         }
@@ -79,6 +81,18 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
+        }
+
+        /// <summary>
+        /// 设置位置状态
+        /// </summary>
+        /// <param name="isInHand"></param>
+        public void SetPosition(bool isInHand)
+        {
+            Collider.enabled = !isInHand;
+            AIPath.enabled = !isInHand;
+            AIDestinationSetter.enabled = !isInHand;
+            SpriteSorter.enabled = !isInHand;
         }
 
         /// <summary>

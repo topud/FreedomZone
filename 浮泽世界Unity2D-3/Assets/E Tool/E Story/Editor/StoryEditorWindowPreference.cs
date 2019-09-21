@@ -147,7 +147,7 @@ namespace E.Tool
             }
         }
         
-        [PreferenceItem("E Writer")]
+        [PreferenceItem("E Story")]
         private static void OnPreference()
         {
             EditorGUILayout.LabelField("路径", EditorStyles.boldLabel);
@@ -195,6 +195,8 @@ namespace E.Tool
             EditorPrefs.SetFloat("BranchLineG", 0);
             EditorPrefs.SetFloat("BranchLineB", 0);
             EditorPrefs.SetFloat("BranchLineA", 1);
+
+            Debug.Log("E Story 预设已重置");
         }
     }
 }

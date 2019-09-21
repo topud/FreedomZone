@@ -6,9 +6,14 @@ using E.Tool;
 
 public class EntityManager : SingletonClass<EntityManager>
 {
+    [Header("组件")]
     public GameObject HumanPrefab;
+    public Transform CharacterCollection { get => GameObject.Find("Entities").transform.GetChild(1); }
+    public Transform ItemCollection { get => GameObject.Find("Entities").transform.GetChild(0); }
+
+    [Header("数据")]
     [ReadOnly] public List<Character> Characters = new List<Character>();
-    [ReadOnly] public List<Item> Interactors = new List<Item>();
+    [ReadOnly] public List<Item> Items = new List<Item>();
 
     /// <summary>
     /// 检查场景内的实体
@@ -16,20 +21,20 @@ public class EntityManager : SingletonClass<EntityManager>
     public void CheckSceneEntity()
     {
         Characters.Clear();
-        Character[] characters = GameObject.Find("Characters").GetComponentsInChildren<Character>();
+        Character[] characters = CharacterCollection.GetComponentsInChildren<Character>();
         foreach (Character item in characters)
         {
             Characters.Add(item);
         }
         Debug.Log("场景内NPC数量 " + Characters.Count);
         
-        Interactors.Clear();
-        Item[] interactors = GameObject.Find("Interactors").GetComponentsInChildren<Item>();
+        Items.Clear();
+        Item[] interactors = ItemCollection.GetComponentsInChildren<Item>();
         foreach (Item item in interactors)
         {
-            Interactors.Add(item);
+            Items.Add(item);
         }
-        Debug.Log("场景内物品数量 " + Interactors.Count);
+        Debug.Log("场景内物品数量 " + Items.Count);
     }
 
     /// <summary>
@@ -40,17 +45,16 @@ public class EntityManager : SingletonClass<EntityManager>
     /// <returns></returns>
     public Character SpawnCharacter(CharacterStaticData sData, Vector2 position, bool isPlayer = false)
     {
-        Transform parent = GameObject.Find("Characters").transform;
         GameObject go;
         Character character;
         if (sData.Prefab)
         {
-            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), parent);
+            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
             character = go.GetComponent<Character>();
         }
         else
         {
-            go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), parent);
+            go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
             character = go.GetComponent<Character>();
             character.StaticData = sData;
             character.ResetComponents();
@@ -77,12 +81,11 @@ public class EntityManager : SingletonClass<EntityManager>
     /// <returns></returns>
     public Item SpawnInteractor(ItemStaticData sData, Vector2 position)
     {
-        Transform parent = GameObject.Find("Interactors").transform;
         GameObject target;
         Item inte;
-        target = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), parent);
+        target = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), ItemCollection);
         inte = target.GetComponent<Item>();
-        Interactors.Add(inte);
+        Items.Add(inte);
         return inte;
     }
     /// <summary>
@@ -117,7 +120,7 @@ public class EntityManager : SingletonClass<EntityManager>
     /// <returns></returns>
     public Item GetInteractor(string name)
     {
-        foreach (Item item in Interactors)
+        foreach (Item item in Items)
         {
             if (item.StaticData.Name == name)
             {

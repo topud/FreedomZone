@@ -10,7 +10,7 @@ using System.Reflection;
 
 namespace E.Tool
 {
-    public class Utility
+    public static class Utility
     {
         /// <summary>
         /// 限定整型数字范围，仅包含最小值

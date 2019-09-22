@@ -90,6 +90,8 @@ namespace E.Tool
             base.ResetDynamicData();
 
             gameObject.layer = 9;
+            AIPath.enabled = false;
+            AIDestinationSetter.enabled = false;
 
             if (!StaticData) return;
 

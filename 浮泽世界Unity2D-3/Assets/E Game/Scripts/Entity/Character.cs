@@ -156,6 +156,8 @@ namespace E.Tool
 
             gameObject.layer = 8;
             gameObject.tag = IsPlayer ? "Player" : "NPC";
+            AIPath.enabled = false;
+            AIDestinationSetter.enabled = false;
 
             if (!StaticData) return;
             DynamicData = new CharacterDynamicData

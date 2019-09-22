@@ -259,9 +259,16 @@ namespace E.Tool
         {
             if (IsNearby(item))
             {
-                item.gameObject.SetActive(false);
-                DynamicData.Items.Add(item);
-                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+                if (item.StaticData.Movable)
+                {
+                    item.gameObject.SetActive(false);
+                    DynamicData.Items.Add(item);
+                    Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+                }
+                else
+                {
+                    Debug.Log(string.Format("不可拾取 {0}", item.StaticData.Name));
+                }
             }
             else
             {

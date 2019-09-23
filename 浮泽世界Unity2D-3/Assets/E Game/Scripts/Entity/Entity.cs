@@ -10,8 +10,6 @@ namespace E.Tool
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(AudioSource))]
-    [RequireComponent(typeof(AIPath))]
-    [RequireComponent(typeof(AIDestinationSetter))]
     public abstract class Entity<S,D> : MonoBehaviour where S: EntityStaticData where D: EntityDynamicData
     {
         [Header("实体组件")]
@@ -19,26 +17,12 @@ namespace E.Tool
         public Rigidbody2D Rigidbody;
         public AudioSource AudioSource;
         public Animator Animator;
-        public AIPath AIPath;
-        public AIDestinationSetter AIDestinationSetter;
         public EntityUI TargetUI;
         public SpriteSorter SpriteSorter;
 
         [Header("实体数据")]
         public S StaticData;
         public D DynamicData;
-
-        public Transform FollowTarget
-        {
-            get
-            {
-                return AIDestinationSetter.target;
-            }
-            set
-            {
-                AIDestinationSetter.target = value;
-            }
-        }
 
         protected virtual void Awake()
         {
@@ -126,8 +110,6 @@ namespace E.Tool
             Collider = GetComponent<Collider2D>();
             Rigidbody = GetComponent<Rigidbody2D>();
             AudioSource = GetComponent<AudioSource>();
-            AIPath = GetComponent<AIPath>();
-            AIDestinationSetter = GetComponent<AIDestinationSetter>();
             //子对象组件
             Animator = GetComponentInChildren<Animator>(true);
             TargetUI = GetComponentInChildren<EntityUI>(true);
@@ -136,8 +118,6 @@ namespace E.Tool
             if (!Collider) Debug.LogError("未找到 + Collider");
             if (!Rigidbody) Debug.LogError("未找到 Rigidbody");
             if (!AudioSource) Debug.LogError("未找到 AudioSource");
-            if (!AIPath) Debug.LogError("未找到 AIPath");
-            if (!AIDestinationSetter) Debug.LogError("未找到 AIDestinationSetter");
             if (!Animator) Debug.LogError("未找到 Animator");
             if (!TargetUI) Debug.LogError("未找到 TargetUI");
             if (!SpriteSorter) Debug.LogError("未找到 SpriteSorter");

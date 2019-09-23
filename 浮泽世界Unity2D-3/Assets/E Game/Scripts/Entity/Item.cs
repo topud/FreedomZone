@@ -90,8 +90,6 @@ namespace E.Tool
             base.ResetDynamicData();
 
             gameObject.layer = 9;
-            AIPath.enabled = false;
-            AIDestinationSetter.enabled = false;
 
             if (!StaticData) return;
 
@@ -122,8 +120,6 @@ namespace E.Tool
         public void SetPosition(bool isInHand)
         {
             Collider.enabled = !isInHand;
-            AIPath.enabled = !isInHand;
-            AIDestinationSetter.enabled = !isInHand;
             SpriteSorter.enabled = !isInHand;
         }
 

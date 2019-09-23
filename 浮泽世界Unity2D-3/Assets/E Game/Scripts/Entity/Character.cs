@@ -7,11 +7,15 @@ using Pathfinding;
 
 namespace E.Tool
 {
+    [RequireComponent(typeof(AIPath))]
+    [RequireComponent(typeof(AIDestinationSetter))]
     public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
         public static Character Player;
 
         [Header("角色组件")]
+        public AIPath AIPath;
+        public AIDestinationSetter AIDestinationSetter;
         [SerializeField] private InHandItemController RightHandItemController;
 
         [Header("角色状态")]
@@ -54,6 +58,17 @@ namespace E.Tool
             set
             {
                 SpriteSorter.transform.localScale = new Vector3(value ? 1:-1, 1, 1);
+            }
+        }
+        public Transform FollowTarget
+        {
+            get
+            {
+                return AIDestinationSetter.target;
+            }
+            set
+            {
+                AIDestinationSetter.target = value;
             }
         }
 
@@ -188,7 +203,14 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
+
+            AIPath = GetComponent<AIPath>();
+            AIDestinationSetter = GetComponent<AIDestinationSetter>();
             RightHandItemController = GetComponentInChildren<InHandItemController>();
+
+            if (!AIPath) Debug.LogError("未找到 AIPath");
+            if (!AIDestinationSetter) Debug.LogError("未找到 AIDestinationSetter");
+            if (!RightHandItemController) Debug.LogError("未找到 RightHandItemController");
         }
 
         /// <summary>

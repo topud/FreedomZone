@@ -65,7 +65,16 @@ namespace E.Tool
             set => now = Utility.Clamp(value, min, max);
         }
 
-        public IntProperty(int max, int now, int min = 0, bool changeable = true, bool autoChangeable = true, int changeRate = 1)
+        /// <summary>
+        /// 构造器
+        /// </summary>
+        /// <param name="max">最大值</param>
+        /// <param name="now">当前值</param>
+        /// <param name="min">最小值</param>
+        /// <param name="changeable">是否可变动当前值</param>
+        /// <param name="autoChangeable">是否可自动变动当前值</param>
+        /// <param name="changeRate">自动变动速率</param>
+        public IntProperty(int max, int now, int min = 0, bool changeable = true, bool autoChangeable = true, int autoChangeRate = 1)
         {
             if (max < min)
             {
@@ -86,7 +95,7 @@ namespace E.Tool
 
             this.changeable = changeable;
             this.autoChangeable = autoChangeable;
-            this.autoChangeRate = changeRate;
+            this.autoChangeRate = autoChangeRate;
         }
     }
 }

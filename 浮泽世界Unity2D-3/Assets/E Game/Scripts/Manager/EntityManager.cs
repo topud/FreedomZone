@@ -50,11 +50,13 @@ public class EntityManager : SingletonClass<EntityManager>
         if (sData.Prefab)
         {
             go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
+            go.name = go.name.Replace("(Clone)", "");
             character = go.GetComponent<Character>();
         }
         else
         {
             go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
+            go.name = go.name.Replace("(Clone)", "");
             character = go.GetComponent<Character>();
             character.StaticData = sData;
             character.ResetComponents();

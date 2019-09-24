@@ -9,7 +9,7 @@ public class CameraManager : SingletonClass<CameraManager>
 {
     public Camera MainCamera { get => GameObject.FindWithTag("MainCamera").GetComponent<Camera>(); }
     public Camera MinimapCamera { get => GameObject.FindWithTag("MinimapCamera").GetComponent<Camera>(); }
-    public CinemachineVirtualCamera VirtualCamera;
+    public CinemachineVirtualCamera VirtualCamera { get => GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>(); }
 
     public void SetFollow(Transform target)
     {

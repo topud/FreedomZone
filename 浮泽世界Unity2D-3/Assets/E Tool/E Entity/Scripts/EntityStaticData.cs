@@ -11,8 +11,10 @@ namespace E.Tool
         [Header("实体静态数据")]
         [SerializeField, Tooltip("质量")] private int weight = 50;
         [SerializeField, Tooltip("体积")] private int volume = 1;
-        [SerializeField, Tooltip("生日")] private DateTime birthday = new DateTime(2000, 1, 1);
-        [SerializeField, Tooltip("初始生机")] private IntProperty health = new IntProperty(20, 20);
+        [SerializeField, Tooltip("生日 年"), Range(1970, 2020)] private int birthdayYear = 2000;
+        [SerializeField, Tooltip("生日 月"), Range(1, 12)] private int birthdayMonth = 1;
+        [SerializeField, Tooltip("生日 日"), Range(1, 31)] private int birthdayDay = 1;
+        [SerializeField, Tooltip("初始生机/耐久")] private IntProperty health = new IntProperty(20, 20);
 
         /// <summary>
         /// 质量
@@ -25,7 +27,7 @@ namespace E.Tool
         /// <summary>
         /// 生日
         /// </summary>
-        public DateTime Birthday { get => birthday; }
+        public DateTime Birthday { get => new DateTime(birthdayYear, birthdayMonth, birthdayDay); }
         /// <summary>
         /// 初始生机
         /// </summary>

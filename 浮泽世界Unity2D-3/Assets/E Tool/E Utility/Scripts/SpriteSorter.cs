@@ -19,6 +19,7 @@ namespace E.Tool
         /// </summary>
         [SerializeField] private int offset = 0;
 
+        [ExecuteInEditMode]
         private void Update()
         {
             //更新渲染层次

@@ -13,6 +13,8 @@ TagManager:
   - Collection
   - MainLight
   - MapPart
+  - InventorySlot
+  - Building
   layers:
   - Default
   - TransparentFX
@@ -26,8 +28,8 @@ TagManager:
   - Item
   - Effect
   - Camera
-  - Map
-  - 
+  - Building
+  - Ground
   - 
   - 
   - 
@@ -47,7 +49,7 @@ TagManager:
   - 
   - 
   m_SortingLayers:
-  - name: Floor
+  - name: Ground
     uniqueID: 1088210625
     locked: 0
   - name: Entity

@@ -16,6 +16,7 @@ namespace E.Tool
         [Header("角色组件")]
         public AIPath AIPath;
         public AIDestinationSetter AIDestinationSetter;
+        public EntityUI TargetUI;
         [SerializeField] private InHandItemController RightHandItemController;
 
         [Header("角色状态")]
@@ -175,6 +176,12 @@ namespace E.Tool
             AIDestinationSetter.enabled = false;
 
             if (!StaticData) return;
+
+            TargetUI.SetName(StaticData.Name);
+            TargetUI.HideName();
+            TargetUI.HideChat();
+            TargetUI.HideHelp();
+
             DynamicData = new CharacterDynamicData
             {
                 Name = StaticData.Name,
@@ -206,10 +213,12 @@ namespace E.Tool
 
             AIPath = GetComponent<AIPath>();
             AIDestinationSetter = GetComponent<AIDestinationSetter>();
+            TargetUI = GetComponentInChildren<EntityUI>(true);
             RightHandItemController = GetComponentInChildren<InHandItemController>();
 
             if (!AIPath) Debug.LogError("未找到 AIPath");
             if (!AIDestinationSetter) Debug.LogError("未找到 AIDestinationSetter");
+            if (!TargetUI) Debug.LogError("未找到 TargetUI");
             if (!RightHandItemController) Debug.LogError("未找到 RightHandItemController");
         }
 

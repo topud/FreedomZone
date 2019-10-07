@@ -17,7 +17,6 @@ namespace E.Tool
         public Rigidbody2D Rigidbody;
         public AudioSource AudioSource;
         public Animator Animator;
-        public EntityUI TargetUI;
         public SpriteSorter SpriteSorter;
 
         [Header("实体数据")]
@@ -95,10 +94,6 @@ namespace E.Tool
                 return;
             }
 
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
-            TargetUI.HideHelp();
             Rigidbody.mass = StaticData.Weight;
         }
         /// <summary>
@@ -112,14 +107,12 @@ namespace E.Tool
             AudioSource = GetComponent<AudioSource>();
             //子对象组件
             Animator = GetComponentInChildren<Animator>(true);
-            TargetUI = GetComponentInChildren<EntityUI>(true);
             SpriteSorter = GetComponentInChildren<SpriteSorter>(true);
 
             if (!Collider) Debug.LogError("未找到 + Collider");
             if (!Rigidbody) Debug.LogError("未找到 Rigidbody");
             if (!AudioSource) Debug.LogError("未找到 AudioSource");
             if (!Animator) Debug.LogError("未找到 Animator");
-            if (!TargetUI) Debug.LogError("未找到 TargetUI");
             if (!SpriteSorter) Debug.LogError("未找到 SpriteSorter");
         }
 

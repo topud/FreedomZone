@@ -7,6 +7,9 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
+        [Header("物品组件")]
+        public EntityUI TargetUI;
+
         protected override void Awake()
         {
             base.Awake();
@@ -93,6 +96,11 @@ namespace E.Tool
 
             if (!StaticData) return;
 
+            TargetUI.SetName(StaticData.Name);
+            TargetUI.HideName();
+            TargetUI.HideChat();
+            TargetUI.HideHelp();
+
             DynamicData = new ItemDynamicData
             {
                 Name = StaticData.Name,
@@ -111,6 +119,9 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
+
+            TargetUI = GetComponentInChildren<EntityUI>(true);
+            if (!TargetUI) Debug.LogError("未找到 TargetUI");
         }
 
         /// <summary>

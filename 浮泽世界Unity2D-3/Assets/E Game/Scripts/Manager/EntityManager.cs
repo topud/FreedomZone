@@ -8,8 +8,8 @@ public class EntityManager : SingletonClass<EntityManager>
 {
     [Header("组件")]
     public GameObject HumanPrefab;
-    public Transform CharacterCollection { get => GameObject.Find("Entities").transform.GetChild(1); }
-    public Transform ItemCollection { get => GameObject.Find("Entities").transform.GetChild(0); }
+    public Transform CharacterCollection { get => GameObject.Find("Characters").transform; }
+    public Transform ItemCollection { get => GameObject.Find("Items").transform; }
 
     [Header("数据")]
     [ReadOnly] public List<Character> Characters = new List<Character>();

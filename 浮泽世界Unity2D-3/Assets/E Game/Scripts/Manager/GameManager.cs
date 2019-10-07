@@ -49,7 +49,7 @@ public class GameManager : SingletonClass<GameManager>
             if (Character.Player == null)
             {
                 EntityManager.Singleton.CheckSceneEntity();
-                Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5), true);
+                Invoke("SpawnPlayer",0.02f);
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
         }
@@ -166,5 +166,10 @@ public class GameManager : SingletonClass<GameManager>
     public void QuitGame()
     {
         Application.Quit();
+    }
+
+    private void SpawnPlayer()
+    {
+        Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("璃亚"), new Vector2(165, 5), true);
     }
 }

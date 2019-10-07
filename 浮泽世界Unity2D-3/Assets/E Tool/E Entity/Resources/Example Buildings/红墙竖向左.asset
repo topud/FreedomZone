@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 011f6a7e0ab71ff4b883a7516785615e, type: 3}
+  m_Name: "\u7EA2\u5899\u7AD6\u5411\u5DE6"
+  m_EditorClassIdentifier: 
+  name: "\u7EA2\u5899\u7AD6\u5411\u5DE6"
+  describe: "\u8FD9\u662F\u4E00\u4E2A\u7EA2\u5899\u7AD6\u5411\u5DE6"
+  icon: {fileID: 21300000, guid: fe267cdd4f0c65c44aee846b569de2e9, type: 3}
+  prefab: {fileID: 4684906803966809292, guid: 0622357a2d1b1d447b07fef7bb2f2aee, type: 3}
+  weight: 10000
+  volume: 2000
+  birthdayYear: 2000
+  birthdayMonth: 1
+  birthdayDay: 1
+  health:
+    changeable: 1
+    autoChangeable: 1
+    autoChangeRate: 1
+    max: 20
+    min: 0
+    now: 20
+  rmbPrice: 10

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEditor;
 using UnityEngine.EventSystems;
 using System;
 using System.Collections.Generic;
@@ -143,6 +144,53 @@ namespace E.Tool
             }
             return index;
         }
+
+        /// <summary>
+        /// 移动对象
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public static void Move(Transform transform, float x, float y, float z)
+        {
+            transform.position = new Vector3(transform.position.x + x, transform.position.y + y, transform.position.z + z);
+        }
+        /// <summary>
+        /// 批量移动对象
+        /// </summary>
+        /// <param name="transform"></param>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="z"></param>
+        public static void Move(Transform[] transforms, float x, float y, float z)
+        {
+            foreach (Transform item in transforms)
+            {
+                item.position = new Vector3(item.position.x + x, item.position.y + y, item.position.z + z);
+            }
+        }
+        [MenuItem("Tools/E Utility/X坐标+1 %#l")]
+        public static void MoveX1()
+        {
+            Move(Selection.transforms,1,0,0);
+        }
+        [MenuItem("Tools/E Utility/X坐标-1 %#j")]
+        public static void Move1X()
+        {
+            Move(Selection.transforms, -1, 0, 0);
+        }
+        [MenuItem("Tools/E Utility/Y坐标+1 %#i")]
+        public static void MoveY1()
+        {
+            Move(Selection.transforms, 0, 1, 0);
+        }
+        [MenuItem("Tools/E Utility/Y坐标-1 %#k")]
+        public static void Move1Y()
+        {
+            Move(Selection.transforms, 0, -1, 0);
+        }
+
 
         /// <summary>
         /// 是否有键抬起

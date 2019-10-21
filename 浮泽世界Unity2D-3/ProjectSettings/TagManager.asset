@@ -52,6 +52,9 @@ TagManager:
   - name: Ground
     uniqueID: 1088210625
     locked: 0
+  - name: Shadow
+    uniqueID: 3850324229
+    locked: 0
   - name: Entity
     uniqueID: 2470428127
     locked: 0
@@ -60,9 +63,6 @@ TagManager:
     locked: 0
   - name: Foreground
     uniqueID: 3099144059
-    locked: 0
-  - name: 
-    uniqueID: 3850324229
     locked: 0
   - name: 
     uniqueID: 850132101

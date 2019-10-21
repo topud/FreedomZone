@@ -238,12 +238,12 @@ namespace E.Tool
         /// </summary>
         private static void CreateStory()
         {
-            Story story = AssetCreator<Story>.CreateAsset(StoryEditorWindowPreference.StoryResourcesFolder, "Story");
-            if (story != null)
-            {
-                OpenStory(story);
-                AssetDatabase.Refresh();
-            }
+            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", StoryEditorWindowPreference.StoryResourcesFolder);
+            if (path == "") return;
+            Story story = CreateInstance<Story>();
+            AssetDatabase.CreateAsset(story, path);
+            OpenStory(story);
+            //AssetDatabase.Refresh();
         }
         [MenuItem("Tools/E Story/创建节点", false, 2)]
         /// <summary>
@@ -258,6 +258,10 @@ namespace E.Tool
             else
             {
                 Instance.ShowNotification(new GUIContent("未指定故事"));
+                if (EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点", "好的", "关闭"))
+                {
+
+                }
             }
         }
         [MenuItem("Tools/E Story/创建节点内容", false, 3)]
@@ -267,19 +271,26 @@ namespace E.Tool
         /// <param name="type"></param>
         private static void CreateContent()
         {
-            if (CurrentStory.Nodes.Contains(CurrentNode))
+            if (CurrentStory != null)
             {
-                StoryContent storyContent = AssetCreator<StoryContent>.CreateAsset(StoryEditorWindowPreference.StoryResourcesFolder, "Content");
-                if (storyContent != null)
+                if (CurrentStory.Nodes.Contains(CurrentNode))
                 {
-                    CurrentNode.Content = storyContent;
-                    Selection.activeObject = storyContent;
+                    string path = EditorUtility.SaveFilePanelInProject("创建节点内容", "新节点内容", "Asset", "保存节点内容", StoryEditorWindowPreference.StoryResourcesFolder);
+                    if (path == "") return;
+                    StoryContent content = CreateInstance<StoryContent>();
+                    AssetDatabase.CreateAsset(content, path);
+                    CurrentNode.Content = content;
+                    Selection.activeObject = content;
                     RefreshNodeHeight(CurrentNode);
+                }
+                else
+                {
+                    Debug.LogWarning("未指定节点");
                 }
             }
             else
             {
-                Debug.LogWarning("未指定节点");
+                EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点内容", "好的", "关闭");
             }
         }
 

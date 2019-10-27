@@ -26,7 +26,7 @@ public class EntityManager : SingletonClass<EntityManager>
         {
             Characters.Add(item);
         }
-        Debug.Log("场景内NPC数量 " + Characters.Count);
+        Debug.Log("场景内角色数量 " + Characters.Count);
         
         Items.Clear();
         Item[] interactors = ItemCollection.GetComponentsInChildren<Item>();
@@ -43,60 +43,78 @@ public class EntityManager : SingletonClass<EntityManager>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Character SpawnCharacter(CharacterStaticData sData, Vector2 position, bool isPlayer = false)
+    public Character SpawnCharacter(string name, Vector2 position, bool isPlayer = false)
     {
         GameObject go;
         Character character;
-        if (sData.Prefab)
+        CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(name);
+        if (sData)
         {
-            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
-            go.name = go.name.Replace("(Clone)", "");
-            character = go.GetComponent<Character>();
+            if (sData.Prefab)
+            {
+                go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
+                character = go.GetComponent<Character>();
+                character.ResetDynamicData();
+            }
+            else
+            {
+                go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
+                character = go.GetComponent<Character>();
+                character.StaticData = sData;
+                character.ResetComponents();
+                character.ResetDynamicData();
+            }
+            character.IsPlayer = isPlayer;
+            Characters.Add(character);
+            Debug.Log("角色生成成功：" + name);
+            return character;
         }
         else
         {
-            go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), CharacterCollection);
-            go.name = go.name.Replace("(Clone)", "");
-            character = go.GetComponent<Character>();
-            character.StaticData = sData;
-            character.ResetComponents();
-            character.ResetDynamicData();
+            Debug.LogError("静态数据不存在：" + name);
+            return null;
         }
-        character.IsPlayer = isPlayer;
-        Characters.Add(character);
-        return character;
     }
     /// <summary>
     /// 生成角色，从动态数据（如存档）
     /// </summary>
     public Character SpawnCharacter(CharacterDynamicData dData, bool isPlayer = false)
     {
-        CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(dData.Name);
-        Character character = SpawnCharacter(sData, dData.Position, isPlayer);
+        Character character = SpawnCharacter(dData.Name, dData.Position, isPlayer);
         return character;
     }
     /// <summary>
-    /// 生成Interactor
+    /// 生成物品
     /// </summary>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Item SpawnInteractor(ItemStaticData sData, Vector2 position)
+    public Item SpawnItem(string name, Vector2 position)
     {
-        GameObject target;
-        Item inte;
-        target = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), ItemCollection);
-        inte = target.GetComponent<Item>();
-        Items.Add(inte);
-        return inte;
+        GameObject go;
+        Item item;
+        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(name);
+        if (sData)
+        {
+            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), ItemCollection);
+            item = go.GetComponent<Item>();
+            item.ResetDynamicData();
+            Items.Add(item);
+            Debug.Log("物品生成成功：" + name);
+            return item;
+        }
+        else
+        {
+            Debug.LogError("静态数据不存在：" + name);
+            return null;
+        }
     }
     /// <summary>
-    /// 生成Interactor
+    /// 生成物品
     /// </summary>
-    public Item SpawnInteractor(ItemDynamicData dData)
+    public Item SpawnItem(ItemDynamicData dData)
     {
-        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
-        return SpawnInteractor(sData, dData.Position);
+        return SpawnItem(dData.Name, dData.Position);
     }
 
     /// <summary>
@@ -120,7 +138,7 @@ public class EntityManager : SingletonClass<EntityManager>
     /// </summary>
     /// <param name="name">物品名</param>
     /// <returns></returns>
-    public Item GetInteractor(string name)
+    public Item GetItem(string name)
     {
         foreach (Item item in Items)
         {

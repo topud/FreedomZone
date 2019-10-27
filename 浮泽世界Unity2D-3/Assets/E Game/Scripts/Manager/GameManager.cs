@@ -79,8 +79,8 @@ public class GameManager : SingletonClass<GameManager>
                     if (Character.Player == null)
                     {
                         EntityManager.Singleton.CheckSceneEntity();
-                        Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("库娅"), new Vector2(165, 5), true);
-                        Character npc = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("从人"), new Vector2(170, 10));
+                        Character player = EntityManager.Singleton.SpawnCharacter("库娅", new Vector2(165, 5), true);
+                        Character npc = EntityManager.Singleton.SpawnCharacter("从人", new Vector2(170, 10));
                         npc.FollowTarget = player.transform;
                         Debug.Log("新存档初始化");
                     }
@@ -170,6 +170,6 @@ public class GameManager : SingletonClass<GameManager>
 
     private void SpawnPlayer()
     {
-        Character player = EntityManager.Singleton.SpawnCharacter((CharacterStaticData)CharacterStaticData.GetValue("璃亚"), new Vector2(165, 5), true);
+        Character player = EntityManager.Singleton.SpawnCharacter("璃亚", new Vector2(165, 5), true);
     }
 }

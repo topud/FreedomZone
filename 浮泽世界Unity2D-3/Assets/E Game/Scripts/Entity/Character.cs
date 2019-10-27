@@ -163,14 +163,23 @@ namespace E.Tool
         {
             base.SetDynamicData(data);
         }
+        [ContextMenu("重置静态数据")]
         /// <summary>
-        /// 重置数据，默认用于对象初次生成的数据初始化
+        /// 重置静态数据
+        /// </summary>
+        public override void ResetStaticData()
+        {
+            base.ResetStaticData();
+        }
+        [ContextMenu("重置动态数据")]
+        /// <summary>
+        /// 重置动态数据
         /// </summary>
         public override void ResetDynamicData()
         {
             base.ResetDynamicData();
 
-            gameObject.layer = 8;
+            gameObject.layer = LayerMask.NameToLayer("Character");
             gameObject.tag = IsPlayer ? "Player" : "NPC";
             AIPath.enabled = false;
             AIDestinationSetter.enabled = false;
@@ -204,6 +213,7 @@ namespace E.Tool
                 Relationships = StaticData.Relationships
             };
         }
+        [ContextMenu("重置组件")]
         /// <summary>
         /// 设置组件
         /// </summary>

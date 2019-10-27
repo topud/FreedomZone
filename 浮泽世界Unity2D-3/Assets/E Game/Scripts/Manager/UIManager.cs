@@ -184,7 +184,7 @@ namespace E.Tool
         /// 设置光标状态
         /// </summary>
         /// <param name="isShow">是否展示</param>
-        private void SetCursor(bool isShow)
+        public static void SetCursor(bool isShow)
         {
             Cursor.visible = isShow;
             if (isShow)

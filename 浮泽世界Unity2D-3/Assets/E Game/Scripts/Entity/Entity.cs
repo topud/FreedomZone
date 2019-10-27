@@ -55,11 +55,27 @@ namespace E.Tool
         protected virtual void Reset()
         {
             ResetComponents();
+            ResetStaticData();
             ResetDynamicData();
         }
 
         /// <summary>
-        /// 设置数据，默认用于从存档读取数据
+        /// 设置静态数据
+        /// </summary>
+        public virtual void SetStaticData(string name)
+        {
+            S sData = (S)EntityStaticData.GetValue(name);
+            if (sData)
+            {
+                StaticData = sData;
+            }
+            else
+            {
+                Debug.LogError("静态数据不存在：" + name);
+            }
+        }
+        /// <summary>
+        /// 设置动态数据
         /// </summary>
         /// <param name="data"></param>
         public virtual void SetDynamicData(D data)
@@ -81,23 +97,38 @@ namespace E.Tool
                     StaticData.Name, data.Name));
             }
         }
+
+        [ContextMenu("重置静态数据")]
         /// <summary>
-        /// 重置数据，默认用于对象初次生成的数据初始化
+        /// 重置静态数据
+        /// </summary>
+        public virtual void ResetStaticData()
+        {
+
+            S sData = (S)EntityStaticData.GetValue(gameObject.name);
+            if (sData)
+            {
+                StaticData = sData;
+            }
+        }
+        [ContextMenu("重置动态数据")]
+        /// <summary>
+        /// 重置动态数据
         /// </summary>
         public virtual void ResetDynamicData()
         {
-            StaticData = (S)EntityStaticData.GetValue(gameObject.name);
-
             if (!StaticData)
             {
-                Debug.LogError("静态数据不存在，无法设置数据");
+                Debug.LogError("静态数据未设置，动态数据无法设置");
                 return;
             }
 
+            name = StaticData.Name + gameObject.GetInstanceID();
             Rigidbody.mass = StaticData.Weight;
         }
+        [ContextMenu("重置组件")]
         /// <summary>
-        /// 设置组件
+        /// 重置组件
         /// </summary>
         public virtual void ResetComponents()
         {

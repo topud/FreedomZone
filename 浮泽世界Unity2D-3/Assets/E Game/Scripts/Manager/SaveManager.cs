@@ -224,14 +224,14 @@ public class SaveManager : SingletonClass<SaveManager>
         }
         foreach (ItemDynamicData item in save.InteractorDynamicDatas)
         {
-            Item inte = EntityManager.Singleton.GetInteractor(item.Name);
+            Item inte = EntityManager.Singleton.GetItem(item.Name);
             if (inte)
             {
                 inte.SetDynamicData(item);
             }
             else
             {
-                EntityManager.Singleton.SpawnInteractor(item);
+                EntityManager.Singleton.SpawnItem(item);
             }
         }
 

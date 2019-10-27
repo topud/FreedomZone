@@ -85,6 +85,17 @@ namespace E.Tool
         {
             base.SetDynamicData(data);
         }
+
+        [ContextMenu("重置静态数据")]
+        /// <summary>
+        /// 重置静态数据
+        /// </summary>
+        public override void ResetStaticData()
+        {
+
+            base.ResetStaticData();
+        }
+        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
@@ -92,7 +103,7 @@ namespace E.Tool
         {
             base.ResetDynamicData();
 
-            gameObject.layer = 9;
+            gameObject.layer = LayerMask.NameToLayer("Item");
 
             if (!StaticData) return;
 
@@ -113,6 +124,7 @@ namespace E.Tool
             Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
             GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
         }
+        [ContextMenu("重置组件")]
         /// <summary>
         /// 设置组件
         /// </summary>

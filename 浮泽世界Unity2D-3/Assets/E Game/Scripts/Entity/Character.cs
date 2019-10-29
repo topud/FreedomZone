@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using Pathfinding;
 
 namespace E.Tool
@@ -25,6 +26,7 @@ namespace E.Tool
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
+        public UnityEvent OnItemChange = new UnityEvent();
 
         public bool IsPlayer
         {
@@ -306,6 +308,8 @@ namespace E.Tool
                 {
                     item.gameObject.SetActive(false);
                     DynamicData.Items.Add(item);
+
+                    Player.OnItemChange.Invoke();
                     Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
                 }
                 else

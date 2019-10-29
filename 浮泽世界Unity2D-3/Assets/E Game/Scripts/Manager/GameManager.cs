@@ -43,16 +43,6 @@ public class GameManager : SingletonClass<GameManager>
         {
             Destroy(gameObject);
         }
-
-        if (SceneManager.GetActiveScene().name == "Game")
-        {
-            if (Character.Player == null)
-            {
-                EntityManager.Singleton.CheckSceneEntity();
-                Invoke("SpawnPlayer",0.02f);
-                Debug.Log("本次运行为调试模式，已自动添加可控制角色");
-            }
-        }
     }
     private void OnEnable()
     {
@@ -60,6 +50,17 @@ public class GameManager : SingletonClass<GameManager>
     }
     private void Start()
     {
+        if (SceneManager.GetActiveScene().name == "Game")
+        {
+            if (Character.Player == null)
+            {
+                EntityManager.Singleton.CheckSceneEntity();
+                Character player = EntityManager.Singleton.GetCharacter("璃亚");
+                player.IsPlayer = true;
+                Debug.Log("本次运行为调试模式，已自动添加可控制角色");
+            }
+        }
+        UIManager.Singleton.SetUIActive(true);
     }
     private void Update()
     {
@@ -166,10 +167,5 @@ public class GameManager : SingletonClass<GameManager>
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    private void SpawnPlayer()
-    {
-        Character player = EntityManager.Singleton.SpawnCharacter("璃亚", new Vector2(165, 5), true);
     }
 }

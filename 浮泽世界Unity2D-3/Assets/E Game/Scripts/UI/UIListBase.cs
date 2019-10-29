@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace E.Tool
 {
@@ -13,10 +14,19 @@ namespace E.Tool
         [Header("数据")]
         public List<D> Datas = new List<D>();
 
-        private void Start()
+        protected virtual void Start()
         {
             pfbSlot.gameObject.SetActive(false);
+        }
+        protected virtual void OnEnable()
+        {
             Refresh();
+
+            Character.Player.OnItemChange.AddListener(Refresh);
+        }
+        protected virtual void OnDisable()
+        {
+            Character.Player.OnItemChange.RemoveListener(Refresh);
         }
 
         public virtual void Clear()
@@ -24,15 +34,7 @@ namespace E.Tool
             Datas.Clear();
             for (int i = 0; i < tsfParent.childCount; i++)
             {
-                Transform transform = tsfParent.GetChild(i);
-                if (transform == pfbSlot.transform)
-                {
-                    continue;
-                }
-                else
-                {
-                    Destroy(transform.gameObject);
-                }
+                tsfParent.GetChild(i).gameObject.SetActive(false);
             }
         }
         public abstract void LoadData();
@@ -41,11 +43,29 @@ namespace E.Tool
             if (Datas == null) return;
             foreach (D item in Datas)
             {
-                GameObject go = Instantiate(pfbSlot.gameObject, tsfParent);
-                go.SetActive(true);
-                S slot = go.GetComponent<S>();
+                S slot = GetAvailableSlot();
                 slot.SetData(item);
             }
+        }
+        public S GetAvailableSlot()
+        {
+            for (int i = 0; i < tsfParent.childCount; i++)
+            {
+                if (tsfParent.GetChild(i).gameObject.activeInHierarchy) continue;
+                S slot = tsfParent.GetChild(i).GetComponent<S>();
+                if (slot)
+                {
+                    slot.gameObject.SetActive(true);
+                    return slot;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+            GameObject go = Instantiate(pfbSlot.gameObject, tsfParent);
+            go.SetActive(true);
+            return go.GetComponent<S>();
         }
 
         public virtual void Refresh()

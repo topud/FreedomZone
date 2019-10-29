@@ -5,35 +5,47 @@ namespace E.Tool
 {
     public class UISlotItem : UISlotBase<Item>
     {
-        public Text txtName;
+        [Header("组件")]
         public Image imgIcon;
-        public GameObject panCapacity;
-        public Image imgCapacity;
-        public Toggle togFolder;
+        //public Text txtName;
+        public Text txtStack;
+        //public GameObject panCapacity;
+        //public Image imgCapacity;
 
-        [SerializeField, ReadOnly] private Item item;
-
-        public override void SetData(Item item)
+        public override void SetData(Item data)
         {
-            this.item = item;
+            Data = data;
             UpdateData();
         }
 
         public override void UpdateData()
         {
-            if (item.StaticData.Accommodatable)
-            {
-                togFolder.gameObject.SetActive(true);
-                panCapacity.SetActive(true);
-                imgCapacity.fillAmount = item.GetCapacityPercentage();
-            }
-            else
-            {
-                togFolder.gameObject.SetActive(false);
-                panCapacity.SetActive(false);
-            }
-            imgIcon.sprite = item.StaticData.Icon;
-            txtName.text = item.StaticData.Name;
+            //if (Data.StaticData.Accommodatable)
+            //{
+            //    panCapacity.SetActive(true);
+            //    imgCapacity.fillAmount = Data.GetCapacityPercentage();
+            //}
+            //else
+            //{
+            //    panCapacity.SetActive(false);
+            //}
+            imgIcon.sprite = Data.StaticData.Icon;
+            //txtName.text = Data.StaticData.Name;
+            int stack = Data.DynamicData.Stack;
+            txtStack.text = stack == 1 ? "" : stack.ToString();
+        }
+
+        public override void OnBeginDrag()
+        {
+        }
+        public override void OnDrag()
+        {
+        }
+        public override void OnEndDrag()
+        {
+        }
+        public override void OnDrop()
+        {
         }
     }
 }

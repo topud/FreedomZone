@@ -8,34 +8,16 @@ namespace E.Tool
     {
         [Header("组件")]
         [SerializeField] private UICharacterInfo uiCharacterInfo;
-        [SerializeField] private UICharacterInventory uiCharacterInventory;
-        [SerializeField] private UICharacterEquipment uiCharacterEquipment;
+        [SerializeField] private UIEquipment uiCharacterEquipment;
         [SerializeField] private UICharacterSkill uiCharacterSkill;
         [SerializeField] private UICharacterQuest uiCharacterQuest;
-        public Toggle TogInfo;
-        public Toggle TogInventory;
-        public Toggle TogEquipment;
-        public Toggle TogSkill;
-        public Toggle TogQuest;
-        public ToggleGroup TogGroup;
 
         [Header("数据")]
         public static Character Target;
 
-        private void Awake()
-        {
-            uiCharacterInventory.slotPrefab.SetActive(false);
-
-            TogInfo.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogInfo); });
-            TogInventory.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogInventory); });
-            TogEquipment.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogEquipment); });
-            TogSkill.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogSkill); });
-            TogQuest.onValueChanged.AddListener((bool isOn) => { OnToggleClick(TogQuest); });
-        }
         private void Start()
         {
             if (!Target) Target = Character.Player;
-            UpdateInventory();
         }
         private void Update()
         {
@@ -66,114 +48,7 @@ namespace E.Tool
                 uiCharacterInfo.txtDefense.text = Target.DynamicData.Defense.ToString();
             }
         }
-        private void OnToggleClick(Toggle toggle)
-        {
-            if (toggle.isOn)
-            {
-                if (toggle == TogInfo)
-                {
-                    ShowInfo();
-                }
-                else if (toggle == TogInventory)
-                {
-                    ShowInventory();
-                }
-                else if (toggle == TogEquipment)
-                {
-                    ShowEquipment();
-                }
-                else if (toggle == TogSkill)
-                {
-                    ShowSkills();
-                }
-                else if (toggle == TogQuest)
-                {
-                    ShowQuests();
-                }
-            }
-        }
 
-        public void ShowInfo()
-        {
-            uiCharacterInfo.scrInfo.SetActive(true);
-            uiCharacterInfo.panInfoDetail.SetActive(true);
-            uiCharacterInventory.scrItems.SetActive(false);
-            uiCharacterInventory.panItemDetail.SetActive(false);
-            uiCharacterEquipment.panEquipDetail.SetActive(false);
-            uiCharacterSkill.scrSkills.SetActive(false);
-            uiCharacterSkill.panSkillDetail.SetActive(false);
-            uiCharacterQuest.scrQuests.SetActive(false);
-            uiCharacterQuest.panQuestDetail.SetActive(false);
-        }
-        public void ShowInventory()
-        {
-            uiCharacterInfo.scrInfo.SetActive(false);
-            uiCharacterInfo.panInfoDetail.SetActive(false);
-            uiCharacterInventory.scrItems.SetActive(true);
-            uiCharacterInventory.panItemDetail.SetActive(true);
-            uiCharacterEquipment.panEquipDetail.SetActive(false);
-            uiCharacterSkill.scrSkills.SetActive(false);
-            uiCharacterSkill.panSkillDetail.SetActive(false);
-            uiCharacterQuest.scrQuests.SetActive(false);
-            uiCharacterQuest.panQuestDetail.SetActive(false);
-        }
-        public void ShowEquipment()
-        {
-            uiCharacterInfo.scrInfo.SetActive(false);
-            uiCharacterInfo.panInfoDetail.SetActive(false);
-            uiCharacterInventory.scrItems.SetActive(true);
-            uiCharacterInventory.panItemDetail.SetActive(false);
-            uiCharacterEquipment.panEquipDetail.SetActive(true);
-            uiCharacterSkill.scrSkills.SetActive(false);
-            uiCharacterSkill.panSkillDetail.SetActive(false);
-            uiCharacterQuest.scrQuests.SetActive(false);
-            uiCharacterQuest.panQuestDetail.SetActive(false);
-        }
-        public void ShowSkills()
-        {
-            uiCharacterInfo.scrInfo.SetActive(false);
-            uiCharacterInfo.panInfoDetail.SetActive(false);
-            uiCharacterInventory.scrItems.SetActive(false);
-            uiCharacterInventory.panItemDetail.SetActive(false);
-            uiCharacterEquipment.panEquipDetail.SetActive(false);
-            uiCharacterSkill.scrSkills.SetActive(true);
-            uiCharacterSkill.panSkillDetail.SetActive(true);
-            uiCharacterQuest.scrQuests.SetActive(false);
-            uiCharacterQuest.panQuestDetail.SetActive(false);
-        }
-        public void ShowQuests()
-        {
-            uiCharacterInfo.scrInfo.SetActive(false);
-            uiCharacterInfo.panInfoDetail.SetActive(false);
-            uiCharacterInventory.scrItems.SetActive(false);
-            uiCharacterInventory.panItemDetail.SetActive(false);
-            uiCharacterEquipment.panEquipDetail.SetActive(false);
-            uiCharacterSkill.scrSkills.SetActive(false);
-            uiCharacterSkill.panSkillDetail.SetActive(false);
-            uiCharacterQuest.scrQuests.SetActive(true);
-            uiCharacterQuest.panQuestDetail.SetActive(true);
-        }
-
-        
-        public void UpdateInventory()
-        {
-            for (int i = 1; i < uiCharacterInventory.content.childCount; i++)
-            {
-                Destroy(uiCharacterInventory.content.GetChild(i).gameObject);
-            }
-
-            if (!Target)
-            {
-                return;
-            }
-
-            foreach (Item item in Target.DynamicData.Items)
-            {
-                GameObject go = Instantiate(uiCharacterInventory.slotPrefab, uiCharacterInventory.content);
-                go.GetComponent<UISlotItem>().SetData(item);
-                go.SetActive(true);
-            }
-        }
     }
 
     [Serializable]
@@ -207,16 +82,7 @@ namespace E.Tool
         public Text txtDefense;
     }
     [Serializable]
-    public class UICharacterInventory
-    {
-        public GameObject scrItems;
-        public GameObject panItemDetail;
-        [Space(5)]
-        public Transform content;
-        public GameObject slotPrefab;
-    }
-    [Serializable]
-    public class UICharacterEquipment
+    public class UIEquipment
     {
         public GameObject scrItems;
         public GameObject panEquipDetail;

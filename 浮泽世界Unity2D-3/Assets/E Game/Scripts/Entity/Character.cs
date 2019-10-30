@@ -13,6 +13,8 @@ namespace E.Tool
     public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
         public static Character Player;
+        public static UnityEvent OnPlayerItemChange = new UnityEvent();
+        public static UnityEvent OnPlayerInfoChange = new UnityEvent();
 
         [Header("角色组件")]
         public AIPath AIPath;
@@ -26,7 +28,7 @@ namespace E.Tool
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
-        public UnityEvent OnItemChange = new UnityEvent();
+
 
         public bool IsPlayer
         {
@@ -309,7 +311,7 @@ namespace E.Tool
                     item.gameObject.SetActive(false);
                     DynamicData.Items.Add(item);
 
-                    Player.OnItemChange.Invoke();
+                    OnPlayerItemChange.Invoke();
                     Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
                 }
                 else

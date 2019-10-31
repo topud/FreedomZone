@@ -7,8 +7,20 @@ using E.Tool;
 
 public class TimeManager : SingletonClass<TimeManager>
 {
-    [ReadOnly] public Light2D GlobleLight;
+    public bool Enable = false;
     public Gradient SunLightColor;
+    [SerializeField, ReadOnly] private Light2D globleLight;
+    public Light2D GlobleLight
+    {
+        get
+        {
+            if (!globleLight)
+            {
+                globleLight = GameObject.FindGameObjectWithTag("MainLight").GetComponent<Light2D>();
+            }
+            return globleLight;
+        }
+    }
 
     public DateTime Now;
     [Range(1, 1440), Tooltip("现实中1秒游戏中？秒")] public float Ratio = 60;
@@ -21,28 +33,28 @@ public class TimeManager : SingletonClass<TimeManager>
 
     private void Start()
     {
-        GlobleLight = GameObject.FindGameObjectWithTag("MainLight").GetComponent<Light2D>();
         Now = new DateTime(2020, 1, 1, 5, 0, 0);
+    }
+    private void OnEnable()
+    {
         InvokeRepeating("UpdateTime", 0, Interval);
+    }
+    private void OnDisable()
+    {
+        CancelInvoke();
     }
     private void UpdateTime()
     {
-        Now = Now.AddSeconds(Interval * Ratio);
-        Hour = Now.Hour;
-        Minute = Now.Minute;
-        Second = Now.Second;
-        float current = Hour * 60 * 60 + Minute * 60 + Second;
-        Current = current / Max;
-        
-        GlobleLight.color = SunLightColor.Evaluate(Current);
-    }
-    private void OnValidate()
-    {
-        CancelInvoke();
-        InvokeRepeating("UpdateTime", 0, Interval);
-    }
-    private void Reset()
-    {
-        
+        if (Enable)
+        {
+            Now = Now.AddSeconds(Interval * Ratio);
+            Hour = Now.Hour;
+            Minute = Now.Minute;
+            Second = Now.Second;
+            float current = Hour * 60 * 60 + Minute * 60 + Second;
+            Current = current / Max;
+
+            GlobleLight.color = SunLightColor.Evaluate(Current);
+        }
     }
 }

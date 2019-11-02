@@ -42,7 +42,6 @@ namespace E.Tool
             {
                 if (item)
                 {
-                    item.TargetUI.HideAll();
                     character.TargetUI.HideAll();
                 }
             }

@@ -4,17 +4,14 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Map
-  - MovableItem
-  - ImmovableItem
   - NPC
   - MinimapCamera
   - VirtualCamera
-  - Collection
   - MainLight
-  - MapPart
   - InventorySlot
   - Building
+  - Item
+  - Manager
   layers:
   - Default
   - TransparentFX

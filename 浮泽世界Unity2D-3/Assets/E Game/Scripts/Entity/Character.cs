@@ -306,21 +306,16 @@ namespace E.Tool
         {
             if (IsNearby(item))
             {
-                if (item.StaticData.Movable)
-                {
-                    item.gameObject.SetActive(false);
-                    DynamicData.Items.Add(item);
+                item.gameObject.SetActive(false);
+                DynamicData.Items.Add(item);
 
-                    OnPlayerItemChange.Invoke();
-                    Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
-                }
-                else
-                {
-                    Debug.Log(string.Format("不可拾取 {0}", item.StaticData.Name));
-                }
+                OnPlayerItemChange.Invoke();
+                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
             }
             else
             {
+                TargetUI.ShowChat();
+                TargetUI.SetChat("它太远了，我捡不到。");
                 Debug.LogError(string.Format("无法拾取 {0}，因距离过远", item.StaticData.Name));
             }
         }
@@ -330,14 +325,14 @@ namespace E.Tool
         /// <param name="item"></param>
         public void Survey(Item item)
         {
+            TargetUI.ShowChat();
             if (IsNearby(item))
             {
-                item.TargetUI.HideAll();
-                TargetUI.ShowChat();
                 TargetUI.SetChat(item.StaticData.Describe);
             }
             else
             {
+                TargetUI.SetChat("我需要靠近点才能仔细观察。");
                 Debug.LogError(string.Format("无法调查 {0}，因距离过远", item.StaticData.Name));
             }
         }
@@ -545,13 +540,6 @@ namespace E.Tool
                     }
                     //获取离自己最近的物品
                     nearistItem = NearbyItems[Utility.IndexMin(diss)];
-                    foreach (Item it in NearbyItems)
-                    {
-                        if (nearistItem != it)
-                        {
-                            it.TargetUI.HideHelp();
-                        }
-                    }
                 }
 
                 Character nearistCharacter = null;
@@ -574,16 +562,14 @@ namespace E.Tool
                     }
                 }
 
+                //最近物品离自己的距离
                 float ni = nearistItem ? Vector2.Distance(nearistItem.transform.position, transform.position) : -1;
+                //最近角色离自己的距离
                 float nc = nearistCharacter ? Vector2.Distance(nearistCharacter.transform.position, transform.position) : -1;
                 if (ni > nc)
                 {
                     if (nearistItem)
                     {
-                        if (!nearistItem.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
-                        {
-                            nearistItem.TargetUI.ShowHelp();
-                        }
                         //检测是否按键拾取
                         if (Input.GetKeyUp(KeyCode.F)) PickUp(nearistItem);
                         //检测是否按键调查
@@ -596,10 +582,6 @@ namespace E.Tool
                 }
                 else if (ni < nc)
                 {
-                    if (nearistItem)
-                    {
-                        nearistItem.TargetUI.HideHelp();
-                    }
                     if (nearistCharacter)
                     {
                         if (!nearistCharacter.TargetUI.IsShowChat() && !TargetUI.IsShowChat())

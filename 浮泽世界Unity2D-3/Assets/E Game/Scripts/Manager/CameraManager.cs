@@ -7,9 +7,9 @@ using E.Tool;
 
 public class CameraManager : SingletonClass<CameraManager>
 {
-    public Camera MainCamera { get => GameObject.FindWithTag("MainCamera").GetComponent<Camera>(); }
-    public Camera MinimapCamera { get => GameObject.FindWithTag("MinimapCamera").GetComponent<Camera>(); }
-    public CinemachineVirtualCamera VirtualCamera { get => GameObject.FindWithTag("VirtualCamera").GetComponent<CinemachineVirtualCamera>(); }
+    public Camera MainCamera;
+    public Camera MinimapCamera;
+    public CinemachineVirtualCamera VirtualCamera;
 
     public void SetFollow(Transform target)
     {
@@ -27,14 +27,4 @@ public class CameraManager : SingletonClass<CameraManager>
     {
         VirtualCamera.m_Lens.OrthographicSize += offset;
     }
-
-    public void SetCameraOffset(bool isLeft)
-    {
-        if (isLeft)
-        {
-        }
-
-    }
-
-
 }

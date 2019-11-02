@@ -7,9 +7,6 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
-        [Header("物品组件")]
-        public EntityUI TargetUI;
-
         protected override void Awake()
         {
             base.Awake();
@@ -104,13 +101,9 @@ namespace E.Tool
             base.ResetDynamicData();
 
             gameObject.layer = LayerMask.NameToLayer("Item");
+            gameObject.tag = "Item";
 
             if (!StaticData) return;
-
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
-            TargetUI.HideHelp();
 
             DynamicData = new ItemDynamicData
             {
@@ -120,8 +113,7 @@ namespace E.Tool
                 Health = StaticData.Health,
                 Items = StaticData.Items
             };
-            gameObject.tag = StaticData.Movable ? "MovableItem" : "ImmovableItem";
-            Rigidbody.bodyType = StaticData.Movable ? RigidbodyType2D.Dynamic : RigidbodyType2D.Static;
+            Rigidbody.bodyType = RigidbodyType2D.Dynamic;
             GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
         }
         [ContextMenu("重置组件")]
@@ -131,9 +123,6 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
-
-            TargetUI = GetComponentInChildren<EntityUI>(true);
-            if (!TargetUI) Debug.LogError("未找到 TargetUI");
         }
 
         /// <summary>

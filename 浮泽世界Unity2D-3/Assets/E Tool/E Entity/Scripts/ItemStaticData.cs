@@ -9,7 +9,6 @@ namespace E.Tool
     public class ItemStaticData : EntityStaticData
     {
         [Header("物品实体静态数据")]
-        [SerializeField, Tooltip("是否可移动")] private bool movable = true;
         [SerializeField, Tooltip("是否可堆叠")] private bool stackable = false;
         [SerializeField, Tooltip("是否可容纳")] private bool accommodatable = false;
         [SerializeField, Tooltip("是否可腐烂")] private bool perishable = false;
@@ -21,10 +20,6 @@ namespace E.Tool
         [SerializeField, Tooltip("使用后习得的技能")] private List<Skill> skills = new List<Skill>();
         [SerializeField, Tooltip("使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
 
-        /// <summary>
-        /// 是否可移动
-        /// </summary>
-        public bool Movable { get => movable; }
         /// <summary>
         /// 是否可堆叠
         /// </summary>

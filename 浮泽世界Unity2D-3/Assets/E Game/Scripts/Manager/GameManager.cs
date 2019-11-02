@@ -54,8 +54,8 @@ public class GameManager : SingletonClass<GameManager>
         {
             if (Character.Player == null)
             {
-                EntityManager.Singleton.CheckSceneEntity();
-                Character player = EntityManager.Singleton.GetCharacter("璃亚");
+                CharacterManager.Singleton.CheckSceneCharacters();
+                Character player = CharacterManager.Singleton.GetCharacter("璃亚");
                 player.IsPlayer = true;
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
@@ -79,9 +79,9 @@ public class GameManager : SingletonClass<GameManager>
                 {
                     if (Character.Player == null)
                     {
-                        EntityManager.Singleton.CheckSceneEntity();
-                        Character player = EntityManager.Singleton.SpawnCharacter("库娅", new Vector2(165, 5), true);
-                        Character npc = EntityManager.Singleton.SpawnCharacter("从人", new Vector2(170, 10));
+                        CharacterManager.Singleton.CheckSceneCharacters();
+                        Character player = CharacterManager.Singleton.SpawnCharacter("库娅", new Vector2(165, 5), true);
+                        Character npc = CharacterManager.Singleton.SpawnCharacter("从人", new Vector2(170, 10));
                         npc.FollowTarget = player.transform;
                         Debug.Log("新存档初始化");
                     }
@@ -89,7 +89,7 @@ public class GameManager : SingletonClass<GameManager>
                 //否则载入存档
                 else
                 {
-                    EntityManager.Singleton.CheckSceneEntity();
+                    CharacterManager.Singleton.CheckSceneCharacters();
                     SaveManager.LoadFrom(selectSave);
                     Debug.Log("载入存档初始化");
                 }

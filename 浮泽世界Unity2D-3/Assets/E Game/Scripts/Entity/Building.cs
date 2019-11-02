@@ -99,6 +99,7 @@ namespace E.Tool
             base.ResetDynamicData();
 
             gameObject.layer = LayerMask.NameToLayer("Building");
+            gameObject.tag = "Building";
 
             if (!StaticData) return;
 

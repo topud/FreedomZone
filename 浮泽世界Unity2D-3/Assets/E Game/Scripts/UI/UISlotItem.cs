@@ -25,14 +25,14 @@ namespace E.Tool
         public override void UpdateData()
         {
             imgIcon.sprite = Data.StaticData.Icon;
-            imgFrame.color = uiInventory.SelectedSlot == this ? clrSelected : clrDefault;
+            imgFrame.color = Character.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
             int stack = Data.DynamicData.Stack;
             txtStack.text = stack == 1 ? "" : stack.ToString();
         }
 
         public void OnClick()
         {
-            Item item = Character.Player.GetItemInRightHand();
+            Item item = Character.Player.GetRightHandItem();
             if (item)
             {
                 if (item == Data)
@@ -41,6 +41,7 @@ namespace E.Tool
                 }
                 else
                 {
+                    Character.Player.PutRightHandItemInBag();
                     Character.Player.PutItemInRightHand(Data);
                 }
             }
@@ -48,8 +49,7 @@ namespace E.Tool
             {
                 Character.Player.PutItemInRightHand(Data);
             }
-
-            uiInventory.SelectedSlot = uiInventory.SelectedSlot == this ? null : this;
+            Character.OnPlayerItemChange.Invoke();
         }
         public override void OnBeginDrag()
         {

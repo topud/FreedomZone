@@ -5,13 +5,13 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public abstract class UISlotBase<T> : MonoBehaviour
+    public abstract class UISlotBase<D> : MonoBehaviour
     {
         [Header("数据")]
-        [SerializeField, ReadOnly] private T data;
-        public T Data { get => data; protected set => data = value; }
+        [SerializeField, ReadOnly] private D data;
+        public D Data { get => data; protected set => data = value; }
 
-        public virtual void SetData(T data)
+        public virtual void SetData(D data)
         {
             Data = data;
             UpdateData();

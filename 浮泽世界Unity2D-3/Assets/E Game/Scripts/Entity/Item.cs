@@ -73,7 +73,6 @@ namespace E.Tool
             }
         }
 
-
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
@@ -154,6 +153,11 @@ namespace E.Tool
             {
                 return -1;
             }
+        }
+
+        public void Use()
+        {
+
         }
     }
 }

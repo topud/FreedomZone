@@ -10,7 +10,7 @@ namespace E.Tool
         public bool xScale, yScale, zScale;
         public Vector3 positionOffset;
 
-        private void Update()
+        public void Update()
         {
             if (!target) return;
             if (!self) self = transform;

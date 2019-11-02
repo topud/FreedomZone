@@ -7,34 +7,50 @@ namespace E.Tool
     {
         [Header("组件")]
         public Image imgIcon;
-        //public Text txtName;
+        public Image imgFrame;
         public Text txtStack;
-        //public GameObject panCapacity;
-        //public Image imgCapacity;
+        public Color clrDefault;
+        public Color clrSelected;
+        private UIInventory uiInventory;
 
+        private void Awake()
+        {
+            uiInventory = GetComponentInParent<UIInventory>();
+        }
         public override void SetData(Item data)
         {
             Data = data;
             UpdateData();
         }
-
         public override void UpdateData()
         {
-            //if (Data.StaticData.Accommodatable)
-            //{
-            //    panCapacity.SetActive(true);
-            //    imgCapacity.fillAmount = Data.GetCapacityPercentage();
-            //}
-            //else
-            //{
-            //    panCapacity.SetActive(false);
-            //}
             imgIcon.sprite = Data.StaticData.Icon;
-            //txtName.text = Data.StaticData.Name;
+            imgFrame.color = uiInventory.SelectedSlot == this ? clrSelected : clrDefault;
             int stack = Data.DynamicData.Stack;
             txtStack.text = stack == 1 ? "" : stack.ToString();
         }
 
+        public void OnClick()
+        {
+            Item item = Character.Player.GetItemInRightHand();
+            if (item)
+            {
+                if (item == Data)
+                {
+                    Character.Player.PutRightHandItemInBag();
+                }
+                else
+                {
+                    Character.Player.PutItemInRightHand(Data);
+                }
+            }
+            else
+            {
+                Character.Player.PutItemInRightHand(Data);
+            }
+
+            uiInventory.SelectedSlot = uiInventory.SelectedSlot == this ? null : this;
+        }
         public override void OnBeginDrag()
         {
         }

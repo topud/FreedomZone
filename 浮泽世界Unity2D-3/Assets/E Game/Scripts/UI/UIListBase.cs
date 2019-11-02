@@ -12,7 +12,45 @@ namespace E.Tool
         [SerializeField] protected S pfbSlot;
 
         [Header("数据")]
+        [SerializeField] protected S selectedSlot;
         public List<D> Datas = new List<D>();
+
+        public S SelectedSlot
+        {
+            get => selectedSlot;
+            set
+            {
+                selectedSlot = value;
+                Refresh();
+            }
+        }
+        public int SelectedSlotID
+        {
+            get
+            {
+                if (!SelectedSlot) return -1;
+                for (int i = 0; i < Slots.Count; i++)
+                {
+                    if (SelectedSlot == Slots[i]) return i;
+                }
+                return -1;
+            }
+        }
+        public List<S> Slots
+        {
+            get
+            {
+                List<S> slots = new List<S>();
+                for (int i = 0; i < tsfParent.childCount; i++)
+                {
+                    if (!tsfParent.GetChild(i).gameObject.activeInHierarchy) continue;
+                    S slot = tsfParent.GetChild(i).GetComponent<S>();
+                    if (slot) slots.Add(slot);
+                }
+                return slots;
+            }
+        }
+
 
         protected virtual void Start()
         {
@@ -67,12 +105,52 @@ namespace E.Tool
             go.SetActive(true);
             return go.GetComponent<S>();
         }
-
         public virtual void Refresh()
         {
             Clear();
             LoadData();
             SetPanel();
+        }
+
+        public void SelectedLastSlot()
+        {
+            if (Slots.Count > 0)
+            {
+                if (SelectedSlot)
+                {
+                    int id = SelectedSlotID - 1;
+                    if (id < 0) id = Slots.Count - 1;
+                    SelectedSlot = Slots[id];
+                }
+                else
+                {
+                    SelectedSlot = Slots[Slots.Count - 1];
+                }
+            }
+            else
+            {
+                Debug.Log("没有槽了");
+            }
+        }
+        public void SelectedNextSlot()
+        {
+            if (Slots.Count > 0)
+            {
+                if (SelectedSlot)
+                {
+                    int id = SelectedSlotID + 1;
+                    if (id >= Slots.Count) id = 0;
+                    SelectedSlot = Slots[id];
+                }
+                else
+                {
+                    SelectedSlot = Slots[0];
+                }
+            }
+            else
+            {
+                Debug.Log("没有槽了");
+            }
         }
     }
 }

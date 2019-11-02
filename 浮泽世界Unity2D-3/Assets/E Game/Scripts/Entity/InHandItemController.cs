@@ -8,10 +8,12 @@ using E.Tool;
 [RequireComponent(typeof(LookAt))]
 public class InHandItemController : MonoBehaviour
 {
-    public Item Item;
+    private Item item;
     private CopyPosition copyPosition;
     private CopyRendererOrder copyRendererOrder;
     private LookAt lookAt;
+
+    public Item Item { get => item; private set => item = value; }
 
     private void Awake()
     {
@@ -28,6 +30,9 @@ public class InHandItemController : MonoBehaviour
         copyRendererOrder.self = Item.SpriteSorter.Renderers[0];
         lookAt.self = Item.transform;
         lookAt.enabled = isLookAtCursor;
+
+        copyPosition.Update();
+        lookAt.Update();
     }
     public void RemoveItem()
     {

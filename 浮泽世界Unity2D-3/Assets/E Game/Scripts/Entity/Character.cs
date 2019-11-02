@@ -109,19 +109,7 @@ namespace E.Tool
                 CheckNearby();
                 CheckAttack();
                 CheckCameraSize();
-
-                if (IsPlayer)
-                {
-                    if (Input.GetKeyUp(KeyCode.LeftBracket))
-                    {
-                        PutInRightHand(DynamicData.Items[0]);
-                    }
-                    if (Input.GetKeyUp(KeyCode.RightBracket))
-                    {
-                        PutInBag();
-                    }
-                }
-
+                CheckSwitchRightHandItem();
             }
         }
         protected override void FixedUpdate()
@@ -390,25 +378,37 @@ namespace E.Tool
         /// 将物品放在右手
         /// </summary>
         /// <param name="item"></param>
-        public void PutInRightHand(Item item)
+        public void PutItemInRightHand(Item item)
         {
+            if (GetItemInRightHand()) PutRightHandItemInBag();
+
             RightHandItemController.SetItem(item, true);
             item.SetPosition(true);
             item.gameObject.SetActive(true);
             Debug.Log(item.StaticData.Name + "已放在手中");
         }
         /// <summary>
-        /// 将物品放在背包
+        /// 将右手物品放在背包
         /// </summary>
         /// <param name="item"></param>
-        public void PutInBag()
+        public void PutRightHandItemInBag()
         {
-            Debug.Log(RightHandItemController.Item.StaticData.Name + "已放入背包");
+            if (!GetItemInRightHand()) return;
+            Debug.Log(RightHandItemController.Item.StaticData.Name + "放入背包");
 
-            RightHandItemController.Item.SetPosition(false);
             RightHandItemController.Item.gameObject.SetActive(false);
+            RightHandItemController.Item.SetPosition(false);
             RightHandItemController.RemoveItem();
         }
+        /// <summary>
+        /// 获取右手上的物品
+        /// </summary>
+        /// <returns></returns>
+        public Item GetItemInRightHand()
+        {
+            return RightHandItemController.Item;
+        }
+            
 
         /// <summary>
         /// 与角色对话
@@ -610,8 +610,27 @@ namespace E.Tool
         {
             if (IsPlayer)
             {
-                float f = Input.GetAxis("Mouse ScrollWheel");
-                CameraManager.Singleton.ChangeOrthographicSize(f);
+                if (Input.GetKey(KeyCode.LeftAlt))
+                {
+                    float f = Input.GetAxis("Mouse ScrollWheel");
+                    CameraManager.Singleton.ChangeOrthographicSize(f);
+                }
+            }
+        }
+        private void CheckSwitchRightHandItem()
+        {
+            float f = Input.GetAxis("Mouse ScrollWheel");
+            if (f > 0.0001)
+            {
+                UIManager.Singleton.UIInventory.SelectedLastSlot();
+                UISlotItem slot = UIManager.Singleton.UIInventory.SelectedSlot;
+                if (slot) PutItemInRightHand(slot.Data);
+            }
+            else if (f < -0.0001)
+            {
+                UIManager.Singleton.UIInventory.SelectedNextSlot();
+                UISlotItem slot = UIManager.Singleton.UIInventory.SelectedSlot;
+                if (slot) PutItemInRightHand(slot.Data);
             }
         }
     }

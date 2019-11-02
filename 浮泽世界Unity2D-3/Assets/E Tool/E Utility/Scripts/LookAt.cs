@@ -12,7 +12,7 @@ namespace E.Tool
         private Vector3 mpos;
         private Vector3 lookPos;
 
-        private void Update()
+        public void Update()
         {
             if (!self) self = transform;
 

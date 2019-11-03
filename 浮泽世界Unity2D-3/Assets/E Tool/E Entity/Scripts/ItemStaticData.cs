@@ -9,29 +9,18 @@ namespace E.Tool
     public class ItemStaticData : EntityStaticData
     {
         [Header("物品实体静态数据")]
-        [SerializeField, Tooltip("是否可堆叠")] private bool stackable = false;
-        [SerializeField, Tooltip("是否可容纳")] private bool accommodatable = false;
-        [SerializeField, Tooltip("是否可腐烂")] private bool perishable = false;
-
+        [SerializeField, Tooltip("物品类型")] private ItemTag tag = ItemTag.Food;
         [SerializeField, Tooltip("价格")] private int rmbPrice = 10;
         [SerializeField, Tooltip("容量")] private int capacity = 0;
-        [SerializeField, Tooltip("初始堆叠数量")] private int stack = 1;
-        [SerializeField, Tooltip("初始容纳物品")] private List<Item> items = new List<Item>();
+        [SerializeField, Tooltip("初始容纳物品")] private List<ItemStaticData> items = new List<ItemStaticData>();
+        [SerializeField, Tooltip("组成的部件")] private List<ItemStaticData> components = new List<ItemStaticData>();
         [SerializeField, Tooltip("使用后习得的技能")] private List<Skill> skills = new List<Skill>();
         [SerializeField, Tooltip("使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
 
         /// <summary>
-        /// 是否可堆叠
+        /// 物品类型
         /// </summary>
-        public bool Stackable { get => stackable; }
-        /// <summary>
-        /// 是否可容纳
-        /// </summary>
-        public bool Accommodatable { get => accommodatable; }
-        /// <summary>
-        /// 是否可腐烂
-        /// </summary>
-        public bool Perishable { get => perishable; }
+        public ItemTag Tag { get => tag; }
         /// <summary>
         /// 价格
         /// </summary>
@@ -41,13 +30,13 @@ namespace E.Tool
         /// </summary>
         public int Capacity { get => capacity; }
         /// <summary>
-        /// 初始堆叠数量
-        /// </summary>
-        public int Stack { get => stack; }
-        /// <summary>
         /// 初始容纳物品
         /// </summary>
-        public List<Item> Items { get => items; }
+        public List<ItemStaticData> Items { get => items; }
+        /// <summary>
+        /// 组成的部件
+        /// </summary>
+        public List<ItemStaticData> Components { get => components; }
         /// <summary>
         /// 使用后习得的技能
         /// </summary>
@@ -56,5 +45,75 @@ namespace E.Tool
         /// 使用后获得的增益
         /// </summary>
         public List<Buff> Buffs { get => buffs; }
+
+        private void OnValidate()
+        {
+            switch (Tag)
+            {
+                case ItemTag.Food:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                case ItemTag.Weapon:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                case ItemTag.Book:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                case ItemTag.Clothing:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                case ItemTag.Bag:
+                    //capacity = 0;
+                    //items = new List<ItemStaticData>();
+                    items.RemoveAll(x => x.Tag == ItemTag.Bag);
+                    break;
+                case ItemTag.Switch:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                case ItemTag.Other:
+                    capacity = 0;
+                    items = new List<ItemStaticData>();
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    public enum ItemTag
+    {
+        /// <summary>
+        /// 使用时，食用，长时间食用会逐渐腐烂，health表示为新鲜程度
+        /// </summary>
+        Food,
+        /// <summary>
+        /// 使用时，攻击，每次有效攻击时会受到损伤，health表示为耐久
+        /// </summary>
+        Weapon,
+        /// <summary>
+        /// 使用时进入阅读状态
+        /// </summary>
+        Book,
+        /// <summary>
+        /// 穿在身上时即为使用状态，health表示为洁净程度
+        /// </summary>
+        Clothing,
+        /// <summary>
+        /// 可以在里面放其他物品
+        /// </summary>
+        Bag,
+        /// <summary>
+        /// 使用后会切换使用状态，如手机、地图、手电筒、收音机，health表示为剩余能量
+        /// </summary>
+        Switch,
+        /// <summary>
+        /// 其他类型
+        /// </summary>
+        Other
     }
 }

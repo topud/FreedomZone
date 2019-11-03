@@ -8,7 +8,6 @@ namespace E.Tool
         [Header("组件")]
         public Image imgIcon;
         public Image imgFrame;
-        public Text txtStack;
         public Color clrDefault;
         public Color clrSelected;
         private UIInventory uiInventory;
@@ -26,8 +25,6 @@ namespace E.Tool
         {
             imgIcon.sprite = Data.StaticData.Icon;
             imgFrame.color = Character.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
-            int stack = Data.DynamicData.Stack;
-            txtStack.text = stack == 1 ? "" : stack.ToString();
         }
 
         public void OnClick()

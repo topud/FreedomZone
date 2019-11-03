@@ -212,26 +212,26 @@ public class SaveManager : SingletonClass<SaveManager>
         StoryManager.Singleton.NodeID = save.NodeID;
         foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
         {
-            Character character = CharacterManager.Singleton.GetCharacter(item.Name);
+            Character character = CharacterManager.GetCharacter(item.ID);
             if (character)
             {
                 character.SetDynamicData(item);
             }
             else
             {
-                CharacterManager.Singleton.SpawnCharacter(item, item.IsPlayer);
+                CharacterManager.SpawnCharacter(item);
             }
         }
         foreach (ItemDynamicData item in save.InteractorDynamicDatas)
         {
-            Item inte = ItemManager.Singleton.GetItem(item.Name);
-            if (inte)
+            Item it = ItemManager.GetItem(item.ID);
+            if (it)
             {
-                inte.SetDynamicData(item);
+                it.SetDynamicData(item);
             }
             else
             {
-                ItemManager.Singleton.SpawnItem(item);
+                ItemManager.SpawnItem(item);
             }
         }
 

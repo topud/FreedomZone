@@ -12,6 +12,7 @@ namespace E.Tool
         [Space(5)]
         public UIGameMenu UIGameMenu;
         public UIInventory UIInventory;
+        public UIItemDetail UIItemDetail;
         public UICharacterStatus UICharacterStatus;
         public UICharacterDetail UICharacterDetail;
         public UIMap UIMinimap;

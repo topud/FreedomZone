@@ -10,39 +10,42 @@ public class ItemManager : SingletonClass<ItemManager>
     public GameObject ItemPrefab;
 
     [Header("数据")]
-    [ReadOnly] public List<Item> Items = new List<Item>();
-
-    /// <summary>
-    /// 检查场景内的实体
-    /// </summary>
-    public void CheckSceneItems()
+    [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
+    public List<Item> Items
     {
-        
-        Items.Clear();
-        Item[] interactors = transform.GetComponentsInChildren<Item>();
-        foreach (Item item in interactors)
+        get
         {
-            Items.Add(item);
+            items.Clear();
+            Item[] interactors = transform.GetComponentsInChildren<Item>();
+            foreach (Item item in interactors)
+            {
+                items.Add(item);
+            }
+            return items;
         }
-        Debug.Log("场景内物品数量 " + Items.Count);
     }
+
+    private void OnEnable()
+    {
+        items = Items;
+    }
+
     /// <summary>
     /// 生成物品
     /// </summary>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Item SpawnItem(string name, Vector2 position)
+    public static Item SpawnItem(string name, Vector2 position)
     {
         GameObject go;
         Item item;
         ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(name);
         if (sData)
         {
-            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
+            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), Singleton.transform);
             item = go.GetComponent<Item>();
             item.ResetDynamicData();
-            Items.Add(item);
             Debug.Log("物品生成成功：" + name);
             return item;
         }
@@ -55,20 +58,46 @@ public class ItemManager : SingletonClass<ItemManager>
     /// <summary>
     /// 生成物品
     /// </summary>
-    public Item SpawnItem(ItemDynamicData dData)
+    public static Item SpawnItem(ItemDynamicData dData)
     {
-        return SpawnItem(dData.Name, dData.Position);
+        GameObject go;
+        Item item;
+        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
+        if (sData)
+        {
+            go = Instantiate(sData.Prefab, dData.Position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+            item = go.GetComponent<Item>();
+            item.SetDynamicData(dData);
+            Debug.Log("物品生成成功：" + dData.Name);
+            return item;
+        }
+        else
+        {
+            Debug.LogError("静态数据不存在：" + dData.Name);
+            return null;
+        }
     }
     /// <summary>
     /// 获取物品
     /// </summary>
     /// <param name="name">物品名</param>
     /// <returns></returns>
-    public Item GetItem(string name)
+    public static Item GetItem(string name)
     {
-        foreach (Item item in Items)
+        foreach (Item item in Singleton.Items)
         {
             if (item.StaticData.Name == name)
+            {
+                return item;
+            }
+        }
+        return null;
+    }
+    public static Item GetItem(int id)
+    {
+        foreach (Item item in Singleton.Items)
+        {
+            if (item.gameObject.GetInstanceID() == id)
             {
                 return item;
             }

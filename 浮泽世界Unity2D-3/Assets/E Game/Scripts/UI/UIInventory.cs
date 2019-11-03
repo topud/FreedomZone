@@ -9,7 +9,7 @@ public class UIInventory : UIListBase<Item, UISlotItem>
     {
         if (Character.Player)
         {
-            Datas.AddRange(Character.Player.DynamicData.Items);
+            Datas.AddRange(Character.Player.Items);
         }
     }
 }

@@ -8,5 +8,6 @@ namespace E.Tool
     {
         [Header("动态数据")]
         [Tooltip("名称"), ReadOnly] public string Name = "";
+        [Tooltip("名称"), ReadOnly] public int ID = 0;
     }
 }

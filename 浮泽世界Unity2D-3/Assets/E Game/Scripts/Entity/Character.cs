@@ -29,7 +29,6 @@ namespace E.Tool
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
 
-
         public bool IsPlayer
         {
             get => isPlayer;
@@ -62,7 +61,7 @@ namespace E.Tool
             }
             set
             {
-                SpriteSorter.transform.localScale = new Vector3(value ? 1:-1, 1, 1);
+                SpriteSorter.transform.localScale = new Vector3(value ? 1 : -1, 1, 1);
             }
         }
         public Transform FollowTarget
@@ -84,6 +83,7 @@ namespace E.Tool
         protected override void OnEnable()
         {
             base.OnEnable();
+            OnPlayerItemChange.AddListener(UpdateItemDatas);
         }
         protected override void Start()
         {
@@ -106,12 +106,30 @@ namespace E.Tool
             }
             if (State != CharacterState.Dead && State != CharacterState.Talk)
             {
-                CheckNearby();
-                CheckUseItem();
-                CheckDiscard();
-                CheckAttack();
-                CheckCameraSize();
-                CheckSwitchRightHandItem();
+                if (IsPlayer)
+                {
+                    CheckNearby();
+                    CheckKeyUp_Q();
+                    CheckKeyUp_F();
+                    CheckMouseButtonDown_0();
+                    CheckMouseButtonDown_1();
+                    CheckMouseButtonDown_2();
+                    CheckMouseScrollWheel();
+                }
+                else
+                {
+                    //朝向
+                    if (AIPath.desiredVelocity.x >= 0.01f)
+                    {
+                        IsFaceRight = false;
+                    }
+                    else if (AIPath.desiredVelocity.x < -0.01f)
+                    {
+                        IsFaceRight = true;
+                    }
+                    //动画
+                    Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));
+                }
             }
         }
         protected override void FixedUpdate()
@@ -130,6 +148,7 @@ namespace E.Tool
         protected override void OnDisable()
         {
             base.OnDisable();
+            OnPlayerItemChange.RemoveListener(UpdateItemDatas);
         }
         protected override void OnDestroy()
         {
@@ -156,6 +175,8 @@ namespace E.Tool
         public override void SetDynamicData(CharacterDynamicData data)
         {
             base.SetDynamicData(data);
+
+            IsPlayer = data.IsPlayer;
         }
         [ContextMenu("重置静态数据")]
         /// <summary>
@@ -188,6 +209,8 @@ namespace E.Tool
             DynamicData = new CharacterDynamicData
             {
                 Name = StaticData.Name,
+                ID = gameObject.GetInstanceID(),
+                //Position
 
                 Health = StaticData.Health,
                 Mind = StaticData.Mind,
@@ -199,7 +222,7 @@ namespace E.Tool
 
                 RMB = StaticData.RMB,
                 FZB = StaticData.FZB,
-                Items = new List<Item>(StaticData.Items),
+                //ItemInstanceIDs
                 Skills = new List<Skill>(StaticData.Skills),
                 Buffs = StaticData.Buffs,
                 AcceptedQuests = StaticData.AcceptedQuests,
@@ -250,6 +273,17 @@ namespace E.Tool
         {
             return DynamicData.Health.Now > 0;
         }
+        /// <summary>
+        /// 更新物品数据
+        /// </summary>
+        public void UpdateItemDatas()
+        {
+            DynamicData.ItemIDs.Clear();
+            foreach (Item item in Items)
+            {
+                DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
+            }
+        }
 
         /// <summary>
         /// 更改当前生命值上限
@@ -283,11 +317,11 @@ namespace E.Tool
             if (enabled && DynamicData.Health.Now > 0)
             {
                 if (DynamicData.Health.AutoChangeable) DynamicData.Health.Now += (int)(0.1 * DynamicData.Health.AutoChangeRate);
-                if (DynamicData.Mind.AutoChangeable) DynamicData.Mind.Now +=(int)(0.1 * DynamicData.Mind.AutoChangeRate);
-                if (DynamicData.Power.AutoChangeable) DynamicData.Power.Now +=(int)(0.1 * DynamicData.Power.AutoChangeRate);
+                if (DynamicData.Mind.AutoChangeable) DynamicData.Mind.Now += (int)(0.1 * DynamicData.Mind.AutoChangeRate);
+                if (DynamicData.Power.AutoChangeable) DynamicData.Power.Now += (int)(0.1 * DynamicData.Power.AutoChangeRate);
             }
         }
-        
+
         /// <summary>
         /// 检测物品是否在拾取范围
         /// </summary>
@@ -303,7 +337,7 @@ namespace E.Tool
         /// <returns></returns>
         public bool IsOwning(Item item)
         {
-            return DynamicData.Items.Contains(item);
+            return Items.Contains(item);
         }
         /// <summary>
         /// 获取物品排序
@@ -312,7 +346,7 @@ namespace E.Tool
         /// <returns></returns>
         public int GetIndex(Item item)
         {
-            return DynamicData.Items.IndexOf(item);
+            return Items.IndexOf(item);
         }
 
         /// <summary>
@@ -329,7 +363,7 @@ namespace E.Tool
             if (IsNearby(item))
             {
                 item.gameObject.SetActive(false);
-                DynamicData.Items.Add(item);
+                Items.Add(item);
                 PutRightHandItemInBag();
                 PutItemInRightHand(item);
 
@@ -366,6 +400,21 @@ namespace E.Tool
             }
         }
         /// <summary>
+        /// 显示细节
+        /// </summary>
+        /// <param name="item"></param>
+        public void ShowDetail(Item item)
+        {
+            if (!item)
+            {
+                Debug.LogError("没有物品可显示细节");
+                return;
+            }
+            UIManager.Singleton.UIItemDetail.SetData(item);
+
+            Debug.Log(item.StaticData.Name);
+        }
+        /// <summary>
         /// 丢弃物品
         /// </summary>
         /// <param name="item"></param>
@@ -388,7 +437,7 @@ namespace E.Tool
                     RightHandItemController.RemoveItem();
                 }
 
-                DynamicData.Items.Remove(item);
+                Items.Remove(item);
 
                 OnPlayerItemChange.Invoke();
                 Debug.Log(string.Format("已丢弃 {0}", item.StaticData.Name));
@@ -404,15 +453,16 @@ namespace E.Tool
         /// <param name="item"></param>
         public void Use(Item item)
         {
-            if (item)
+            if (!item)
             {
                 Debug.LogError("没有物品可使用");
                 return;
             }
             if (IsOwning(item))
             {
-                item.Use();
-                //DynamicData.Buffs += item.StaticData.Buffs;
+                item.SwitchState();
+                DynamicData.Skills.AddRange(item.StaticData.Skills);
+                DynamicData.Buffs.AddRange(item.StaticData.Buffs);
             }
             else
             {
@@ -445,15 +495,27 @@ namespace E.Tool
         public void TakeOutLastItem()
         {
             Item item = GetRightHandItem();
+
+            if (Items.Count == 0)
+            {
+                Debug.LogError("身上没有物品");
+                return;
+            }
+            else if (Items.Count == 1 && item)
+            {
+                Debug.LogError("身上只有一个物品，无需切换");
+                return;
+            }
+
             int last = 0;
             if (item)
             {
                 last = GetIndex(item) - 1;
-                if (last < 0) last = DynamicData.Items.Count - 1;
+                if (last < 0) last = Items.Count - 1;
             }
 
             PutRightHandItemInBag();
-            PutItemInRightHand(DynamicData.Items[last]);
+            PutItemInRightHand(Items[last]);
 
             OnPlayerItemChange.Invoke();
         }
@@ -463,15 +525,27 @@ namespace E.Tool
         public void TakeOutNextItem()
         {
             Item item = GetRightHandItem();
+
+            if (Items.Count == 0)
+            {
+                Debug.LogError("身上没有物品");
+                return;
+            }
+            else if (Items.Count == 1 && item)
+            {
+                Debug.LogError("身上只有一个物品，无需切换");
+                return;
+            }
+
             int next = 0;
             if (item)
             {
                 next = GetIndex(item) + 1;
-                if (next > DynamicData.Items.Count - 1) next = 0;
+                if (next > Items.Count - 1) next = 0;
             }
 
             PutRightHandItemInBag();
-            PutItemInRightHand(DynamicData.Items[next]);
+            PutItemInRightHand(Items[next]);
 
             OnPlayerItemChange.Invoke();
         }
@@ -518,7 +592,7 @@ namespace E.Tool
         {
             if (IsNearby(target))
             {
-                if (target.StaticData.RandomStorys.Count>0)
+                if (target.StaticData.RandomStorys.Count > 0)
                 {
                     target.TargetUI.HideName();
                     target.TargetUI.ShowChat();
@@ -573,180 +647,179 @@ namespace E.Tool
 
         private void CheckMove()
         {
-            if (IsPlayer)
+            float horizontal = Input.GetAxis("Horizontal");
+            float vertical = Input.GetAxis("Vertical");
+
+            int currentSpeed = 0;
+            if (horizontal != 0 || vertical != 0)
             {
-                float horizontal = Input.GetAxis("Horizontal");
-                float vertical = Input.GetAxis("Vertical");
+                Vector2 direction = new Vector2(horizontal, vertical);
+                if (direction.magnitude > 1)
+                    direction = direction.normalized;
 
-                int currentSpeed = 0;
-                if (horizontal != 0 || vertical != 0)
+                //是否跑步
+                if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    Vector2 direction = new Vector2(horizontal, vertical);
-                    if (direction.magnitude > 1)
-                        direction = direction.normalized;
-
-                    //是否跑步
-                    if (Input.GetKey(KeyCode.LeftShift))
-                    {
-                        currentSpeed = DynamicData.Speed.Max;
-                    }
-                    else
-                    {
-                        currentSpeed = DynamicData.Speed.Now;
-                    }
-                    Rigidbody.velocity = direction * currentSpeed;
-
-                    // 绘制动线
-                    Debug.DrawLine(transform.position, transform.position + (Vector3)direction * currentSpeed, Color.green, 0, false);
+                    currentSpeed = DynamicData.Speed.Max;
                 }
                 else
                 {
-                    Rigidbody.velocity = Vector2.zero;
+                    currentSpeed = DynamicData.Speed.Now;
                 }
+                Rigidbody.velocity = direction * currentSpeed;
 
-                //朝向（角色面朝鼠标位置）
-                Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                IsFaceRight = mousePositionInWorld.x < transform.position.x ? true : false;
-                //动画
-                Animator.SetInteger("Speed", currentSpeed);
+                // 绘制动线
+                Debug.DrawLine(transform.position, transform.position + (Vector3)direction * currentSpeed, Color.green, 0, false);
             }
             else
             {
-                //朝向
-                if (AIPath.desiredVelocity.x >= 0.01f)
-                {
-                    IsFaceRight = false;
-                }
-                else if (AIPath.desiredVelocity.x < -0.01f)
-                {
-                    IsFaceRight = true;
-                }
-                //动画
-                Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));
+                Rigidbody.velocity = Vector2.zero;
             }
+
+            //朝向（角色面朝鼠标位置）
+            Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            IsFaceRight = mousePositionInWorld.x < transform.position.x ? true : false;
+            //动画
+            Animator.SetInteger("Speed", currentSpeed);
         }
         private void CheckNearby()
         {
-            if (IsPlayer)
+            Item nearistItem = null;
+            if (NearbyItems.Count != 0)
             {
-                Item nearistItem = null;
-                if (NearbyItems.Count != 0)
+                //计算所有附近物品离自己的距离
+                List<float> diss = new List<float>();
+                for (int i = 0; i < NearbyItems.Count; i++)
                 {
-                    //计算所有附近物品离自己的距离
-                    List<float> diss = new List<float>();
-                    for (int i = 0; i < NearbyItems.Count; i++)
-                    {
-                        diss.Add(Vector2.Distance(NearbyItems[i].transform.position, transform.position));
-                    }
-                    //获取离自己最近的物品
-                    nearistItem = NearbyItems[Utility.IndexMin(diss)];
+                    diss.Add(Vector2.Distance(NearbyItems[i].transform.position, transform.position));
                 }
+                //获取离自己最近的物品
+                nearistItem = NearbyItems[Utility.IndexMin(diss)];
+            }
 
-                Character nearistCharacter = null;
-                if (NearbyCharacters.Count != 0)
+            Character nearistCharacter = null;
+            if (NearbyCharacters.Count != 0)
+            {
+                //计算所有附近角色离自己的距离
+                List<float> diss = new List<float>();
+                for (int i = 0; i < NearbyCharacters.Count; i++)
                 {
-                    //计算所有附近角色离自己的距离
-                    List<float> diss = new List<float>();
-                    for (int i = 0; i < NearbyCharacters.Count; i++)
-                    {
-                        diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
-                    }
-                    //获取离自己最近的角色
-                    nearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
-                    foreach (Character it in NearbyCharacters)
-                    {
-                        if (nearistCharacter != it)
-                        {
-                            it.TargetUI.HideHelp();
-                        }
-                    }
+                    diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
                 }
-
-                //最近物品离自己的距离
-                float ni = nearistItem ? Vector2.Distance(nearistItem.transform.position, transform.position) : -1;
-                //最近角色离自己的距离
-                float nc = nearistCharacter ? Vector2.Distance(nearistCharacter.transform.position, transform.position) : -1;
-                if (ni > nc)
+                //获取离自己最近的角色
+                nearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
+                foreach (Character it in NearbyCharacters)
                 {
-                    if (nearistItem)
+                    if (nearistCharacter != it)
                     {
-                        //检测是否按键拾取
-                        if (Input.GetKeyUp(KeyCode.E)) PickUp(nearistItem);
-                        //检测是否按键调查
-                        if (Input.GetKeyUp(KeyCode.F)) Survey(nearistItem);
-                    }
-                    if (nearistCharacter)
-                    {
-                        nearistCharacter.TargetUI.HideHelp();
-                    }
-                }
-                else if (ni < nc)
-                {
-                    if (nearistCharacter)
-                    {
-                        if (!nearistCharacter.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
-                        {
-                            nearistCharacter.TargetUI.ShowHelp();
-                        }
-                        //检测是否按键对话
-                        if (Input.GetKeyUp(KeyCode.E)) ChatWith(nearistCharacter);
-                        //检测是否按键调查
-                        if (Input.GetKeyUp(KeyCode.F)) Survey(nearistCharacter);
+                        it.TargetUI.HideHelp();
                     }
                 }
             }
+
+            //最近物品离自己的距离
+            float ni = nearistItem ? Vector2.Distance(nearistItem.transform.position, transform.position) : -1;
+            //最近角色离自己的距离
+            float nc = nearistCharacter ? Vector2.Distance(nearistCharacter.transform.position, transform.position) : -1;
+            if (ni > nc)
+            {
+                if (nearistItem)
+                {
+                    //检测是否按键拾取
+                    if (Input.GetKeyUp(KeyCode.E)) PickUp(nearistItem);
+                    //检测是否按键调查
+                    if (Input.GetKeyUp(KeyCode.F)) Survey(nearistItem);
+                }
+                if (nearistCharacter)
+                {
+                    nearistCharacter.TargetUI.HideHelp();
+                }
+            }
+            else if (ni < nc)
+            {
+                if (nearistCharacter)
+                {
+                    if (!nearistCharacter.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
+                    {
+                        nearistCharacter.TargetUI.ShowHelp();
+                    }
+                    //检测是否按键对话
+                    if (Input.GetKeyUp(KeyCode.E)) ChatWith(nearistCharacter);
+                    //检测是否按键调查
+                    if (Input.GetKeyUp(KeyCode.F)) Survey(nearistCharacter);
+                }
+            }
         }
-        private void CheckUseItem()
+        private void CheckKeyUp_Q()
+        {
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                Discard(GetRightHandItem());
+            }
+        }
+        private void CheckKeyUp_F()
+        {
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                Survey(GetRightHandItem());
+            }
+        }
+        private void CheckMouseButtonDown_0()
         {
             if (IsPlayer)
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Use(GetRightHandItem());
+                    Item item = GetRightHandItem();
+                    if (item)
+                    {
+                        Use(item);
+                    }
+                    else
+                    {
+                        Attack();
+                    }
                 }
             }
         }
-        private void CheckDiscard()
+        private void CheckMouseButtonDown_1()
         {
-            if (IsPlayer)
+            if (Input.GetMouseButtonDown(1))
             {
-                if (Input.GetKeyUp(KeyCode.Q))
+                if (UIManager.Singleton.UIItemDetail.IsShow)
                 {
-                    Discard(GetRightHandItem());
+                    UIManager.Singleton.UIItemDetail.Hide();
+                }
+                else
+                {
+                    ShowDetail(GetRightHandItem());
                 }
             }
         }
-        private void CheckAttack()
+        private void CheckMouseButtonDown_2()
         {
-            if (IsPlayer)
+            if (Input.GetMouseButtonDown(2))
             {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    Attack();
-                }
+                PutRightHandItemInBag();
             }
         }
-        private void CheckCameraSize()
-        {
-            if (IsPlayer)
-            {
-                if (Input.GetKey(KeyCode.LeftAlt))
-                {
-                    float f = Input.GetAxis("Mouse ScrollWheel");
-                    CameraManager.Singleton.ChangeOrthographicSize(f);
-                }
-            }
-        }
-        private void CheckSwitchRightHandItem()
+        private void CheckMouseScrollWheel()
         {
             float f = Input.GetAxis("Mouse ScrollWheel");
-            if (f > 0.0001)
+            if (Input.GetKey(KeyCode.LeftAlt))
             {
-                TakeOutLastItem();
+                CameraManager.Singleton.ChangeOrthographicSize(f);
             }
-            else if (f < -0.0001)
+            else
             {
-                TakeOutNextItem();
+                if (f > 0.0001)
+                {
+                    TakeOutLastItem();
+                }
+                else if (f < -0.0001)
+                {
+                    TakeOutNextItem();
+                }
             }
         }
     }

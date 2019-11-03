@@ -7,6 +7,8 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
+        [Tooltip("可以切换激活状态的子对象")] public GameObject SwitchableObject;
+
         protected override void Awake()
         {
             base.Awake();
@@ -104,16 +106,17 @@ namespace E.Tool
 
             if (!StaticData) return;
 
-            DynamicData = new ItemDynamicData
-            {
-                Name = StaticData.Name,
-
-                Stack = StaticData.Stack,
-                Health = StaticData.Health,
-                Items = StaticData.Items
-            };
-            Rigidbody.bodyType = RigidbodyType2D.Dynamic;
             GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
+
+             DynamicData = new ItemDynamicData()
+            {
+                Name = StaticData.name,
+                ID = gameObject.GetInstanceID(),
+                //Position
+
+                Health = StaticData.Health,
+                //ItemInstanceIDs
+            };
         }
         [ContextMenu("重置组件")]
         /// <summary>
@@ -122,6 +125,8 @@ namespace E.Tool
         public override void ResetComponents()
         {
             base.ResetComponents();
+
+            SwitchableObject = transform.GetChild(0).gameObject;
         }
 
         /// <summary>
@@ -140,24 +145,31 @@ namespace E.Tool
         /// <returns></returns>
         public float GetCapacityPercentage()
         {
-            if (StaticData.Accommodatable)
+            int vo = 0;
+            foreach (Item item in Items)
             {
-                int vo = 0;
-                foreach (Item item in DynamicData.Items)
-                {
-                    vo += item.StaticData.Volume;
-                }
-                return (StaticData.Capacity > 0) ? (float)vo / StaticData.Capacity : -1;
+                vo += item.StaticData.Volume;
             }
-            else
-            {
-                return -1;
-            }
+            return (StaticData.Capacity > 0) ? (float)vo / StaticData.Capacity : 0;
         }
 
-        public void Use()
+        public void SwitchState()
         {
-
+            if (SwitchableObject)
+            {
+                SwitchableObject.SetActive(!SwitchableObject.activeInHierarchy);
+            }
+        }
+        /// <summary>
+        /// 更新物品数据
+        /// </summary>
+        public void UpdateItemDatas()
+        {
+            DynamicData.ItemIDs.Clear();
+            foreach (Item item in Items)
+            {
+                DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ namespace E.Tool
     public class UIBase : MonoBehaviour
     {
         private Animator animator;
+        public bool IsShow = false;
 
         private void Awake()
         {
@@ -18,10 +19,12 @@ namespace E.Tool
         public void Show()
         {
             animator.SetTrigger("Show");
+            IsShow = true;
         }
         public void Hide()
         {
             animator.SetTrigger("Hide");
+            IsShow = false;
         }
     }
 }

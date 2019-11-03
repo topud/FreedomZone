@@ -22,6 +22,7 @@ namespace E.Tool
         [Header("实体数据")]
         public S StaticData;
         public D DynamicData;
+        [ReadOnly] public List<Item> Items = new List<Item>();
 
         protected virtual void Awake()
         {
@@ -90,6 +91,20 @@ namespace E.Tool
             {
                 DynamicData = data;
                 transform.position = data.Position;
+
+                Items.Clear();
+                foreach (int item in DynamicData.ItemIDs)
+                {
+                    Item it = ItemManager.GetItem(item);
+                    if (it)
+                    {
+                        Items.Add(it);
+                    }
+                    else
+                    {
+                        Debug.LogError("找不到物品ID " + it);
+                    }
+                }
             }
             else
             {

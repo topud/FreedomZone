@@ -11,7 +11,7 @@ namespace E.Tool
         private Animator animator;
         public bool IsShow = false;
 
-        private void Awake()
+        protected virtual void Awake()
         {
             animator = GetComponent<Animator>();
         }

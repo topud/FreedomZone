@@ -179,11 +179,11 @@ public class SaveManager : SingletonClass<SaveManager>
         {
             NodeID = StoryManager.Singleton.NodeID
         };
-        foreach (Character item in CharacterManager.Singleton.Characters)
+        foreach (Character item in CharacterManager.Characters)
         {
             save.CharacterDynamicDatas.Add(item.DynamicData);
         }
-        foreach (Item item in ItemManager.Singleton.Items)
+        foreach (Item item in ItemManager.Items)
         {
             save.InteractorDynamicDatas.Add(item.DynamicData);
         }

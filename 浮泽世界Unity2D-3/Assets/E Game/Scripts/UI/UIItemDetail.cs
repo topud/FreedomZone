@@ -9,13 +9,13 @@ public class UIItemDetail : UIBase
     [SerializeField] private Text txtName;
     [SerializeField] private Text txtDes;
     [SerializeField] private Image imgIcon;
+    [SerializeField] private Image imgHealth;
 
-    [SerializeField] private Item Item;
+    public Item Item;
 
     public void SetData(Item item)
     {
         Item = item;
-        Show();
         Refresh();
     }
     public void Refresh()
@@ -25,6 +25,7 @@ public class UIItemDetail : UIBase
             txtName.text = Item.StaticData.Name;
             txtDes.text = Item.StaticData.Describe;
             imgIcon.sprite = Item.StaticData.Icon;
+            imgHealth.fillAmount = Item.DynamicData.Health.NowPercent;
 
             imgIcon.enabled = true;
         }
@@ -33,6 +34,7 @@ public class UIItemDetail : UIBase
             txtName.text = "";
             txtDes.text = "";
             imgIcon.sprite = null;
+            imgHealth.fillAmount = 0;
 
             imgIcon.enabled = false;
         }

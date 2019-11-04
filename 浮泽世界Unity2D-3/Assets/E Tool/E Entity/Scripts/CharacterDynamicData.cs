@@ -19,6 +19,7 @@ namespace E.Tool
 
         [Tooltip("当前携带的人民币")] public int RMB = 100;
         [Tooltip("当前携带的浮泽币")] public int FZB = 0;
+        [Tooltip("初始穿戴的服装")] public List<int> Clothings = new List<int>();
         [Tooltip("当前掌握的技能")] public List<Skill> Skills = new List<Skill>();
         [Tooltip("当前拥有的增益")] public List<Buff> Buffs = new List<Buff>();
         [Tooltip("当前接受的任务")] public List<Quest> AcceptedQuests = new List<Quest>();

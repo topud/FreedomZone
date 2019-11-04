@@ -30,6 +30,7 @@ namespace E.Tool
         [SerializeField, Tooltip("初始携带的人民币")] private int rmb = 100;
         [SerializeField, Tooltip("初始携带的浮泽币")] private int fzb = 0;
         [SerializeField, Tooltip("初始携带的物品")] private List<ItemStaticData> items = new List<ItemStaticData>();
+        [SerializeField, Tooltip("初始穿戴的服装")] private List<ItemStaticData> clothings = new List<ItemStaticData>();
         [SerializeField, Tooltip("初始掌握的技能")] private List<Skill> skills = new List<Skill>();
         [SerializeField, Tooltip("初始拥有的增益")] private List<Buff> buffs = new List<Buff>();
         [SerializeField, Tooltip("初始接受的任务")] private List<Quest> acceptedQuests = new List<Quest>();
@@ -116,6 +117,10 @@ namespace E.Tool
         /// 初始携带的物品
         /// </summary>
         public List<ItemStaticData> Items { get => items; }
+        /// <summary>
+        /// 初始穿戴的服装
+        /// </summary>
+        public List<ItemStaticData> Clothings { get => clothings; set => clothings = value; }
         /// <summary>
         /// 初始掌握的技能
         /// </summary>

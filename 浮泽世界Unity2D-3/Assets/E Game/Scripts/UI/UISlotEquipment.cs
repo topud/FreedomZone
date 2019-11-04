@@ -18,7 +18,7 @@ namespace E.Tool
         public override void UpdateData()
         {
             imgIcon.sprite = item.StaticData.Icon;
-            imgHealth.fillAmount = item.GetHealthPercentage();
+            imgHealth.fillAmount = item.DynamicData.Health.NowPercent;
         }
     }
 }

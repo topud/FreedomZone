@@ -8,6 +8,34 @@ namespace E.Tool
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
         [Tooltip("可以切换激活状态的子对象")] public GameObject SwitchableObject;
+        public bool IsUsing
+        {
+            get
+            {
+                bool isUsing = false;
+                switch (StaticData.Type)
+                {
+                    case ItemType.Food:
+                        break;
+                    case ItemType.Weapon:
+                        break;
+                    case ItemType.Book:
+                        break;
+                    case ItemType.Clothing:
+                        break;
+                    case ItemType.Bag:
+                        break;
+                    case ItemType.Switch:
+                        isUsing = SwitchableObject.activeInHierarchy;
+                        break;
+                    case ItemType.Other:
+                        break;
+                    default:
+                        break;
+                }
+                return isUsing;
+            }
+        }
 
         protected override void Awake()
         {
@@ -158,17 +186,6 @@ namespace E.Tool
             if (SwitchableObject)
             {
                 SwitchableObject.SetActive(!SwitchableObject.activeInHierarchy);
-            }
-        }
-        /// <summary>
-        /// 更新物品数据
-        /// </summary>
-        public void UpdateItemDatas()
-        {
-            DynamicData.ItemIDs.Clear();
-            foreach (Item item in Items)
-            {
-                DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
             }
         }
     }

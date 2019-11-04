@@ -22,6 +22,10 @@ public class InHandItemController : MonoBehaviour
         lookAt = GetComponent<LookAt>();
     }
 
+    public void SetIsLookAtCursor(bool isLookAtCursor)
+    {
+        lookAt.enabled = isLookAtCursor;
+    }
     public void SetItem(Item item, bool isLookAtCursor)
     {
         Item = item;

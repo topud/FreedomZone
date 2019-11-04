@@ -11,17 +11,17 @@ public class ItemManager : SingletonClass<ItemManager>
 
     [Header("数据")]
     [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
-    public List<Item> Items
+    public static List<Item> Items
     {
         get
         {
-            items.Clear();
-            Item[] interactors = transform.GetComponentsInChildren<Item>();
+            Singleton.items.Clear();
+            Item[] interactors = Singleton.transform.GetComponentsInChildren<Item>();
             foreach (Item item in interactors)
             {
-                items.Add(item);
+                Singleton.items.Add(item);
             }
-            return items;
+            return Singleton.items;
         }
     }
 
@@ -84,7 +84,7 @@ public class ItemManager : SingletonClass<ItemManager>
     /// <returns></returns>
     public static Item GetItem(string name)
     {
-        foreach (Item item in Singleton.Items)
+        foreach (Item item in Items)
         {
             if (item.StaticData.Name == name)
             {
@@ -95,7 +95,7 @@ public class ItemManager : SingletonClass<ItemManager>
     }
     public static Item GetItem(int id)
     {
-        foreach (Item item in Singleton.Items)
+        foreach (Item item in Items)
         {
             if (item.gameObject.GetInstanceID() == id)
             {

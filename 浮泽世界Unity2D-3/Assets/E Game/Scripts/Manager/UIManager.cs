@@ -23,13 +23,23 @@ namespace E.Tool
         public UILoading UILoading;
         public UIPopup UIPopup;
 
+        public static bool IsShowAnyUIPanel
+        {
+            get
+            {
+                return Singleton.UILobbyMenu.IsShow || Singleton.UIGameMenu.IsShow ||
+                       Singleton.UIInventory.IsShow || Singleton.UIItemDetail.IsShow || Singleton.UICharacterStatus.IsShow || Singleton.UICharacterDetail.IsShow || Singleton.UIMinimap.IsShow ||
+                       Singleton.UIListSave.IsShow || Singleton.UISetting.IsShow || Singleton.UIHelp.IsShow || Singleton.UILoading.IsShow || Singleton.UIPopup.IsShow;
+            }
+        }
+
         protected override void Awake()
         {
             base.Awake();
         }
         private void Start()
         {
-            if (GameManager.Singleton.IsInLobby)
+            if (GameManager.IsInLobby)
             {
                 UILobbyMenu.gameObject.SetActive(true);
                 UICharacterStatus.gameObject.SetActive(false);
@@ -51,7 +61,7 @@ namespace E.Tool
         }
         private void Update()
         {
-            if (GameManager.Singleton.IsInLobby)
+            if (GameManager.IsInLobby)
             {
             }
             else
@@ -117,11 +127,6 @@ namespace E.Tool
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
-
-        public void SetUIActive(bool isActive)
-        {
-            UIInventory.gameObject.SetActive(isActive);
-        }
         
         /// <summary>
         /// 显示加载面板
@@ -142,7 +147,7 @@ namespace E.Tool
         /// </summary>
         public void ShowMenu()
         {
-            if (GameManager.Singleton.IsInLobby)
+            if (GameManager.IsInLobby)
             {
                 UILobbyMenu.gameObject.SetActive(true);
             }
@@ -156,7 +161,7 @@ namespace E.Tool
         /// </summary>
         public void HideMenu()
         {
-            if (GameManager.Singleton.IsInLobby)
+            if (GameManager.IsInLobby)
             {
                 UILobbyMenu.gameObject.SetActive(false);
             }

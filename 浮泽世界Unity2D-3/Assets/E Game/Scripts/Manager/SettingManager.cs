@@ -21,10 +21,10 @@ public class SettingManager : SingletonClass<SettingManager>
         SaveSetting();
     }
 
-    public void SaveSetting()
+    public static void SaveSetting()
     {
-        PlayerPrefs.SetInt("IsShowVersionInfo", IsShowVersionInfo ? 1 : 0);
-        PlayerPrefs.SetInt("IsFullScreen", IsFullScreen ? 1 : 0);
+        PlayerPrefs.SetInt("IsShowVersionInfo", Singleton.IsShowVersionInfo ? 1 : 0);
+        PlayerPrefs.SetInt("IsFullScreen", Singleton.IsFullScreen ? 1 : 0);
         PlayerPrefs.Save();
     }
 }

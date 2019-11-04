@@ -6,28 +6,18 @@ namespace E.Tool
     public class UISlotItem : UISlotBase<Item>
     {
         [Header("组件")]
-        public Image imgIcon;
-        public Image imgFrame;
-        public Color clrDefault;
-        public Color clrSelected;
+        [SerializeField] private Image imgIcon;
+        [SerializeField] private Image imgFrame;
+        [SerializeField] private Image imgHealth;
+        [SerializeField] private Color clrDefault;
+        [SerializeField] private Color clrSelected;
         private UIInventory uiInventory;
 
         private void Awake()
         {
             uiInventory = GetComponentInParent<UIInventory>();
         }
-        public override void SetData(Item data)
-        {
-            Data = data;
-            UpdateData();
-        }
-        public override void UpdateData()
-        {
-            imgIcon.sprite = Data.StaticData.Icon;
-            imgFrame.color = Character.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
-        }
-
-        public void OnClick()
+        public void OnClickLeftMouse()
         {
             Item item = Character.Player.GetRightHandItem();
             if (item)
@@ -48,6 +38,25 @@ namespace E.Tool
             }
             Character.OnPlayerItemChange.Invoke();
         }
+        public void OnClickRightMouse()
+        {
+            if (UIManager.Singleton.UIItemDetail.IsShow)
+            {
+                if (UIManager.Singleton.UIItemDetail.Item == Data)
+                {
+                    UIManager.Singleton.UIItemDetail.Hide();
+                }
+                else
+                {
+                    UIManager.Singleton.UIItemDetail.SetData(Data);
+                }
+            }
+            else
+            {
+                UIManager.Singleton.UIItemDetail.SetData(Data);
+                UIManager.Singleton.UIItemDetail.Show();
+            }
+        }
         public override void OnBeginDrag()
         {
         }
@@ -60,5 +69,18 @@ namespace E.Tool
         public override void OnDrop()
         {
         }
+
+        public override void SetData(Item data)
+        {
+            Data = data;
+            UpdateData();
+        }
+        public override void UpdateData()
+        {
+            imgIcon.sprite = Data.StaticData.Icon;
+            imgFrame.color = Character.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
+            imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
+        }
+
     }
 }

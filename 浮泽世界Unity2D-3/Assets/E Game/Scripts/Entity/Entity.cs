@@ -22,7 +22,20 @@ namespace E.Tool
         [Header("实体数据")]
         public S StaticData;
         public D DynamicData;
-        [ReadOnly] public List<Item> Items = new List<Item>();
+        [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
+        public List<Item> Items
+        {
+            get => items;
+            set
+            {
+                items = value;
+                DynamicData.ItemIDs.Clear();
+                foreach (Item item in Items)
+                {
+                    DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
+                }
+            }
+        }
 
         protected virtual void Awake()
         {
@@ -160,15 +173,6 @@ namespace E.Tool
             if (!AudioSource) Debug.LogError("未找到 AudioSource");
             if (!Animator) Debug.LogError("未找到 Animator");
             if (!SpriteSorter) Debug.LogError("未找到 SpriteSorter");
-        }
-
-        /// <summary>
-        /// 耐久百分比
-        /// </summary>
-        /// <returns></returns>
-        public virtual float GetHealthPercentage()
-        {
-            return (DynamicData.Health.Max > 0) ? (float)DynamicData.Health.Now / DynamicData.Health.Max : 0;
         }
     }
 }

@@ -31,9 +31,9 @@ namespace E.Tool
         {
             if (Target)
             {
-                sldHealth.value = Target.GetHealthPercentage();
-                sldMind.value = Target.GetMindPercentage();
-                sldPower.value = Target.GetPowerPercentage();
+                sldHealth.value = Target.DynamicData.Health.NowPercent;
+                sldMind.value = Target.DynamicData.Mind.NowPercent;
+                sldPower.value = Target.DynamicData.Power.NowPercent;
                 //txtHealth.text = Target.DynamicData.Health + " / " + Target.DynamicData.MaxHealth;
                 //txtMind.text = Target.DynamicData.Mind + " / " + Target.DynamicData.MaxMind;
                 //txtPower.text = Target.DynamicData.Power + " / " + Target.DynamicData.MaxPower;

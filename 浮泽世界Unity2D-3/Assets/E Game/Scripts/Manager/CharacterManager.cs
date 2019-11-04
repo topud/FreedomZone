@@ -11,17 +11,17 @@ public class CharacterManager : SingletonClass<CharacterManager>
 
     [Header("数据")]
     [SerializeField, ReadOnly] private List<Character> characters = new List<Character>();
-    public List<Character> Characters
+    public static List<Character> Characters
     {
         get
         {
-            characters.Clear();
-            Character[] chars = transform.GetComponentsInChildren<Character>();
+            Singleton.characters.Clear();
+            Character[] chars = Singleton.transform.GetComponentsInChildren<Character>();
             foreach (Character item in chars)
             {
-                characters.Add(item);
+                Singleton.characters.Add(item);
             }
-            return characters;
+            return Singleton.characters;
         }
     }
 
@@ -107,7 +107,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
     /// <returns></returns>
     public static Character GetCharacter(string name)
     {
-        foreach (Character item in Singleton.Characters)
+        foreach (Character item in Characters)
         {
             if (item.StaticData.Name == name)
             {
@@ -118,7 +118,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
     }
     public static Character GetCharacter(int id)
     {
-        foreach (Character item in Singleton.Characters)
+        foreach (Character item in Characters)
         {
             if (item.gameObject.GetInstanceID() == id)
             {

@@ -64,6 +64,18 @@ namespace E.Tool
             get => now;
             set => now = Utility.Clamp(value, min, max);
         }
+        /// <summary>
+        /// 当前值百分比
+        /// </summary>
+        public float NowPercent
+        {
+            get
+            {
+                if (max == 0) return 0;
+                else return (float)now / max;
+            }
+            set => now = Mathf.RoundToInt(max * value);
+        }
 
         /// <summary>
         /// 构造器

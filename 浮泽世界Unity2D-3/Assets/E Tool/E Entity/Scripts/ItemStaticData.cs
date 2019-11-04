@@ -9,7 +9,7 @@ namespace E.Tool
     public class ItemStaticData : EntityStaticData
     {
         [Header("物品实体静态数据")]
-        [SerializeField, Tooltip("物品类型")] private ItemTag tag = ItemTag.Food;
+        [SerializeField, Tooltip("物品类型")] private ItemType type = ItemType.Food;
         [SerializeField, Tooltip("价格")] private int rmbPrice = 10;
         [SerializeField, Tooltip("容量")] private int capacity = 0;
         [SerializeField, Tooltip("初始容纳物品")] private List<ItemStaticData> items = new List<ItemStaticData>();
@@ -20,7 +20,7 @@ namespace E.Tool
         /// <summary>
         /// 物品类型
         /// </summary>
-        public ItemTag Tag { get => tag; }
+        public ItemType Type { get => type; }
         /// <summary>
         /// 价格
         /// </summary>
@@ -48,34 +48,34 @@ namespace E.Tool
 
         private void OnValidate()
         {
-            switch (Tag)
+            switch (Type)
             {
-                case ItemTag.Food:
+                case ItemType.Food:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemTag.Weapon:
+                case ItemType.Weapon:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemTag.Book:
+                case ItemType.Book:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemTag.Clothing:
+                case ItemType.Clothing:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemTag.Bag:
+                case ItemType.Bag:
                     //capacity = 0;
                     //items = new List<ItemStaticData>();
-                    items.RemoveAll(x => x.Tag == ItemTag.Bag);
+                    items.RemoveAll(x => x.Type == ItemType.Bag);
                     break;
-                case ItemTag.Switch:
+                case ItemType.Switch:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemTag.Other:
+                case ItemType.Other:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
@@ -85,7 +85,7 @@ namespace E.Tool
         }
     }
 
-    public enum ItemTag
+    public enum ItemType
     {
         /// <summary>
         /// 使用时，食用，长时间食用会逐渐腐烂，health表示为新鲜程度

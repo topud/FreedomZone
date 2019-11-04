@@ -8,14 +8,14 @@ using E.Tool;
 public class GameManager : SingletonClass<GameManager>
 {
     [Header("状态")]
-    [ReadOnly] public bool IsInLobby = true;
-    public bool IsShowUIInGame = true;
+    [SerializeField, ReadOnly] private bool isInLobby = true;
     public bool IsAcceptInputInGame = true;
 
     private bool isStartGame = false;
     private FileInfo selectSave;
 
     private AsyncOperation sceneAsyncOperation;
+
     public float SceneLoadProcess
     {
         get
@@ -30,6 +30,12 @@ public class GameManager : SingletonClass<GameManager>
                 return -1;
             }
         }
+    }
+
+    public static bool IsInLobby
+    {
+        get => Singleton.isInLobby;
+        set => Singleton.isInLobby = value;
     }
 
     protected override void Awake()
@@ -59,7 +65,6 @@ public class GameManager : SingletonClass<GameManager>
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
         }
-        UIManager.Singleton.SetUIActive(true);
     }
     private void Update()
     {
@@ -113,7 +118,7 @@ public class GameManager : SingletonClass<GameManager>
     /// </summary>
     /// <param name="name"></param>
     /// <param name="useLoadUI"></param>
-    public void LoadScene(string name, bool useLoadUI = false)
+    public static void LoadScene(string name, bool useLoadUI = false)
     {
         if (SceneManager.GetSceneByName(name) == null)
         {
@@ -124,29 +129,29 @@ public class GameManager : SingletonClass<GameManager>
         {
             UIManager.Singleton.ShowLoading();
         }
-        StartCoroutine(AsyncLoading(name));
+        Singleton.StartCoroutine(AsyncLoading(name));
     }
-    private IEnumerator AsyncLoading(string name)
+    private static IEnumerator AsyncLoading(string name)
     {
-        sceneAsyncOperation = SceneManager.LoadSceneAsync(name);
-        sceneAsyncOperation.allowSceneActivation = false;
+        Singleton.sceneAsyncOperation = SceneManager.LoadSceneAsync(name);
+        Singleton.sceneAsyncOperation.allowSceneActivation = false;
 
-        yield return sceneAsyncOperation;
+        yield return Singleton.sceneAsyncOperation;
     }
 
-    public void StartNewSave()
+    public static void StartNewSave()
     {
         LoadScene("Game", true);
-        isStartGame = true;
-        selectSave = null;
+        Singleton.isStartGame = true;
+        Singleton.selectSave = null;
     }
-    public void ContinueLastSave()
+    public static void ContinueLastSave()
     {
         LoadScene("Game", true);
-        isStartGame = true;
-        selectSave = SaveManager.GetLatestSaveFile();
+        Singleton.isStartGame = true;
+        Singleton.selectSave = SaveManager.GetLatestSaveFile();
     }
-    public void ContinueSelectSave(FileInfo fileInfo)
+    public static void ContinueSelectSave(FileInfo fileInfo)
     {
         if (fileInfo == null)
         {
@@ -154,14 +159,14 @@ public class GameManager : SingletonClass<GameManager>
             return;
         }
         LoadScene("Game", true);
-        isStartGame = true;
-        selectSave = fileInfo;
+        Singleton.isStartGame = true;
+        Singleton.selectSave = fileInfo;
     }
-    public void BackToLobby()
+    public static void BackToLobby()
     {
         LoadScene("Lobby", false);
     }
-    public void QuitGame()
+    public static void QuitGame()
     {
         Application.Quit();
     }

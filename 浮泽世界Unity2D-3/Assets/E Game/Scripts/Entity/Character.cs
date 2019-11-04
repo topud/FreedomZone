@@ -24,10 +24,13 @@ namespace E.Tool
 
         [Header("角色状态")]
         [SerializeField] private bool isPlayer = false;
+        [SerializeField, ReadOnly] private int currentSpeed = 0;
+        [SerializeField, ReadOnly] private Item lastPutInBagItem;
         [ReadOnly] public CharacterState State = CharacterState.Idle;
         [ReadOnly] public float RunBeyondDistance = 5;
         [ReadOnly] public List<Item> NearbyItems = new List<Item>();
         [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
+        [SerializeField, ReadOnly] private List<Item> clothings = new List<Item>();
 
         public bool IsPlayer
         {
@@ -43,7 +46,7 @@ namespace E.Tool
 
                     Player = this;
                     AIPath.enabled = false;
-                    CameraManager.Singleton.SetFollow(transform);
+                    CameraManager.SetFollow(transform);
                 }
                 else
                 {
@@ -75,6 +78,19 @@ namespace E.Tool
                 AIDestinationSetter.target = value;
             }
         }
+        public List<Item> Clothings
+        {
+            get => clothings;
+            set
+            {
+                clothings = value;
+                DynamicData.Clothings.Clear();
+                foreach (Item item in Items)
+                {
+                    DynamicData.Clothings.Add(item.gameObject.GetInstanceID());
+                }
+            }
+        }
 
         protected override void Awake()
         {
@@ -83,7 +99,6 @@ namespace E.Tool
         protected override void OnEnable()
         {
             base.OnEnable();
-            OnPlayerItemChange.AddListener(UpdateItemDatas);
         }
         protected override void Start()
         {
@@ -95,40 +110,38 @@ namespace E.Tool
 
             if (AIDestinationSetter.target)
             {
-                if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
-                {
-                    AIPath.maxSpeed = DynamicData.Speed.Max;
-                }
-                else
-                {
-                    AIPath.maxSpeed = DynamicData.Speed.Now;
-                }
+                CheckAIPathMaxSpeed();
             }
             if (State != CharacterState.Dead && State != CharacterState.Talk)
             {
                 if (IsPlayer)
                 {
-                    CheckNearby();
-                    CheckKeyUp_Q();
-                    CheckKeyUp_F();
-                    CheckMouseButtonDown_0();
-                    CheckMouseButtonDown_1();
-                    CheckMouseButtonDown_2();
-                    CheckMouseScrollWheel();
+                    if (!UIManager.IsShowAnyUIPanel)
+                    {
+                        CheckNearby();
+                        CheckKeyUp_Q();
+                        CheckKeyUp_F();
+                        CheckKeyUp_I();
+                        CheckMouseButtonDown_0();
+                        CheckMouseButtonDown_1();
+                        CheckMouseButtonDown_2();
+                        CheckMouseScrollWheelWithAlt();
+
+                        CheckPlayerFaceTo();
+                        CheckPlayerAnimation();
+
+                        RightHandItemController.SetIsLookAtCursor(true);
+                    }
+                    else
+                    {
+                        RightHandItemController.SetIsLookAtCursor(false);
+                    }
+                    CheckMouseScrollWheelWithoutAlt();
                 }
                 else
                 {
-                    //朝向
-                    if (AIPath.desiredVelocity.x >= 0.01f)
-                    {
-                        IsFaceRight = false;
-                    }
-                    else if (AIPath.desiredVelocity.x < -0.01f)
-                    {
-                        IsFaceRight = true;
-                    }
-                    //动画
-                    Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));
+                    CheckNPCFaceTo();
+                    CheckNPCAnimation();
                 }
             }
         }
@@ -138,7 +151,10 @@ namespace E.Tool
 
             if (State != CharacterState.Dead && State != CharacterState.Talk)
             {
-                CheckMove();
+                if (IsPlayer && !UIManager.IsShowAnyUIPanel)
+                {
+                    CheckMove();
+                }
             }
         }
         protected override void LateUpdate()
@@ -148,7 +164,6 @@ namespace E.Tool
         protected override void OnDisable()
         {
             base.OnDisable();
-            OnPlayerItemChange.RemoveListener(UpdateItemDatas);
         }
         protected override void OnDestroy()
         {
@@ -250,39 +265,12 @@ namespace E.Tool
         }
 
         /// <summary>
-        /// 脑力百分比
-        /// </summary>
-        /// <returns></returns>
-        public float GetMindPercentage()
-        {
-            return (DynamicData.Mind.Max > 0) ? (float)DynamicData.Mind.Now / DynamicData.Mind.Max : 0;
-        }
-        /// <summary>
-        /// 体力百分比
-        /// </summary>
-        /// <returns></returns>
-        public float GetPowerPercentage()
-        {
-            return (DynamicData.Power.Max > 0) ? (float)DynamicData.Power.Now / DynamicData.Power.Max : 0;
-        }
-        /// <summary>
         /// 是否存活
         /// </summary>
         /// <returns></returns>
         public bool IsAlive()
         {
             return DynamicData.Health.Now > 0;
-        }
-        /// <summary>
-        /// 更新物品数据
-        /// </summary>
-        public void UpdateItemDatas()
-        {
-            DynamicData.ItemIDs.Clear();
-            foreach (Item item in Items)
-            {
-                DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
-            }
         }
 
         /// <summary>
@@ -332,12 +320,20 @@ namespace E.Tool
             return NearbyItems.Contains(item);
         }
         /// <summary>
-        /// 检测玩家是否拥有物品
+        /// 检测玩家是否携带物品
         /// </summary>
         /// <returns></returns>
-        public bool IsOwning(Item item)
+        public bool IsCarrying(Item item)
         {
             return Items.Contains(item);
+        }
+        /// <summary>
+        /// 检测玩家是否携带物品
+        /// </summary>
+        /// <returns></returns>
+        public bool IsWearing(Item item)
+        {
+            return Clothings.Contains(item);
         }
         /// <summary>
         /// 获取物品排序
@@ -368,13 +364,13 @@ namespace E.Tool
                 PutItemInRightHand(item);
 
                 OnPlayerItemChange.Invoke();
-                Debug.Log(string.Format("已拾取 {0}", item.StaticData.Name));
+                Debug.Log(string.Format("已拾取 {0}", item.name));
             }
             else
             {
                 TargetUI.ShowChat();
                 TargetUI.SetChat("它太远了，我捡不到。");
-                Debug.LogError(string.Format("无法拾取 {0}，因距离过远", item.StaticData.Name));
+                Debug.LogError(string.Format("无法拾取 {0}，因距离过远", item.name));
             }
         }
         /// <summary>
@@ -396,7 +392,7 @@ namespace E.Tool
             else
             {
                 TargetUI.SetChat("我需要靠近点才能仔细观察。");
-                Debug.LogError(string.Format("无法调查 {0}，因距离过远", item.StaticData.Name));
+                Debug.LogError(string.Format("无法调查 {0}，因距离过远", item.name));
             }
         }
         /// <summary>
@@ -411,6 +407,10 @@ namespace E.Tool
                 return;
             }
             UIManager.Singleton.UIItemDetail.SetData(item);
+            if (!UIManager.Singleton.UIItemDetail.IsShow)
+            {
+                UIManager.Singleton.UIItemDetail.Show();
+            }
 
             Debug.Log(item.StaticData.Name);
         }
@@ -425,7 +425,7 @@ namespace E.Tool
                 Debug.LogError("没有物品可丢弃");
                 return;
             }
-            if (IsOwning(item))
+            if (IsCarrying(item))
             {
                 item.transform.position = transform.position;
                 item.gameObject.SetActive(true);
@@ -440,11 +440,11 @@ namespace E.Tool
                 Items.Remove(item);
 
                 OnPlayerItemChange.Invoke();
-                Debug.Log(string.Format("已丢弃 {0}", item.StaticData.Name));
+                Debug.Log(string.Format("已丢弃 {0}", item.name));
             }
             else
             {
-                Debug.LogError(string.Format("无法丢弃 {0}，因未携带该物品", item.StaticData.Name));
+                Debug.LogError(string.Format("无法丢弃 {0}，因未携带该物品", item.name));
             }
         }
         /// <summary>
@@ -458,15 +458,37 @@ namespace E.Tool
                 Debug.LogError("没有物品可使用");
                 return;
             }
-            if (IsOwning(item))
+            if (IsCarrying(item))
             {
-                item.SwitchState();
-                DynamicData.Skills.AddRange(item.StaticData.Skills);
-                DynamicData.Buffs.AddRange(item.StaticData.Buffs);
+                switch (item.StaticData.Type)
+                {
+                    case ItemType.Food:
+                        DynamicData.Skills.AddRange(item.StaticData.Skills);
+                        DynamicData.Buffs.AddRange(item.StaticData.Buffs);
+                        break;
+                    case ItemType.Weapon:
+                        break;
+                    case ItemType.Book:
+                        break;
+                    case ItemType.Clothing:
+                        Clothings.Add(item);
+                        Items.Remove(item);
+                        break;
+                    case ItemType.Bag:
+                        break;
+                    case ItemType.Switch:
+                        item.SwitchState();
+                        break;
+                    case ItemType.Other:
+                        break;
+                    default:
+                        break;
+                }
+                Debug.Log("使用了" + item.name);
             }
             else
             {
-                Debug.LogError(string.Format("无法使用 {0}，因未携带该物品", item.StaticData.Name));
+                Debug.LogError(string.Format("无法使用 {0}，因未携带该物品", item.name));
             }
         }
         /// <summary>
@@ -480,7 +502,7 @@ namespace E.Tool
                 Debug.Log("没有物品可投掷");
                 return;
             }
-            if (IsOwning(item))
+            if (IsCarrying(item))
             {
                 //item.Use();
             }
@@ -650,7 +672,6 @@ namespace E.Tool
             float horizontal = Input.GetAxis("Horizontal");
             float vertical = Input.GetAxis("Vertical");
 
-            int currentSpeed = 0;
             if (horizontal != 0 || vertical != 0)
             {
                 Vector2 direction = new Vector2(horizontal, vertical);
@@ -674,13 +695,8 @@ namespace E.Tool
             else
             {
                 Rigidbody.velocity = Vector2.zero;
+                currentSpeed = 0;
             }
-
-            //朝向（角色面朝鼠标位置）
-            Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            IsFaceRight = mousePositionInWorld.x < transform.position.x ? true : false;
-            //动画
-            Animator.SetInteger("Speed", currentSpeed);
         }
         private void CheckNearby()
         {
@@ -750,6 +766,20 @@ namespace E.Tool
                 }
             }
         }
+        private void CheckKeyUp_B()
+        {
+            if (Input.GetKeyUp(KeyCode.B))
+            {
+                if (UIManager.Singleton.UIInventory.IsShow)
+                {
+                    UIManager.Singleton.UIInventory.Hide();
+                }
+                else
+                {
+                    UIManager.Singleton.UIItemDetail.Show();
+                }
+            }
+        }
         private void CheckKeyUp_Q()
         {
             if (Input.GetKeyUp(KeyCode.Q))
@@ -762,6 +792,21 @@ namespace E.Tool
             if (Input.GetKeyUp(KeyCode.Q))
             {
                 Survey(GetRightHandItem());
+            }
+        }
+        private void CheckKeyUp_I()
+        {
+            if (Input.GetKeyUp(KeyCode.I))
+            {
+                if (UIManager.Singleton.UIItemDetail.IsShow)
+                {
+                    UIManager.Singleton.UIItemDetail.Hide();
+                }
+                else
+                {
+                    ShowDetail(GetRightHandItem());
+                    UIManager.Singleton.UIItemDetail.Show();
+                }
             }
         }
         private void CheckMouseButtonDown_0()
@@ -786,41 +831,105 @@ namespace E.Tool
         {
             if (Input.GetMouseButtonDown(1))
             {
-                if (UIManager.Singleton.UIItemDetail.IsShow)
-                {
-                    UIManager.Singleton.UIItemDetail.Hide();
-                }
-                else
-                {
-                    ShowDetail(GetRightHandItem());
-                }
             }
         }
         private void CheckMouseButtonDown_2()
         {
             if (Input.GetMouseButtonDown(2))
             {
-                PutRightHandItemInBag();
+                if (GetRightHandItem())
+                {
+                    lastPutInBagItem = GetRightHandItem();
+                    PutRightHandItemInBag();
+                }
+                else
+                {
+                    if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                }
             }
         }
-        private void CheckMouseScrollWheel()
+        private void CheckMouseScrollWheelWithoutAlt()
         {
-            float f = Input.GetAxis("Mouse ScrollWheel");
-            if (Input.GetKey(KeyCode.LeftAlt))
+            if (!Input.GetKey(KeyCode.LeftAlt))
             {
-                CameraManager.Singleton.ChangeOrthographicSize(f);
-            }
-            else
-            {
+                float f = Input.GetAxis("Mouse ScrollWheel");
                 if (f > 0.0001)
                 {
-                    TakeOutLastItem();
+                    if (GetRightHandItem())
+                    {
+                        TakeOutLastItem();
+                        if (UIManager.Singleton.UIItemDetail.IsShow)
+                        {
+                            ShowDetail(GetRightHandItem());
+                        }
+                    }
+                    else
+                    {
+                        if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                    }
                 }
                 else if (f < -0.0001)
                 {
-                    TakeOutNextItem();
+                    if (GetRightHandItem())
+                    {
+                        TakeOutNextItem();
+                        if (UIManager.Singleton.UIItemDetail.IsShow)
+                        {
+                            ShowDetail(GetRightHandItem());
+                        }
+                    }
+                    else
+                    {
+                        if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                    }
                 }
             }
+        }
+        private void CheckMouseScrollWheelWithAlt()
+        {
+            if (Input.GetKey(KeyCode.LeftAlt))
+            {
+                float f = Input.GetAxis("Mouse ScrollWheel");
+                CameraManager.ChangeOrthographicSize(f);
+            }
+        }
+
+        private void CheckAIPathMaxSpeed()
+        {
+            if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
+            {
+                AIPath.maxSpeed = DynamicData.Speed.Max;
+            }
+            else
+            {
+                AIPath.maxSpeed = DynamicData.Speed.Now;
+            }
+        }
+        private void CheckPlayerFaceTo()
+        {
+            //朝向（角色面朝鼠标位置）
+            Vector3 mousePositionInWorld = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            IsFaceRight = mousePositionInWorld.x < transform.position.x ? true : false;
+        }
+        private void CheckPlayerAnimation()
+        {
+            Animator.SetInteger("Speed", currentSpeed);
+        }
+        private void CheckNPCFaceTo()
+        {
+            //朝向
+            if (AIPath.desiredVelocity.x >= 0.01f)
+            {
+                IsFaceRight = false;
+            }
+            else if (AIPath.desiredVelocity.x < -0.01f)
+            {
+                IsFaceRight = true;
+            }
+        }
+        private void CheckNPCAnimation()
+        {
+            Animator.SetInteger("Speed", Mathf.RoundToInt(AIPath.desiredVelocity.magnitude));
         }
     }
 

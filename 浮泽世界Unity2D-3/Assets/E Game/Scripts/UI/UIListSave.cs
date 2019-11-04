@@ -61,9 +61,9 @@ namespace E.Tool
         }
         public void Load(UISlotSave slot)
         {
-            if (GameManager.Singleton.IsInLobby)
+            if (GameManager.IsInLobby)
             {
-                GameManager.Singleton.ContinueSelectSave(slot.Data);
+                GameManager.ContinueSelectSave(slot.Data);
             }
             else
             {

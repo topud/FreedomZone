@@ -23,15 +23,30 @@ namespace E.Tool
         [SerializeField] private InHandItemController RightHandItemController;
 
         [Header("角色状态")]
-        [SerializeField] private bool isPlayer = false;
+        [SerializeField, ReadOnly] private CharacterState state = CharacterState.Idle;
+        [SerializeField, ReadOnly] private bool isPlayer = false;
         [SerializeField, ReadOnly] private int currentSpeed = 0;
+        [SerializeField, ReadOnly] private float RunBeyondDistance = 5;
         [SerializeField, ReadOnly] private Item lastPutInBagItem;
-        [ReadOnly] public CharacterState State = CharacterState.Idle;
-        [ReadOnly] public float RunBeyondDistance = 5;
-        [ReadOnly] public List<Item> NearbyItems = new List<Item>();
-        [ReadOnly] public List<Character> NearbyCharacters = new List<Character>();
         [SerializeField, ReadOnly] private List<Item> clothings = new List<Item>();
+        [SerializeField, ReadOnly] private Item nearistItem;
+        [SerializeField, ReadOnly] private Character nearistCharacter;
+        [SerializeField, ReadOnly] private GameObject nearistEntity;
+        [SerializeField, ReadOnly] private GameObject lastNearistEntity;
+        [SerializeField, ReadOnly] private List<Item> nearbyItems = new List<Item>();
+        [SerializeField, ReadOnly] private List<Character> nearbyCharacters = new List<Character>();
 
+        /// <summary>
+        /// 角色状态
+        /// </summary>
+        public CharacterState State
+        {
+            get => state;
+            private set => state = value;
+        }
+        /// <summary>
+        /// 是否玩家控制角色
+        /// </summary>
         public bool IsPlayer
         {
             get => isPlayer;
@@ -56,28 +71,9 @@ namespace E.Tool
                 DynamicData.IsPlayer = value;
             }
         }
-        public bool IsFaceRight
-        {
-            get
-            {
-                return SpriteSorter.transform.localScale.x < 0;
-            }
-            set
-            {
-                SpriteSorter.transform.localScale = new Vector3(value ? 1 : -1, 1, 1);
-            }
-        }
-        public Transform FollowTarget
-        {
-            get
-            {
-                return AIDestinationSetter.target;
-            }
-            set
-            {
-                AIDestinationSetter.target = value;
-            }
-        }
+        /// <summary>
+        /// 穿着物品
+        /// </summary>
         public List<Item> Clothings
         {
             get => clothings;
@@ -90,6 +86,84 @@ namespace E.Tool
                     DynamicData.Clothings.Add(item.gameObject.GetInstanceID());
                 }
             }
+        }
+        /// <summary>
+        /// 是否面朝右边
+        /// </summary>
+        public bool IsFaceRight
+        {
+            get
+            {
+                return SpriteSorter.transform.localScale.x < 0;
+            }
+            set
+            {
+                SpriteSorter.transform.localScale = new Vector3(value ? 1 : -1, 1, 1);
+            }
+        }
+        /// <summary>
+        /// 是否存活
+        /// </summary>
+        public bool IsAlive
+        {
+            get
+            {
+                return DynamicData.Health.Now > 0;
+            }
+        }
+        /// <summary>
+        /// 跟随目标
+        /// </summary>
+        public Transform FollowTarget
+        {
+            get
+            {
+                return AIDestinationSetter.target;
+            }
+            set
+            {
+                AIDestinationSetter.target = value;
+            }
+        }
+        /// <summary>
+        /// 距离最近的物品
+        /// </summary>
+        public Item NearistItem
+        {
+            get => nearistItem;
+            private set => nearistItem = value;
+        }
+        /// <summary>
+        /// 距离最近的角色
+        /// </summary>
+        public Character NearistCharacter
+        {
+            get => nearistCharacter;
+            private set => nearistCharacter = value;
+        }
+        /// <summary>
+        /// 距离最近的实体
+        /// </summary>
+        public GameObject NearistEntity
+        {
+            get => nearistEntity;
+            private set => nearistEntity = value;
+        }
+        /// <summary>
+        /// 附近的物品
+        /// </summary>
+        public List<Item> NearbyItems
+        {
+            get => nearbyItems;
+            set => nearbyItems = value;
+        }
+        /// <summary>
+        /// 附近的角色
+        /// </summary>
+        public List<Character> NearbyCharacters
+        {
+            get => nearbyCharacters;
+            set => nearbyCharacters = value;
         }
 
         protected override void Awake()
@@ -118,10 +192,15 @@ namespace E.Tool
                 {
                     if (!UIManager.IsShowAnyUIPanel)
                     {
-                        CheckNearby();
-                        CheckKeyUp_Q();
+                        CheckNearistItem();
+                        CheckNearistCharacter();
+                        CheckNearistEntity();
+
+                        CheckKeyUp_B();
+                        CheckKeyUp_E();
                         CheckKeyUp_F();
                         CheckKeyUp_I();
+                        CheckKeyUp_Q();
                         CheckMouseButtonDown_0();
                         CheckMouseButtonDown_1();
                         CheckMouseButtonDown_2();
@@ -151,9 +230,12 @@ namespace E.Tool
 
             if (State != CharacterState.Dead && State != CharacterState.Talk)
             {
-                if (IsPlayer && !UIManager.IsShowAnyUIPanel)
+                if (IsPlayer)
                 {
-                    CheckMove();
+                    if (!UIManager.IsShowAnyUIPanel)
+                    {
+                        CheckMove();
+                    }
                 }
             }
         }
@@ -178,10 +260,6 @@ namespace E.Tool
         {
             base.Reset();
         }
-        private void OnValidate()
-        {
-            IsPlayer = isPlayer;
-        }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
@@ -193,18 +271,18 @@ namespace E.Tool
 
             IsPlayer = data.IsPlayer;
         }
-        [ContextMenu("重置静态数据")]
         /// <summary>
         /// 重置静态数据
         /// </summary>
+        [ContextMenu("重置静态数据")]
         public override void ResetStaticData()
         {
             base.ResetStaticData();
         }
-        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置动态数据
         /// </summary>
+        [ContextMenu("重置动态数据")]
         public override void ResetDynamicData()
         {
             base.ResetDynamicData();
@@ -245,10 +323,10 @@ namespace E.Tool
                 Relationships = StaticData.Relationships
             };
         }
-        [ContextMenu("重置组件")]
         /// <summary>
         /// 设置组件
         /// </summary>
+        [ContextMenu("重置组件")]
         public override void ResetComponents()
         {
             base.ResetComponents();
@@ -263,14 +341,13 @@ namespace E.Tool
             if (!TargetUI) Debug.LogError("未找到 TargetUI");
             if (!RightHandItemController) Debug.LogError("未找到 RightHandItemController");
         }
-
         /// <summary>
-        /// 是否存活
+        /// 设为玩家控制角色
         /// </summary>
-        /// <returns></returns>
-        public bool IsAlive()
+        [ContextMenu("设为玩家控制角色")]
+        public void SetPlayer()
         {
-            return DynamicData.Health.Now > 0;
+            IsPlayer = true;
         }
 
         /// <summary>
@@ -358,6 +435,8 @@ namespace E.Tool
             }
             if (IsNearby(item))
             {
+                NearbyItems.Remove(item);
+
                 item.gameObject.SetActive(false);
                 Items.Add(item);
                 PutRightHandItemInBag();
@@ -698,10 +777,9 @@ namespace E.Tool
                 currentSpeed = 0;
             }
         }
-        private void CheckNearby()
+        private void CheckNearistItem()
         {
-            Item nearistItem = null;
-            if (NearbyItems.Count != 0)
+            if (NearbyItems.Count > 0)
             {
                 //计算所有附近物品离自己的距离
                 List<float> diss = new List<float>();
@@ -710,11 +788,16 @@ namespace E.Tool
                     diss.Add(Vector2.Distance(NearbyItems[i].transform.position, transform.position));
                 }
                 //获取离自己最近的物品
-                nearistItem = NearbyItems[Utility.IndexMin(diss)];
+                NearistItem = NearbyItems[Utility.IndexMin(diss)];
             }
-
-            Character nearistCharacter = null;
-            if (NearbyCharacters.Count != 0)
+            else
+            {
+                NearistItem = null;
+            }
+        }
+        private void CheckNearistCharacter()
+        {
+            if (NearbyCharacters.Count > 0)
             {
                 //计算所有附近角色离自己的距离
                 List<float> diss = new List<float>();
@@ -723,49 +806,80 @@ namespace E.Tool
                     diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
                 }
                 //获取离自己最近的角色
-                nearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
-                foreach (Character it in NearbyCharacters)
+                NearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
+            }
+            else
+            {
+                NearistCharacter = null;
+            }
+        }
+        private void CheckNearistEntity()
+        {
+            bool isChangeNearistEntity = false;
+
+            //最近物品离自己的距离
+            float ni = NearistItem ? Vector2.Distance(NearistItem.transform.position, transform.position) : -1;
+            //最近角色离自己的距离
+            float nc = NearistCharacter ? Vector2.Distance(NearistCharacter.transform.position, transform.position) : -1;
+            if (ni > nc)
+            {
+                if (NearistItem)
                 {
-                    if (nearistCharacter != it)
+                    if (NearistEntity != NearistItem.gameObject)
                     {
-                        it.TargetUI.HideHelp();
+                        NearistEntity = NearistItem.gameObject;
+                        NearistItem.SpriteSorter.SetAlpha(0.5f);
+                        isChangeNearistEntity = true;
                     }
+                }
+                else
+                {
+                    NearistEntity = null;
+                    isChangeNearistEntity = true;
+                }
+            }
+            else
+            {
+                if (NearistCharacter)
+                {
+                    if (NearistEntity != NearistCharacter.gameObject)
+                    {
+                        NearistEntity = NearistCharacter.gameObject;
+                        NearistCharacter.SpriteSorter.SetAlpha(0.5f);
+                        isChangeNearistEntity = true;
+                    }
+                }
+                else
+                {
+                    NearistEntity = null;
+                    isChangeNearistEntity = true;
                 }
             }
 
-            //最近物品离自己的距离
-            float ni = nearistItem ? Vector2.Distance(nearistItem.transform.position, transform.position) : -1;
-            //最近角色离自己的距离
-            float nc = nearistCharacter ? Vector2.Distance(nearistCharacter.transform.position, transform.position) : -1;
-            if (ni > nc)
+            //如果改变了最近的实体
+            if (isChangeNearistEntity)
             {
-                if (nearistItem)
+                if (lastNearistEntity)
                 {
-                    //检测是否按键拾取
-                    if (Input.GetKeyUp(KeyCode.E)) PickUp(nearistItem);
-                    //检测是否按键调查
-                    if (Input.GetKeyUp(KeyCode.F)) Survey(nearistItem);
-                }
-                if (nearistCharacter)
-                {
-                    nearistCharacter.TargetUI.HideHelp();
-                }
-            }
-            else if (ni < nc)
-            {
-                if (nearistCharacter)
-                {
-                    if (!nearistCharacter.TargetUI.IsShowChat() && !TargetUI.IsShowChat())
+                    if (lastNearistEntity.GetComponent<Item>())
                     {
-                        nearistCharacter.TargetUI.ShowHelp();
+                        lastNearistEntity.GetComponent<Item>().SpriteSorter.SetAlpha(1f);
                     }
-                    //检测是否按键对话
-                    if (Input.GetKeyUp(KeyCode.E)) ChatWith(nearistCharacter);
-                    //检测是否按键调查
-                    if (Input.GetKeyUp(KeyCode.F)) Survey(nearistCharacter);
+                    else if (lastNearistEntity.GetComponent<Character>())
+                    {
+                        lastNearistEntity.GetComponent<Character>().SpriteSorter.SetAlpha(1f);
+                    }
+                    else
+                    {
+                    }
                 }
+                else
+                {
+                }
+                lastNearistEntity = NearistEntity;
             }
         }
+
         private void CheckKeyUp_B()
         {
             if (Input.GetKeyUp(KeyCode.B))
@@ -780,18 +894,38 @@ namespace E.Tool
                 }
             }
         }
-        private void CheckKeyUp_Q()
+        private void CheckKeyUp_E()
         {
-            if (Input.GetKeyUp(KeyCode.Q))
+            if (Input.GetKeyUp(KeyCode.E))
             {
-                Discard(GetRightHandItem());
+                if (NearistEntity)
+                {
+                    if (NearistEntity.GetComponent<Item>())
+                    {
+                        PickUp(NearistEntity.GetComponent<Item>());
+                    }
+                    else if (NearistEntity.GetComponent<Character>())
+                    {
+                        ChatWith(NearistEntity.GetComponent<Character>());
+                    }
+                }
             }
         }
         private void CheckKeyUp_F()
         {
-            if (Input.GetKeyUp(KeyCode.Q))
+            if (Input.GetKeyUp(KeyCode.F))
             {
-                Survey(GetRightHandItem());
+                if (NearistEntity)
+                {
+                    if (NearistEntity.GetComponent<Item>())
+                    {
+                        Survey(NearistEntity.GetComponent<Item>());
+                    }
+                    else if (NearistEntity.GetComponent<Character>())
+                    {
+                        Survey(NearistEntity.GetComponent<Character>());
+                    }
+                }
             }
         }
         private void CheckKeyUp_I()
@@ -809,6 +943,18 @@ namespace E.Tool
                 }
             }
         }
+        private void CheckKeyUp_Q()
+        {
+            if (Input.GetKeyUp(KeyCode.Q))
+            {
+                Discard(GetRightHandItem());
+            }
+        }
+        private void CheckKeyUp_F1()
+        {
+
+        }
+
         private void CheckMouseButtonDown_0()
         {
             if (IsPlayer)
@@ -865,7 +1011,10 @@ namespace E.Tool
                     }
                     else
                     {
-                        if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                        if (lastPutInBagItem)
+                            PutItemInRightHand(lastPutInBagItem);
+                        else
+                            TakeOutLastItem();
                     }
                 }
                 else if (f < -0.0001)
@@ -880,7 +1029,10 @@ namespace E.Tool
                     }
                     else
                     {
-                        if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                        if (lastPutInBagItem)
+                            PutItemInRightHand(lastPutInBagItem);
+                        else
+                            TakeOutNextItem();
                     }
                 }
             }
@@ -935,11 +1087,11 @@ namespace E.Tool
 
     public enum CharacterState
     {
-        Idle,
-        Talk,
-        Walk,
-        Run,
-        Rest,
-        Dead
+        Idle = 0,
+        Walk = 1,
+        Run = 2,
+        Rest = 3,
+        Talk = 4,
+        Dead = 5
     }
 }

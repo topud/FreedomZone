@@ -74,35 +74,6 @@ namespace E.Tool
             base.Reset();
         }
 
-        private void OnCollisionEnter2D(Collision2D collision)
-        {
-            
-        }
-        private void OnCollisionExit2D(Collision2D collision)
-        {
-            
-        }
-        private void OnTriggerEnter2D(Collider2D collision)
-        {
-            Character character = collision.GetComponent<Character>();
-            if (!character) return;
-
-            if (character.IsPlayer)
-            {
-                SpriteSorter.SetAlpha(0.5f);
-            }
-        }
-        private void OnTriggerExit2D(Collider2D collision)
-        {
-            Character character = collision.GetComponent<Character>();
-            if (!character) return;
-
-            if (character.IsPlayer)
-            {
-                SpriteSorter.SetAlpha(1);
-            }
-        }
-
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>

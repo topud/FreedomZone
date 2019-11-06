@@ -9,7 +9,6 @@ namespace E.Tool
     {
         [SerializeField] private GameObject PanName;
         [SerializeField] private GameObject PanTalk;
-        [SerializeField] private GameObject PanHelp;
 
         private void Awake()
         {
@@ -28,7 +27,6 @@ namespace E.Tool
         {
             PanName.SetActive(true);
             HideChat();
-            HideHelp();
         }
         public void HideName()
         {
@@ -47,29 +45,16 @@ namespace E.Tool
         {
             PanTalk.SetActive(true);
             HideName();
-            HideHelp();
         }
         public void HideChat()
         {
             PanTalk.SetActive(false);
         }
 
-        public void ShowHelp()
-        {
-            PanHelp.SetActive(true);
-            HideName();
-            HideChat();
-        }
-        public void HideHelp()
-        {
-            PanHelp.SetActive(false);
-        }
-
         public void HideAll()
         {
             HideName();
             HideChat();
-            HideHelp();
         }
     }
 }

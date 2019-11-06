@@ -297,7 +297,6 @@ namespace E.Tool
             TargetUI.SetName(StaticData.Name);
             TargetUI.HideName();
             TargetUI.HideChat();
-            TargetUI.HideHelp();
 
             DynamicData = new CharacterDynamicData
             {
@@ -834,8 +833,11 @@ namespace E.Tool
                 }
                 else
                 {
-                    NearistEntity = null;
-                    isChangeNearistEntity = true;
+                    if (NearistEntity != null)
+                    {
+                        NearistEntity = null;
+                        isChangeNearistEntity = true;
+                    }
                 }
             }
             else
@@ -851,14 +853,33 @@ namespace E.Tool
                 }
                 else
                 {
-                    NearistEntity = null;
-                    isChangeNearistEntity = true;
+                    if (NearistEntity != null)
+                    {
+                        NearistEntity = null;
+                        isChangeNearistEntity = true;
+                    }
                 }
             }
 
             //如果改变了最近的实体
             if (isChangeNearistEntity)
             {
+                CancelInvoke();
+                TargetUI.HideChat();
+                if (NearistEntity)
+                {
+                    if (NearistEntity.GetComponent<Item>())
+                    {
+                        Invoke("ShowItemTip", 2);
+                    }
+                    else if (NearistEntity.GetComponent<Character>())
+                    {
+                        Invoke("ShowCharacterTip", 2);
+                    }
+                    else
+                    {
+                    }
+                }
                 if (lastNearistEntity)
                 {
                     if (lastNearistEntity.GetComponent<Item>())
@@ -877,6 +898,22 @@ namespace E.Tool
                 {
                 }
                 lastNearistEntity = NearistEntity;
+            }
+        }
+        private void ShowItemTip()
+        {
+            if (!TargetUI.IsShowChat())
+            {
+                TargetUI.SetChat("[E]拾取\n[F]调查");
+                TargetUI.ShowChat();
+            }
+        }
+        private void ShowCharacterTip()
+        {
+            if (!TargetUI.IsShowChat())
+            {
+                TargetUI.SetChat("[E]对话\n[F]调查");
+                TargetUI.ShowChat();
             }
         }
 

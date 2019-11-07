@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UILobbyMenu : UIBase
+    public class UILobbyMenu : UIBasePanel
     {
         [SerializeField] private Button btnNew;
         [SerializeField] private Button btnContinue;

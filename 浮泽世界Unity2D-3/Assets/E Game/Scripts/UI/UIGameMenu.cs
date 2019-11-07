@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    public class UIGameMenu : UIBase
+    public class UIGameMenu : UIBasePanel
     {
         
 

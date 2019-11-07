@@ -7,7 +7,7 @@ namespace E.Tool
 {
     public class UIManager : SingletonClass<UIManager>
     {
-        [Header("组件")]
+        [Header("视图")]
         public UILobbyMenu UILobbyMenu;
         [Space(5)]
         public UIGameMenu UIGameMenu;
@@ -23,6 +23,7 @@ namespace E.Tool
         public UILoading UILoading;
         public UIPopup UIPopup;
 
+        //[Header("数据")]
         public static bool IsShowAnyUIPanel
         {
             get
@@ -39,66 +40,15 @@ namespace E.Tool
         }
         private void Start()
         {
-            if (GameManager.IsInLobby)
-            {
-                UILobbyMenu.gameObject.SetActive(true);
-                UICharacterStatus.gameObject.SetActive(false);
-            }
-            else
-            {
-                UILobbyMenu.gameObject.SetActive(false);
-                UICharacterStatus.gameObject.SetActive(true);
-            }
-            UIGameMenu.gameObject.SetActive(false);
-            UICharacterDetail.gameObject.SetActive(false);
-            UIMinimap.gameObject.SetActive(false);
-
-            UIListSave.gameObject.SetActive(false);
-            UISetting.gameObject.SetActive(false);
-            UIHelp.gameObject.SetActive(false);
-            UILoading.gameObject.SetActive(false);
-            UIPopup.gameObject.SetActive(false);
+            CheckUIType();
         }
         private void Update()
         {
-            if (GameManager.IsInLobby)
-            {
-            }
-            else
-            {
-                if (Input.GetKeyUp(KeyCode.I))
-                {
-                    UIInventory.Show();
-                }
-                else if (Input.GetKeyUp(KeyCode.O))
-                {
-                }
-                else if (Input.GetKeyUp(KeyCode.P))
-                {
-                }
-                else if (Input.GetKeyUp(KeyCode.K))
-                {
-                }
-                else if (Input.GetKeyUp(KeyCode.L))
-                {
-                }
-                else if (Input.GetKeyUp(KeyCode.Escape))
-                {
-                    if (UICharacterDetail.gameObject.activeInHierarchy)
-                    {
-                        UICharacterDetail.gameObject.SetActive(false);
-                    }
-                    if (UISetting.gameObject.activeInHierarchy)
-                    {
-                        UISetting.gameObject.SetActive(false);
-                    }
-                    if (UIListSave.gameObject.activeInHierarchy)
-                    {
-                        UIListSave.gameObject.SetActive(false);
-                    }
-                    UIGameMenu.gameObject.SetActive(!UIGameMenu.gameObject.activeInHierarchy);
-                }
-            }
+            CheckUIType();
+
+            CheckKeyUp_B();
+            CheckKeyUp_I();
+            CheckKeyUp_Esc();
         }
         private void Reset()
         {
@@ -127,7 +77,97 @@ namespace E.Tool
                 Cursor.lockState = CursorLockMode.Locked;
             }
         }
-        
+
+        private void CheckUIType()
+        {
+            if (GameManager.IsInLobby)
+            {
+                if (!UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = true;
+                if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
+                if (UIItemDetail.IsEnable) UIItemDetail.IsEnable = false;
+                if (UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = false;
+                if (UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = false;
+                if (UIMinimap.IsEnable) UIMinimap.IsEnable = false;
+
+                if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
+            }
+            else
+            {
+                if (UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = false;
+                if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
+                if (!UIItemDetail.IsEnable) UIItemDetail.IsEnable = true;
+                if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
+                if (!UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = true;
+                if (!UIMinimap.IsEnable) UIMinimap.IsEnable = true;
+            }
+
+            if (!UIListSave.IsEnable) UIListSave.IsEnable = true;
+            if (!UISetting.IsEnable) UISetting.IsEnable = true;
+            if (!UIHelp.IsEnable) UIHelp.IsEnable = true;
+            if (!UILoading.IsEnable) UILoading.IsEnable = true;
+            if (!UIPopup.IsEnable) UIPopup.IsEnable = true;
+        }
+        private void CheckKeyUp_I()
+        {
+            if (Input.GetKeyUp(KeyCode.I))
+            {
+                if (GameManager.IsInLobby)
+                {
+                }
+                else
+                {
+                    if (UIItemDetail.IsShow)
+                    {
+                        UIItemDetail.Hide();
+                    }
+                    else
+                    {
+                        Character.Player.ShowDetail(Character.Player.GetRightHandItem());
+                        UIItemDetail.Show();
+                    }
+                }
+            }
+        }
+        private void CheckKeyUp_B()
+        {
+            if (Input.GetKeyUp(KeyCode.B))
+            {
+                if (GameManager.IsInLobby)
+                {
+                }
+                else
+                {
+                    if (UIInventory.IsShow)
+                    {
+                        UIInventory.Hide();
+                    }
+                    else
+                    {
+                        UIItemDetail.Show();
+                    }
+                }
+            }
+        }
+        private void CheckKeyUp_Esc()
+        {
+            if (Input.GetKeyUp(KeyCode.Escape))
+            {
+                if (GameManager.IsInLobby)
+                {
+                }
+                else
+                {
+                    if (UIGameMenu.IsShow) UIListSave.Hide();
+                    else UIListSave.Show();
+                }
+
+                if (UICharacterDetail.IsShow) UICharacterDetail.Hide();
+                if (UISetting.IsShow) UISetting.Hide();
+                if (UIListSave.IsShow) UIListSave.Hide();
+            }
+        }
+
+
         /// <summary>
         /// 显示加载面板
         /// </summary>

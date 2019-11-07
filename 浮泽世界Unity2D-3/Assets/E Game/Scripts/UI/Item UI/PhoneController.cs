@@ -16,19 +16,24 @@ namespace E.Game
 {
     public class PhoneController : SingletonClass<PhoneController>
     {
-        [Header("动画控制器")]
-        [SerializeField] private Animator m_PhoneAnimator;
-
-        [Header("UI组件")]
-        [SerializeField] private Text m_MessageContent;
-        [SerializeField] private Text m_Time;
-        [SerializeField] private Image m_PowerImg;
+        [Header("视图")]
+        [SerializeField, Tooltip("应用 主页")] private AppHome AppHome;
+        [SerializeField, Tooltip("应用 笔记")] private AppMemo AppMemo;
+        [SerializeField, Tooltip("应用 时间")] private AppTime AppTime;
+        [SerializeField, Tooltip("应用 学生证")] private AppStudentCard AppStudentCard;
+        [SerializeField] private Text txtMessage;
+        [SerializeField] private Text txtTime;
+        [SerializeField] private Image ImgPower;
 
         [Header("数据")]
-        [SerializeField, ReadOnly, Tooltip("当前应用")] private GameObject m_CurrentApp;
-        [SerializeField, Tooltip("手机主页")] private GameObject m_Home;
-        [SerializeField, Tooltip("剩余电量")] private float m_Power;
-        [SerializeField, Tooltip("电量消耗（每帧）")] private float m_PowerCost;
+        [SerializeField, ReadOnly, Tooltip("当前应用")] private PhoneApp CurrentApp;
+        [SerializeField, Tooltip("剩余电量")] private float LeftPower;
+        [SerializeField, Tooltip("电量消耗（每帧）")] private float PowerCost;
+
+        public Animator Animator
+        {
+            get => GetComponentInParent<Animator>();
+        }
 
         private void Start()
         {
@@ -37,7 +42,7 @@ namespace E.Game
         {
             if (Input.GetKeyUp(KeyCode.P))
             {
-                if (m_PhoneAnimator.GetBool("IsShowPhone"))
+                if (Animator.GetBool("IsShowPhone"))
                 {
                     SetPhoneUseState(false);
                 }
@@ -48,7 +53,7 @@ namespace E.Game
             }
 
             //滚轮旋转手机
-            if (m_PhoneAnimator.GetBool("IsShowPhone"))
+            if (Animator.GetBool("IsShowPhone"))
             {
                 float mouseScrollWheel = Input.GetAxis("Mouse ScrollWheel");
                 transform.Rotate(new Vector3(0, 0, mouseScrollWheel * 100));
@@ -63,7 +68,7 @@ namespace E.Game
         /// </summary>
         public void SetPhoneUseState(bool IsShow)
         {
-            m_PhoneAnimator.SetBool("IsShowPhone", IsShow);
+            Animator.SetBool("IsShowPhone", IsShow);
             //UIManager.SetCursor(IsShow);
         }
 
@@ -75,8 +80,8 @@ namespace E.Game
         {
             if (str != string.Empty)
             {
-                m_MessageContent.text = str;
-                m_PhoneAnimator.SetTrigger("MessageTrigger");
+                txtMessage.text = str;
+                Animator.SetTrigger("MessageTrigger");
             }
         }
 
@@ -85,26 +90,26 @@ namespace E.Game
         /// </summary>
         private void PowerUsing()
         {
-            m_Power -= m_PowerCost;
-            if (m_Power <= 0)
+            LeftPower -= PowerCost;
+            if (LeftPower <= 0)
             {
-                m_Power = 0;
+                LeftPower = 0;
             }
 
-            if (m_Power <= 0.2 & m_Power > 0)
+            if (LeftPower <= 0.2 & LeftPower > 0)
             {
-                m_PowerImg.color = Color.red;
+                ImgPower.color = Color.red;
             }
-            else if (m_Power <= 0.5 & m_Power > 0.2)
+            else if (LeftPower <= 0.5 & LeftPower > 0.2)
             {
-                m_PowerImg.color = Color.yellow;
+                ImgPower.color = Color.yellow;
             }
             else
             {
-                m_PowerImg.color = Color.green;
+                ImgPower.color = Color.green;
             }
 
-            m_PowerImg.fillAmount = m_Power;
+            ImgPower.fillAmount = LeftPower;
         }
 
         private void ShowTime()
@@ -138,7 +143,7 @@ namespace E.Game
                     break;
             }
             string time = DateTime.Now.ToString("yyyy/MM/dd HH:mm");
-            m_Time.text = time + " " + week;
+            txtTime.text = time + " " + week;
         }
 
         /// <summary>
@@ -152,21 +157,21 @@ namespace E.Game
         /// 打开应用
         /// </summary>
         /// <param name="app"></param>
-        public void OpenApp(GameObject app)
+        public void OpenApp(PhoneApp app)
         {
             app.transform.SetAsLastSibling();
-            app.SetActive(true);
-            m_CurrentApp = app;
+            app.gameObject.SetActive(true);
+            CurrentApp = app;
         }
 
         /// <summary>
         /// 关闭应用
         /// </summary>
         /// <param name="app"></param>
-        public void CloseApp(GameObject app)
+        public void CloseApp(PhoneApp app)
         {
-            app.SetActive(false);
-            m_CurrentApp = null;
+            app.gameObject.SetActive(false);
+            CurrentApp = null;
         }
         /// <summary>
         /// 关闭当前应用
@@ -180,7 +185,7 @@ namespace E.Game
         /// </summary>
         public void BackHome()
         {
-            m_Home.transform.SetAsLastSibling();
+            AppHome.transform.SetAsLastSibling();
         }
 
         /// <summary>

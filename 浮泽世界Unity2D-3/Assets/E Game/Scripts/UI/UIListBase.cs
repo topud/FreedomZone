@@ -5,7 +5,7 @@ using UnityEngine.Events;
 
 namespace E.Tool
 {
-    public abstract class UIListBase<D, S> : UIBase where S : UISlotBase<D>
+    public abstract class UIListBase<D, S> : UIBasePanel where S : UISlotBase<D>
     {
         [Header("组件")]
         [SerializeField] protected Transform tsfParent;

@@ -4,7 +4,7 @@ using System;
 
 namespace E.Tool
 {
-    public class UICharacterStatus : UIBase
+    public class UICharacterStatus : UIBasePanel
     {
         [Header("组件")]
         [SerializeField] private Slider sldHealth;

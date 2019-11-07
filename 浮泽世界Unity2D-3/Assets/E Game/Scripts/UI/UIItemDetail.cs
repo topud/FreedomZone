@@ -4,13 +4,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using E.Tool;
 
-public class UIItemDetail : UIBase
+public class UIItemDetail : UIBasePanel
 {
+    [Header("视图")]
     [SerializeField] private Text txtName;
     [SerializeField] private Text txtDes;
     [SerializeField] private Image imgIcon;
     [SerializeField] private Image imgHealth;
 
+    [Header("数据")]
     public Item Item;
 
     public void SetData(Item item)

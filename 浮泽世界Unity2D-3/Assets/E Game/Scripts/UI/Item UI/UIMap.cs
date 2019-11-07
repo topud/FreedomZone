@@ -4,7 +4,7 @@ using UnityEngine.SceneManagement;
 
 namespace E.Tool
 {
-    public class UIMap : UIBase
+    public class UIMap : UIBasePanel
     {
         public float zoomMin = 5;
         public float zoomMax = 50;
@@ -32,7 +32,7 @@ namespace E.Tool
             if (player)
             {
                 gameObject.SetActive(true);
-                sceneText.text = SceneManager.GetActiveScene().name;
+                //sceneText.text = SceneManager.GetActiveScene().name;
             }
             else gameObject.SetActive(false);
         }

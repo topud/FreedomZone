@@ -196,10 +196,8 @@ namespace E.Tool
                         CheckNearistCharacter();
                         CheckNearistEntity();
 
-                        CheckKeyUp_B();
                         CheckKeyUp_E();
                         CheckKeyUp_F();
-                        CheckKeyUp_I();
                         CheckKeyUp_Q();
                         CheckMouseButtonDown_0();
                         CheckMouseButtonDown_1();
@@ -917,20 +915,6 @@ namespace E.Tool
             }
         }
 
-        private void CheckKeyUp_B()
-        {
-            if (Input.GetKeyUp(KeyCode.B))
-            {
-                if (UIManager.Singleton.UIInventory.IsShow)
-                {
-                    UIManager.Singleton.UIInventory.Hide();
-                }
-                else
-                {
-                    UIManager.Singleton.UIItemDetail.Show();
-                }
-            }
-        }
         private void CheckKeyUp_E()
         {
             if (Input.GetKeyUp(KeyCode.E))
@@ -962,21 +946,6 @@ namespace E.Tool
                     {
                         Survey(NearistEntity.GetComponent<Character>());
                     }
-                }
-            }
-        }
-        private void CheckKeyUp_I()
-        {
-            if (Input.GetKeyUp(KeyCode.I))
-            {
-                if (UIManager.Singleton.UIItemDetail.IsShow)
-                {
-                    UIManager.Singleton.UIItemDetail.Hide();
-                }
-                else
-                {
-                    ShowDetail(GetRightHandItem());
-                    UIManager.Singleton.UIItemDetail.Show();
                 }
             }
         }

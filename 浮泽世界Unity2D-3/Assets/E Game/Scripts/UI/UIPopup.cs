@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIPopup : UIBase
+    public class UIPopup : UIBasePanel
     {
         public static UIPopup singleton;
         public Text messageText;

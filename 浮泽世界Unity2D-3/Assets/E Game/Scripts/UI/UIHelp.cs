@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    public class UIHelp : UIBase
+    public class UIHelp : UIBasePanel
     {
         
 

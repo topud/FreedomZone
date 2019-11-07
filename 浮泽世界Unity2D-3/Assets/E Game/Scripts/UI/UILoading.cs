@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UILoading : UIBase
+    public class UILoading : UIBasePanel
     {
         [SerializeField] private Text txtProcess;
         [SerializeField] private Slider sldProcess;

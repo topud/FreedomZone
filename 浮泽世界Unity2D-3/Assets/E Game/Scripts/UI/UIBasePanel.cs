@@ -35,15 +35,11 @@ namespace E.Tool
         {
             Animator.SetTrigger("Show");
             IsShow = true;
-            CanvasGroup.interactable = true;
-            CanvasGroup.blocksRaycasts = true;
         }
         public void Hide()
         {
             Animator.SetTrigger("Hide");
             IsShow = false;
-            CanvasGroup.interactable = false;
-            CanvasGroup.blocksRaycasts = false;
         }
     }
 }

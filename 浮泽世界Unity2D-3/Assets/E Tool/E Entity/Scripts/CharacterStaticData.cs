@@ -21,7 +21,6 @@ namespace E.Tool
         [SerializeField, Tooltip("学号")] private string studentID = "F20390052";
 
         [SerializeField, Tooltip("初始脑力")] private IntProperty mind = new IntProperty(20, 20);
-        [SerializeField, Tooltip("初始体力")] private IntProperty power = new IntProperty(20, 20);
         [SerializeField, Tooltip("初始速度")] private IntProperty speed = new IntProperty(5, 2, 0, false, false, 0);
         [SerializeField, Tooltip("初始智力")] private IntProperty iq = new IntProperty(100, 5, 0, false, false, 0);
         [SerializeField, Tooltip("初始力量")] private IntProperty strength = new IntProperty(100, 5, 0, false, false, 0);
@@ -84,10 +83,6 @@ namespace E.Tool
         /// 初始脑力
         /// </summary>
         public IntProperty Mind { get => mind; }
-        /// <summary>
-        /// 初始体力
-        /// </summary>
-        public IntProperty Power { get => power; }
         /// <summary>
         /// 初始速度
         /// </summary>

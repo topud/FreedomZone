@@ -18,20 +18,27 @@ MonoBehaviour:
   prefab: {fileID: 1902451128136963281, guid: 85461a8740df8a94fbd5aea446fc8f45, type: 3}
   weight: 5
   volume: 2
+  birthdayYear: 2000
+  birthdayMonth: 1
+  birthdayDay: 1
   health:
     changeable: 1
     autoChangeable: 1
-    changeRate: 1
+    autoChangeRate: 1
     max: 10
     min: 0
     now: 10
-  movable: 1
-  stackable: 0
-  accommodatable: 0
-  perishable: 0
+  power:
+    changeable: 1
+    autoChangeable: 1
+    autoChangeRate: 1
+    max: 100
+    min: 0
+    now: 100
+  type: 5
   rmbPrice: 100
   capacity: 0
-  stack: 1
   items: []
+  components: []
   skills: []
   buffs: []

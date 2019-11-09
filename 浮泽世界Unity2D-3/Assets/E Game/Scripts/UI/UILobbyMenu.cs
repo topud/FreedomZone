@@ -16,20 +16,18 @@ namespace E.Tool
 
         private void Start()
         {
-            Refresh();
-        }
+            btnNew.onClick.AddListener(() => { GameManager.StartNewSave(); });
+            btnContinue.onClick.AddListener(() => { GameManager.ContinueLastSave(); });
+            btnSave.onClick.AddListener(() => {
+                UIManager.Singleton.UISave.Show();
+                UIManager.Singleton.UISave.OpenMode = OpenMode.Load;
+            });
+            btnSetting.onClick.AddListener(() => { UIManager.Singleton.UISetting.Show(); });
+            btnHelp.onClick.AddListener(() => { UIManager.Singleton.UIHelp.Show(); });
+            btnQuit.onClick.AddListener(() => { GameManager.QuitGame(); });
 
-        public void Refresh()
-        {
             btnContinue.gameObject.SetActive(SaveManager.GetLatestSaveFile() == null ? false : true);
             btnSave.gameObject.SetActive(SaveManager.GetSaveFiles().Count == 0 ? false : true);
-        }
-
-
-        public enum MenuState
-        {
-            NoSave,
-            HasSave
         }
     }
 }

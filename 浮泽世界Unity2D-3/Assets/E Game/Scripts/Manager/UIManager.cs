@@ -15,9 +15,8 @@ namespace E.Tool
         public UIItemDetail UIItemDetail;
         public UICharacterStatus UICharacterStatus;
         public UICharacterDetail UICharacterDetail;
-        public UIMap UIMinimap;
         [Space(5)]
-        public UIListSave UIListSave;
+        public UIListSave UISave;
         public UISetting UISetting;
         public UIHelp UIHelp;
         public UILoading UILoading;
@@ -29,8 +28,8 @@ namespace E.Tool
             get
             {
                 return Singleton.UILobbyMenu.IsShow || Singleton.UIGameMenu.IsShow ||
-                       Singleton.UIInventory.IsShow || Singleton.UIItemDetail.IsShow || Singleton.UICharacterStatus.IsShow || Singleton.UICharacterDetail.IsShow || Singleton.UIMinimap.IsShow ||
-                       Singleton.UIListSave.IsShow || Singleton.UISetting.IsShow || Singleton.UIHelp.IsShow || Singleton.UILoading.IsShow || Singleton.UIPopup.IsShow;
+                       Singleton.UIInventory.IsShow || Singleton.UIItemDetail.IsShow /*|| Singleton.UICharacterStatus.IsShow*/ || Singleton.UICharacterDetail.IsShow ||
+                       Singleton.UISave.IsShow || Singleton.UISetting.IsShow || Singleton.UIHelp.IsShow || Singleton.UILoading.IsShow || Singleton.UIPopup.IsShow;
             }
         }
 
@@ -53,9 +52,8 @@ namespace E.Tool
         private void Reset()
         {
             UICharacterDetail = GetComponentInChildren<UICharacterDetail>(true);
-            UIMinimap = GetComponentInChildren<UIMap>(true);
             UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
-            UIListSave = GetComponentInChildren<UIListSave>(true);
+            UISave = GetComponentInChildren<UIListSave>(true);
             UISetting = GetComponentInChildren<UISetting>(true);
             UIPopup = GetComponentInChildren<UIPopup>(true);
             UILobbyMenu = GetComponentInChildren<UILobbyMenu>(true);
@@ -87,21 +85,20 @@ namespace E.Tool
                 if (UIItemDetail.IsEnable) UIItemDetail.IsEnable = false;
                 if (UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = false;
                 if (UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = false;
-                if (UIMinimap.IsEnable) UIMinimap.IsEnable = false;
 
                 if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
             }
             else
             {
                 if (UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = false;
-                if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
+                if (!UIGameMenu.IsEnable) UIGameMenu.IsEnable = true;
                 if (!UIItemDetail.IsEnable) UIItemDetail.IsEnable = true;
                 if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
                 if (!UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = true;
-                if (!UIMinimap.IsEnable) UIMinimap.IsEnable = true;
+
             }
 
-            if (!UIListSave.IsEnable) UIListSave.IsEnable = true;
+            if (!UISave.IsEnable) UISave.IsEnable = true;
             if (!UISetting.IsEnable) UISetting.IsEnable = true;
             if (!UIHelp.IsEnable) UIHelp.IsEnable = true;
             if (!UILoading.IsEnable) UILoading.IsEnable = true;
@@ -143,7 +140,7 @@ namespace E.Tool
                     }
                     else
                     {
-                        UIItemDetail.Show();
+                        UIInventory.Show();
                     }
                 }
             }
@@ -157,129 +154,14 @@ namespace E.Tool
                 }
                 else
                 {
-                    if (UIGameMenu.IsShow) UIListSave.Hide();
-                    else UIListSave.Show();
+                    if (UIGameMenu.IsShow) UISave.Hide();
+                    else UISave.Show();
                 }
 
                 if (UICharacterDetail.IsShow) UICharacterDetail.Hide();
                 if (UISetting.IsShow) UISetting.Hide();
-                if (UIListSave.IsShow) UIListSave.Hide();
+                if (UISave.IsShow) UISave.Hide();
             }
-        }
-
-
-        /// <summary>
-        /// 显示加载面板
-        /// </summary>
-        public void ShowLoading()
-        {
-            UILoading.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏加载面板
-        /// </summary>
-        public void HideLoading()
-        {
-            UILoading.gameObject.SetActive(false);
-        }
-        /// <summary>
-        /// 显示当前菜单面板
-        /// </summary>
-        public void ShowMenu()
-        {
-            if (GameManager.IsInLobby)
-            {
-                UILobbyMenu.gameObject.SetActive(true);
-            }
-            else
-            {
-                UIGameMenu.gameObject.SetActive(true);
-            }
-        }
-        /// <summary>
-        /// 显示当前菜单面板
-        /// </summary>
-        public void HideMenu()
-        {
-            if (GameManager.IsInLobby)
-            {
-                UILobbyMenu.gameObject.SetActive(false);
-            }
-            else
-            {
-                UIGameMenu.gameObject.SetActive(false);
-            }
-        }
-        /// <summary>
-        /// 显示大厅内菜单面板
-        /// </summary>
-        public void ShowLobbyMenu()
-        {
-            UILobbyMenu.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏大厅内菜单面板
-        /// </summary>
-        public void HideLobbyMenu()
-        {
-            UILobbyMenu.gameObject.SetActive(false);
-        }
-        /// <summary>
-        /// 显示游戏内菜单面板
-        /// </summary>
-        public void ShowGameMenu()
-        {
-            UIGameMenu.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏游戏内菜单面板
-        /// </summary>
-        public void HideGameMenu()
-        {
-            UIGameMenu.gameObject.SetActive(false);
-        }
-        /// <summary>
-        /// 显示设置面板
-        /// </summary>
-        public void ShowSetting()
-        {
-            UISetting.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏设置面板
-        /// </summary>
-        public void HideSetting()
-        {
-            UISetting.gameObject.SetActive(false);
-        }
-        /// <summary>
-        /// 显示帮助面板
-        /// </summary>
-        public void ShowHelp()
-        {
-            UIHelp.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏帮助面板
-        /// </summary>
-        public void HideHelp()
-        {
-            UIHelp.gameObject.SetActive(false);
-        }
-        /// <summary>
-        /// 显示存档面板
-        /// </summary>
-        public void ShowSave(int mode = 1)
-        {
-            UIListSave.OpenMode = (OpenMode)mode;
-            UIListSave.gameObject.SetActive(true);
-        }
-        /// <summary>
-        /// 隐藏存档面板
-        /// </summary>
-        public void HideSave()
-        {
-            UIListSave.gameObject.SetActive(false);
         }
     }
 }

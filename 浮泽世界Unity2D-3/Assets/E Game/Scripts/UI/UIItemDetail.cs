@@ -11,9 +11,18 @@ public class UIItemDetail : UIBasePanel
     [SerializeField] private Text txtDes;
     [SerializeField] private Image imgIcon;
     [SerializeField] private Image imgHealth;
+    [SerializeField] private Image imgPower;
 
     [Header("数据")]
     public Item Item;
+
+    private void Update()
+    {
+        if (Item)
+        {
+            Refresh();
+        }
+    }
 
     public void SetData(Item item)
     {
@@ -28,6 +37,7 @@ public class UIItemDetail : UIBasePanel
             txtDes.text = Item.StaticData.Describe;
             imgIcon.sprite = Item.StaticData.Icon;
             imgHealth.fillAmount = Item.DynamicData.Health.NowPercent;
+            imgPower.fillAmount = Item.DynamicData.Power.NowPercent;
 
             imgIcon.enabled = true;
         }
@@ -37,6 +47,7 @@ public class UIItemDetail : UIBasePanel
             txtDes.text = "";
             imgIcon.sprite = null;
             imgHealth.fillAmount = 0;
+            imgPower.fillAmount = 0;
 
             imgIcon.enabled = false;
         }

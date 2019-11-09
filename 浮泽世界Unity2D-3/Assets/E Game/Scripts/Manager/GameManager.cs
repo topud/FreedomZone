@@ -74,7 +74,7 @@ public class GameManager : SingletonClass<GameManager>
         {
             //允许异步加载完毕后自动切换场景  
             sceneAsyncOperation.allowSceneActivation = true;
-            UIManager.Singleton.HideLoading();
+            UIManager.Singleton.UILoading.Hide();
             //开始游戏
             if (isStartGame && sceneAsyncOperation.isDone)
             {
@@ -127,7 +127,7 @@ public class GameManager : SingletonClass<GameManager>
         }
         if (useLoadUI)
         {
-            UIManager.Singleton.ShowLoading();
+            UIManager.Singleton.UILoading.Show();
         }
         Singleton.StartCoroutine(AsyncLoading(name));
     }

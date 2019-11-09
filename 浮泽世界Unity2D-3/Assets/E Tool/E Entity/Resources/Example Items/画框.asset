@@ -28,13 +28,10 @@ MonoBehaviour:
     max: 20
     min: 0
     now: 20
-  movable: 1
-  stackable: 0
-  accommodatable: 1
-  perishable: 0
+  type: 6
   rmbPrice: 10
   capacity: 0
-  stack: 1
   items: []
+  components: []
   skills: []
   buffs: []

@@ -69,7 +69,7 @@ namespace E.Tool
             {
                 SaveManager.LoadFrom(slot.Data);
             }
-            UIManager.Singleton.HideSave();
+            Hide();
         }
         public void Save(UISlotSave slot)
         {

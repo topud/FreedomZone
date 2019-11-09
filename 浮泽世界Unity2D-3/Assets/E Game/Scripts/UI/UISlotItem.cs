@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace E.Tool
@@ -9,6 +10,7 @@ namespace E.Tool
         [SerializeField] private Image imgIcon;
         [SerializeField] private Image imgFrame;
         [SerializeField] private Image imgHealth;
+        [SerializeField] private Image imgPower;
         [SerializeField] private Color clrDefault;
         [SerializeField] private Color clrSelected;
         private UIInventory uiInventory;
@@ -16,6 +18,13 @@ namespace E.Tool
         private void Awake()
         {
             uiInventory = GetComponentInParent<UIInventory>();
+        }
+        private void Update()
+        {
+            if (Data)
+            {
+                UpdateData();
+            }
         }
         public void OnClickLeftMouse()
         {
@@ -72,6 +81,7 @@ namespace E.Tool
 
         public override void SetData(Item data)
         {
+
             Data = data;
             UpdateData();
         }
@@ -79,6 +89,7 @@ namespace E.Tool
         {
             imgIcon.sprite = Data.StaticData.Icon;
             imgFrame.color = Character.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
+            imgPower.fillAmount = Data.DynamicData.Power.NowPercent;
             imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
         }
 

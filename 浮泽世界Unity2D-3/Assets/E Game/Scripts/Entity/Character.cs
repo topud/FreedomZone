@@ -234,6 +234,10 @@ namespace E.Tool
                     {
                         CheckMove();
                     }
+                    else
+                    {
+                        Debug.Log("IsShowSomeUIPanel");
+                    }
                 }
             }
         }
@@ -553,7 +557,7 @@ namespace E.Tool
                     case ItemType.Bag:
                         break;
                     case ItemType.Switch:
-                        item.SwitchState();
+                        item.TrySwitchUse();
                         break;
                     case ItemType.Other:
                         break;
@@ -868,11 +872,11 @@ namespace E.Tool
                 {
                     if (NearistEntity.GetComponent<Item>())
                     {
-                        Invoke("ShowItemTip", 2);
+                        Invoke("ShowItemTip", 0);
                     }
                     else if (NearistEntity.GetComponent<Character>())
                     {
-                        Invoke("ShowCharacterTip", 2);
+                        Invoke("ShowCharacterTip", 0);
                     }
                     else
                     {

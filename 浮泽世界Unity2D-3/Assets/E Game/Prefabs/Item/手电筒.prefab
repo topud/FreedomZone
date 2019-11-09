@@ -176,6 +176,16 @@ PrefabInstance:
       propertyPath: SwitchableObject
       value: 
       objectReference: {fileID: 588863090125072966}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.Power.max
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.Power.now
+      value: 100
+      objectReference: {fileID: 0}
     - target: {fileID: 6353631478210439943, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_Radius

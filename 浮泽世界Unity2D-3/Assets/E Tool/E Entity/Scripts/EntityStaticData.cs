@@ -15,6 +15,7 @@ namespace E.Tool
         [SerializeField, Tooltip("生日 月"), Range(1, 12)] private int birthdayMonth = 1;
         [SerializeField, Tooltip("生日 日"), Range(1, 31)] private int birthdayDay = 1;
         [SerializeField, Tooltip("初始生机/耐久")] private IntProperty health = new IntProperty(20, 20);
+        [SerializeField, Tooltip("初始体力/能量")] private IntProperty power = new IntProperty(20, 20);
 
         /// <summary>
         /// 质量
@@ -29,8 +30,12 @@ namespace E.Tool
         /// </summary>
         public DateTime Birthday { get => new DateTime(birthdayYear, birthdayMonth, birthdayDay); }
         /// <summary>
-        /// 初始生机
+        /// 初始生机/耐久
         /// </summary>
         public IntProperty Health { get => health; }
+        /// <summary>
+        /// 初始体力/能量
+        /// </summary>
+        public IntProperty Power { get => power; }
     }
 }

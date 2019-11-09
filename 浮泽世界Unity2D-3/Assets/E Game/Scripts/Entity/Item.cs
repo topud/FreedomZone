@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 namespace E.Tool
@@ -48,10 +49,15 @@ namespace E.Tool
         protected override void Start()
         {
             base.Start();
+
+            InvokeRepeating("CheckHealth", 1, 1);
+
         }
         protected override void Update()
         {
             base.Update();
+
+            CheckPower();
         }
         protected override void FixedUpdate()
         {
@@ -113,9 +119,10 @@ namespace E.Tool
                 ID = gameObject.GetInstanceID(),
                 //Position
 
-                Health = StaticData.Health,
-                //ItemInstanceIDs
-            };
+                 Health = StaticData.Health,
+                 Power = StaticData.Power,
+                 //ItemInstanceIDs
+             };
         }
         [ContextMenu("重置组件")]
         /// <summary>
@@ -152,11 +159,99 @@ namespace E.Tool
             return (StaticData.Capacity > 0) ? (float)vo / StaticData.Capacity : 0;
         }
 
-        public void SwitchState()
+        public void TrySwitchUse()
         {
-            if (SwitchableObject)
+            switch (StaticData.Type)
             {
-                SwitchableObject.SetActive(!SwitchableObject.activeInHierarchy);
+                case ItemType.Food:
+                    break;
+                case ItemType.Weapon:
+                    break;
+                case ItemType.Book:
+                    break;
+                case ItemType.Clothing:
+                    break;
+                case ItemType.Bag:
+                    break;
+                case ItemType.Switch:
+                    if (SwitchableObject)
+                    {
+                        if (IsUsing)
+                        {
+                            SwitchableObject.SetActive(false);
+                            Debug.Log("关闭了 " + name);
+                        }
+                        else
+                        {
+                            if (DynamicData.Power.Now > 0)
+                            {
+                                SwitchableObject.SetActive(true);
+                                Debug.Log("打开了 " + name);
+                            }
+                            else
+                            {
+                                Debug.Log("能量不足，无法打开 " + name);
+                            }
+                        }
+                    }
+                    break;
+                case ItemType.Other:
+                    break;
+                default:
+                    break;
+            }
+        }
+        public void CheckHealth()
+        {
+            if (IsUsing)
+            {
+                switch (StaticData.Type)
+                {
+                    case ItemType.Food:
+                        break;
+                    case ItemType.Weapon:
+                        break;
+                    case ItemType.Book:
+                        break;
+                    case ItemType.Clothing:
+                        break;
+                    case ItemType.Bag:
+                        break;
+                    case ItemType.Switch:
+                        DynamicData.Power.Now -= 1;
+                        break;
+                    case ItemType.Other:
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        public void CheckPower()
+        {
+            switch (StaticData.Type)
+            {
+                case ItemType.Food:
+                    break;
+                case ItemType.Weapon:
+                    break;
+                case ItemType.Book:
+                    break;
+                case ItemType.Clothing:
+                    break;
+                case ItemType.Bag:
+                    break;
+                case ItemType.Switch:
+                    if (DynamicData.Power.Now == 0)
+                    {
+                        if (IsUsing)
+                        { TrySwitchUse(); }
+                    }
+                    break;
+                case ItemType.Other:
+                    break;
+                default:
+                    break;
             }
         }
     }

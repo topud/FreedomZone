@@ -11,7 +11,6 @@ namespace E.Tool
     {
         [Header("角色实体动态数据")]
         [Tooltip("脑力")] public IntProperty Mind = new IntProperty(20, 20);
-        [Tooltip("体力")] public IntProperty Power = new IntProperty(20, 20);
         [Tooltip("速度")] public IntProperty Speed = new IntProperty(5, 2, 0, false, false, 0);
         [Tooltip("智力")] public IntProperty IQ = new IntProperty(100, 5, 0, false, false, 0);
         [Tooltip("力量")] public IntProperty Strength = new IntProperty(100, 5, 0, false, false, 0);

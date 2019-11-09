@@ -16,17 +16,22 @@ MonoBehaviour:
   describe: "\u8FD9\u662F\u4E00\u5757\u77F3\u5934"
   icon: {fileID: 21300000, guid: 5974b27edd96ef446acfa7968d0e575f, type: 3}
   prefab: {fileID: 1902451128136963281, guid: 92dee3e0dc7238243868ca1c3d18fcf7, type: 3}
-  invincible: 0
   weight: 50
   volume: 1
-  movable: 0
-  stackable: 0
-  accommodatable: 0
-  perishable: 0
+  birthdayYear: 2000
+  birthdayMonth: 1
+  birthdayDay: 1
+  health:
+    changeable: 1
+    autoChangeable: 1
+    autoChangeRate: 1
+    max: 20
+    min: 0
+    now: 20
+  type: 6
   rmbPrice: 10
   capacity: 0
+  items: []
+  components: []
   skills: []
   buffs: []
-  stack: 1
-  maxHealth: 10
-  items: []

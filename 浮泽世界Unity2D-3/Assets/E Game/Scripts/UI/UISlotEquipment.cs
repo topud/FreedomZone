@@ -5,20 +5,29 @@ namespace E.Tool
 {
     public class UISlotEquipment : UISlotBase<Item>
     {
-        public Image imgIcon;
-        public Image imgHealth;
+        [SerializeField] private Text txtType;
+        [SerializeField] private Image imgIcon;
+        [SerializeField] private Image imgHealth;
 
-        [SerializeField, ReadOnly] private Item item;
-
-        public override void SetData(Item item)
+        public override void SetData(Item data)
         {
-            this.item = item;
+            Data = data;
             UpdateData();
         }
         public override void UpdateData()
         {
-            imgIcon.sprite = item.StaticData.Icon;
-            imgHealth.fillAmount = item.DynamicData.Health.NowPercent;
+            if (Data)
+            {
+                txtType.enabled = false;
+                imgIcon.sprite = Data.StaticData.Icon;
+                imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
+            }
+            else
+            {
+                txtType.enabled = true;
+                imgIcon.sprite = null;
+                imgHealth.fillAmount = 0;
+            }
         }
     }
 }

@@ -14,19 +14,19 @@ namespace E.Tool
         [SerializeField] private UISlotBuff slotPrefab;
 
         [Header("数据")]
-        public static Character Target;
+        public Character Data;
 
         private void Start()
         {
-            Target = Character.Player;
+            Data = Character.Player;
         }
         private void Update()
         {
-            if (Target)
+            if (Data)
             {
-                sldHealth.value = Target.DynamicData.Health.NowPercent;
-                sldMind.value = Target.DynamicData.Mind.NowPercent;
-                sldPower.value = Target.DynamicData.Power.NowPercent;
+                sldHealth.value = Data.DynamicData.Health.NowPercent;
+                sldMind.value = Data.DynamicData.Mind.NowPercent;
+                sldPower.value = Data.DynamicData.Power.NowPercent;
             }
         }
     }

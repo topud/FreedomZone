@@ -27,7 +27,7 @@ namespace E.Tool
                     case ItemType.Bag:
                         break;
                     case ItemType.Switch:
-                        isUsing = SwitchableObject.activeInHierarchy;
+                        isUsing = SwitchableObject.activeSelf;
                         break;
                     case ItemType.Other:
                         break;

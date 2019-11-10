@@ -28,6 +28,25 @@ namespace E.Tool
         }
         public void OnClickLeftMouse()
         {
+            if (UIManager.Singleton.UIItemDetail.IsShow)
+            {
+                if (UIManager.Singleton.UIItemDetail.Item == Data)
+                {
+                    //UIManager.Singleton.UIItemDetail.Hide();
+                }
+                else
+                {
+                    UIManager.Singleton.UIItemDetail.SetData(Data);
+                }
+            }
+            else
+            {
+                UIManager.Singleton.UIItemDetail.SetData(Data);
+                UIManager.Singleton.UIItemDetail.Show();
+            }
+        }
+        public void OnClickMiddleMouse()
+        {
             Item item = Character.Player.GetRightHandItem();
             if (item)
             {
@@ -49,22 +68,7 @@ namespace E.Tool
         }
         public void OnClickRightMouse()
         {
-            if (UIManager.Singleton.UIItemDetail.IsShow)
-            {
-                if (UIManager.Singleton.UIItemDetail.Item == Data)
-                {
-                    UIManager.Singleton.UIItemDetail.Hide();
-                }
-                else
-                {
-                    UIManager.Singleton.UIItemDetail.SetData(Data);
-                }
-            }
-            else
-            {
-                UIManager.Singleton.UIItemDetail.SetData(Data);
-                UIManager.Singleton.UIItemDetail.Show();
-            }
+            Character.Player.Use(Data);
         }
         public override void OnBeginDrag()
         {

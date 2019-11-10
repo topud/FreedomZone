@@ -5,19 +5,35 @@ namespace E.Tool
 {
     public class UIPopup : UIBasePanel
     {
-        public static UIPopup singleton;
-        public Text messageText;
+        [SerializeField] private Text txtMessage;
+        [SerializeField] private GameObject btnsOnlyYes;
+        [SerializeField] private GameObject btnsYesOrNo;
 
-        public UIPopup()
+        public void ShowMessage(string message, PopupType popupType = PopupType.OnlyYes)
         {
-            if (singleton == null) singleton = this;
+            if (!IsShow) Show();
+
+            switch (popupType)
+            {
+                case PopupType.OnlyYes:
+                    btnsOnlyYes.SetActive(true);
+                    btnsYesOrNo.SetActive(false);
+                    break;
+                case PopupType.YesOrNo:
+                    btnsOnlyYes.SetActive(false);
+                    btnsYesOrNo.SetActive(true);
+                    break;
+                default:
+                    break;
+            }
+
+            txtMessage.text += ";\n" + message;
         }
 
-        public void Show(string message)
+        public enum PopupType
         {
-            if (gameObject.activeSelf) messageText.text += ";\n" + message;
-            else messageText.text = message;
-            gameObject.SetActive(true);
+            OnlyYes,
+            YesOrNo,
         }
     }
 }

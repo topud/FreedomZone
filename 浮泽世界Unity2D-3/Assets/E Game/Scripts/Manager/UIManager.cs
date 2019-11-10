@@ -9,12 +9,12 @@ namespace E.Tool
     {
         [Header("视图")]
         public UILobbyMenu UILobbyMenu;
-        [Space(5)]
         public UIGameMenu UIGameMenu;
+        [Space(5)]
         public UIInventory UIInventory;
         public UIItemDetail UIItemDetail;
         public UICharacterStatus UICharacterStatus;
-        public UICharacterDetail UICharacterDetail;
+        public UIEquipment UIEquipment;
         [Space(5)]
         public UIListSave UISave;
         public UISetting UISetting;
@@ -23,13 +23,40 @@ namespace E.Tool
         public UIPopup UIPopup;
 
         //[Header("数据")]
-        public static bool IsShowAnyUIPanel
+        public static bool IsShowAnyUI
         {
             get
             {
-                return Singleton.UILobbyMenu.IsShow || Singleton.UIGameMenu.IsShow ||
-                       Singleton.UIInventory.IsShow || Singleton.UIItemDetail.IsShow /*|| Singleton.UICharacterStatus.IsShow*/ || Singleton.UICharacterDetail.IsShow ||
-                       Singleton.UISave.IsShow || Singleton.UISetting.IsShow || Singleton.UIHelp.IsShow || Singleton.UILoading.IsShow || Singleton.UIPopup.IsShow;
+                return IsShowAnyUIMenu || IsShowAnyUIInGame || IsShowAnyUIPublic;
+            }
+        }
+        public static bool IsShowAnyUIMenu
+        {
+            get
+            {
+                return (Singleton.UILobbyMenu.IsEnable && Singleton.UILobbyMenu.IsShow) || 
+                    (Singleton.UIGameMenu.IsEnable && Singleton.UIGameMenu.IsShow);
+            }
+        }
+        public static bool IsShowAnyUIInGame
+        {
+            get
+            {
+                return (Singleton.UIInventory.IsEnable && Singleton.UIInventory.IsShow) ||
+                    (Singleton.UIItemDetail.IsEnable && Singleton.UIItemDetail.IsShow) ||
+                    (Singleton.UICharacterStatus.IsEnable && Singleton.UICharacterStatus.IsShow )||
+                    (Singleton.UIEquipment.IsEnable && Singleton.UIEquipment.IsShow);
+            }
+        }
+        public static bool IsShowAnyUIPublic
+        {
+            get
+            {
+                return (Singleton.UISave.IsEnable && Singleton.UISave.IsShow )||
+                    (Singleton.UISetting.IsEnable && Singleton.UISetting.IsShow) ||
+                    (Singleton.UIHelp.IsEnable && Singleton.UIHelp.IsShow) ||
+                    (Singleton.UILoading.IsEnable && Singleton.UILoading.IsShow) ||
+                    (Singleton.UIPopup.IsEnable && Singleton.UIPopup.IsShow);
             }
         }
 
@@ -45,13 +72,12 @@ namespace E.Tool
         {
             CheckUIType();
 
-            CheckKeyUp_B();
             CheckKeyUp_I();
             CheckKeyUp_Esc();
         }
         private void Reset()
         {
-            UICharacterDetail = GetComponentInChildren<UICharacterDetail>(true);
+            UIEquipment = GetComponentInChildren<UIEquipment>(true);
             UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
             UISave = GetComponentInChildren<UIListSave>(true);
             UISetting = GetComponentInChildren<UISetting>(true);
@@ -82,19 +108,23 @@ namespace E.Tool
             {
                 if (!UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = true;
                 if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
+
+                if (UIInventory.IsEnable) UIInventory.IsEnable = false;
                 if (UIItemDetail.IsEnable) UIItemDetail.IsEnable = false;
                 if (UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = false;
-                if (UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = false;
+                if (UIEquipment.IsEnable) UIEquipment.IsEnable = false;
 
-                if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
+                //if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
             }
             else
             {
                 if (UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = false;
                 if (!UIGameMenu.IsEnable) UIGameMenu.IsEnable = true;
+
+                if (!UIInventory.IsEnable) UIInventory.IsEnable = true;
                 if (!UIItemDetail.IsEnable) UIItemDetail.IsEnable = true;
                 if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
-                if (!UICharacterDetail.IsEnable) UICharacterDetail.IsEnable = true;
+                if (!UIEquipment.IsEnable) UIEquipment.IsEnable = true;
 
             }
 
@@ -113,34 +143,18 @@ namespace E.Tool
                 }
                 else
                 {
-                    if (UIItemDetail.IsShow)
-                    {
-                        UIItemDetail.Hide();
-                    }
-                    else
-                    {
-                        Character.Player.ShowDetail(Character.Player.GetRightHandItem());
-                        UIItemDetail.Show();
-                    }
-                }
-            }
-        }
-        private void CheckKeyUp_B()
-        {
-            if (Input.GetKeyUp(KeyCode.B))
-            {
-                if (GameManager.IsInLobby)
-                {
-                }
-                else
-                {
                     if (UIInventory.IsShow)
                     {
                         UIInventory.Hide();
+                        if (UIItemDetail.IsShow) UIItemDetail.Hide();
+                        if (UIEquipment.IsShow) UIEquipment.Hide();
                     }
                     else
                     {
                         UIInventory.Show();
+                        Character.Player.ShowDetail(Character.Player.GetRightHandItem());
+                        if (!UIEquipment.IsShow) UIItemDetail.Show();
+                        if (!UIEquipment.IsShow) UIEquipment.Show();
                     }
                 }
             }
@@ -151,17 +165,58 @@ namespace E.Tool
             {
                 if (GameManager.IsInLobby)
                 {
+                    if (IsShowAnyUIPublic)
+                    {
+                        HideUIPublic();
+                        return;
+                    }
+
+                    if (UILobbyMenu.IsShow) UILobbyMenu.Hide();
+                    else UILobbyMenu.Show();
                 }
                 else
                 {
-                    if (UIGameMenu.IsShow) UISave.Hide();
-                    else UISave.Show();
-                }
+                    if (IsShowAnyUIInGame)
+                    {
+                        HideUIInGame();
+                        return;
+                    }
+                    if (IsShowAnyUIPublic)
+                    {
+                        HideUIPublic();
+                        return;
+                    }
 
-                if (UICharacterDetail.IsShow) UICharacterDetail.Hide();
-                if (UISetting.IsShow) UISetting.Hide();
-                if (UISave.IsShow) UISave.Hide();
+                    if (UIGameMenu.IsShow) UIGameMenu.Hide();
+                    else UIGameMenu.Show();
+                }
             }
+        }
+        public void ShowCurrentUIMenu()
+        {
+            if (GameManager.IsInLobby)
+            {
+                if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
+            }
+            else
+            {
+                if (!UIGameMenu.IsShow) UIGameMenu.Show();
+            }
+        }
+        private void HideUIInGame()
+        {
+            if (UIInventory.IsShow) UIInventory.Hide();
+            if (UIItemDetail.IsShow) UIItemDetail.Hide();
+            if (UIEquipment.IsShow) UIEquipment.Hide();
+            if (UICharacterStatus.IsShow) UICharacterStatus.Hide();
+        }
+        private void HideUIPublic()
+        {
+            if (UISetting.IsShow) UISetting.Hide();
+            if (UISave.IsShow) UISave.Hide();
+            if (UIHelp.IsShow) UIHelp.Hide();
+            if (UILoading.IsShow) UILoading.Hide();
+            if (UIPopup.IsShow) UIPopup.Hide();
         }
     }
 }

@@ -190,7 +190,7 @@ namespace E.Tool
             {
                 if (IsPlayer)
                 {
-                    if (!UIManager.IsShowAnyUIPanel)
+                    if (!UIManager.IsShowAnyUI)
                     {
                         CheckNearistItem();
                         CheckNearistCharacter();
@@ -203,6 +203,7 @@ namespace E.Tool
                         CheckMouseButtonDown_1();
                         CheckMouseButtonDown_2();
                         CheckMouseScrollWheelWithAlt();
+                        CheckMouseScrollWheelWithoutAlt();
 
                         CheckPlayerFaceTo();
                         CheckPlayerAnimation();
@@ -213,7 +214,6 @@ namespace E.Tool
                     {
                         RightHandItemController.SetIsLookAtCursor(false);
                     }
-                    CheckMouseScrollWheelWithoutAlt();
                 }
                 else
                 {
@@ -230,7 +230,7 @@ namespace E.Tool
             {
                 if (IsPlayer)
                 {
-                    if (!UIManager.IsShowAnyUIPanel)
+                    if (!UIManager.IsShowAnyUI)
                     {
                         CheckMove();
                     }

@@ -16,11 +16,18 @@ namespace E.Tool
         {
             btnBack.onClick.AddListener(() => { Hide(); });
             btnSave.onClick.AddListener(() => {
+                Hide();
                 UIManager.Singleton.UISave.Show();
                 UIManager.Singleton.UISave.OpenMode = OpenMode.Both;
             });
-            btnSetting.onClick.AddListener(() => { UIManager.Singleton.UISetting.Show(); });
-            btnHelp.onClick.AddListener(() => { UIManager.Singleton.UIHelp.Show(); });
+            btnSetting.onClick.AddListener(() => {
+                Hide();
+                UIManager.Singleton.UISetting.Show();
+            });
+            btnHelp.onClick.AddListener(() => {
+                Hide();
+                UIManager.Singleton.UIHelp.Show();
+            });
             btnQuit.onClick.AddListener(() => { GameManager.BackToLobby(); });
         }
     }

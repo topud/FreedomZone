@@ -6,7 +6,13 @@ namespace E.Tool
 {
     public class UISetting : UIBasePanel
     {
-        
+        public void OnApply()
+        {
 
+        }
+        public void OnDefault()
+        {
+
+        }
     }
 }

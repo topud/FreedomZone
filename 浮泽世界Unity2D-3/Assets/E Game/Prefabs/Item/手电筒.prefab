@@ -1,43 +1,12 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &588863090125072966
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 8519017934483797596}
-  - component: {fileID: 1489588587769831524}
-  m_Layer: 9
-  m_Name: Point Light 2D
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &8519017934483797596
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588863090125072966}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.25, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1902451128136963284}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1489588587769831524
+--- !u!114 &6185011658261044594
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 588863090125072966}
+  m_GameObject: {fileID: 3430408735789829596}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
@@ -137,7 +106,7 @@ PrefabInstance:
     - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_Name
-      value: "\u624B\u7535\u7B52"
+      value: "\u624B\u7535\u7B5218238"
       objectReference: {fileID: 0}
     - target: {fileID: 4000060697525791407, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -175,7 +144,7 @@ PrefabInstance:
         type: 3}
       propertyPath: SwitchableObject
       value: 
-      objectReference: {fileID: 588863090125072966}
+      objectReference: {fileID: 0}
     - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: DynamicData.Power.max
@@ -186,16 +155,42 @@ PrefabInstance:
       propertyPath: DynamicData.Power.now
       value: 100
       objectReference: {fileID: 0}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.ID
+      value: 18238
+      objectReference: {fileID: 0}
     - target: {fileID: 6353631478210439943, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_Radius
       value: 0.3
       objectReference: {fileID: 0}
+    - target: {fileID: 3273176014952775431, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000707623270720283, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: f27174ce816bbbb4eb822444d60a8862,
+        type: 3}
+    - target: {fileID: 8460082997452244643, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8460082997452244643, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.25
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d52d6b4ddbba0a347bd7007ea4060a88, type: 3}
---- !u!4 &1902451128136963284 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+--- !u!1 &3430408735789829596 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1447135887630524315, guid: d52d6b4ddbba0a347bd7007ea4060a88,
     type: 3}
   m_PrefabInstance: {fileID: 4291368585194476103}
   m_PrefabAsset: {fileID: 0}

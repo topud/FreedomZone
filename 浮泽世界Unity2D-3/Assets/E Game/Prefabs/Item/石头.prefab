@@ -10,12 +10,12 @@ PrefabInstance:
     - target: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 162.3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.48
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2443446638038779539, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -99,6 +99,17 @@ PrefabInstance:
       propertyPath: DynamicData.Name
       value: "\u77F3\u5934"
       objectReference: {fileID: 0}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.ID
+      value: -31294
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000707623270720283, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 5974b27edd96ef446acfa7968d0e575f,
+        type: 3}
     - target: {fileID: 1937951728072518310, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_SizeDelta.x

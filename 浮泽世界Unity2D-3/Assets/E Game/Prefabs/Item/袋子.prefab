@@ -65,17 +65,55 @@ PrefabInstance:
     - target: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_Name
+      value: "\u888B\u5B5018696"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4000060697525791407, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Mass
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 2443446638038779536, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8dc6edc5e31a45c4c995289a3da5fcaa,
+        type: 3}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.name
       value: "\u888B\u5B50"
       objectReference: {fileID: 0}
-    - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: StaticData
+      value: 
+      objectReference: {fileID: 11400000, guid: 012cbccd87b21cb44866bb7c612991d5,
+        type: 2}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.Name
+      value: "\u888B\u5B50"
+      objectReference: {fileID: 0}
+    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: DynamicData.ID
+      value: 18696
+      objectReference: {fileID: 0}
+    - target: {fileID: 2000707623270720283, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8dc6edc5e31a45c4c995289a3da5fcaa,
+        type: 3}
+    - target: {fileID: 1937951728072518310, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 120
+      value: 147
       objectReference: {fileID: 0}
-    - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+    - target: {fileID: 1937951728072518310, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 84
+      value: 107
       objectReference: {fileID: 0}
     - target: {fileID: 8360500693443961576, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -87,15 +125,15 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 84
       objectReference: {fileID: 0}
-    - target: {fileID: 1937951728072518310, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+    - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_SizeDelta.x
-      value: 147
+      value: 120
       objectReference: {fileID: 0}
-    - target: {fileID: 1937951728072518310, guid: d52d6b4ddbba0a347bd7007ea4060a88,
+    - target: {fileID: 5306912908124463380, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: 107
+      value: 84
       objectReference: {fileID: 0}
     - target: {fileID: 4086792711929597425, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
@@ -187,28 +225,6 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 44
       objectReference: {fileID: 0}
-    - target: {fileID: 2443446638038779536, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8dc6edc5e31a45c4c995289a3da5fcaa,
-        type: 3}
-    - target: {fileID: 4000060697525791407, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: m_Mass
-      value: 50
-      objectReference: {fileID: 0}
-    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: DynamicData.name
-      value: "\u888B\u5B50"
-      objectReference: {fileID: 0}
-    - target: {fileID: 1022696305292128388, guid: d52d6b4ddbba0a347bd7007ea4060a88,
-        type: 3}
-      propertyPath: StaticData
-      value: 
-      objectReference: {fileID: 11400000, guid: 012cbccd87b21cb44866bb7c612991d5,
-        type: 2}
     - target: {fileID: 5738196728736119592, guid: d52d6b4ddbba0a347bd7007ea4060a88,
         type: 3}
       propertyPath: m_IsActive

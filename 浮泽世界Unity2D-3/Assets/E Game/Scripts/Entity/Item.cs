@@ -8,7 +8,8 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
-        [Tooltip("可以切换激活状态的子对象")] public GameObject SwitchableObject;
+        public GameObject SwitchableObject { get => transform.Find("SwitchableObject").gameObject; }
+
         public bool IsUsing
         {
             get
@@ -75,10 +76,6 @@ namespace E.Tool
         {
             base.OnDestroy();
         }
-        protected override void Reset()
-        {
-            base.Reset();
-        }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
@@ -89,32 +86,46 @@ namespace E.Tool
             base.SetDynamicData(data);
         }
 
-        [ContextMenu("重置静态数据")]
+        [ContextMenu("刷新数据")]
+        /// <summary>
+        /// 刷新数据
+        /// </summary>
+        public override void Refresh()
+        {
+            ResetStaticData();
+            ResetDynamicData();
+        }
+        [ContextMenu("初始化数据")]
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
+        public override void Reset()
+        {
+            base.Reset();
+        }
         /// <summary>
         /// 重置静态数据
         /// </summary>
         public override void ResetStaticData()
         {
-
             base.ResetStaticData();
+
+            SpriteSorter.SetSprite(StaticData.Icon);
         }
-        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置数据，默认用于对象初次生成的数据初始化
         /// </summary>
-        public override void ResetDynamicData()
+        public override void ResetDynamicData(bool isAddID = true)
         {
-            base.ResetDynamicData();
+            base.ResetDynamicData(isAddID);
 
             gameObject.layer = LayerMask.NameToLayer("Item");
             gameObject.tag = "Item";
 
             if (!StaticData) return;
 
-            GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
-
              DynamicData = new ItemDynamicData()
-            {
+             {
                 Name = StaticData.name,
                 ID = gameObject.GetInstanceID(),
                 //Position
@@ -123,16 +134,6 @@ namespace E.Tool
                  Power = StaticData.Power,
                  //ItemInstanceIDs
              };
-        }
-        [ContextMenu("重置组件")]
-        /// <summary>
-        /// 设置组件
-        /// </summary>
-        public override void ResetComponents()
-        {
-            base.ResetComponents();
-
-            SwitchableObject = transform.GetChild(0).gameObject;
         }
 
         /// <summary>

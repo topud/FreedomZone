@@ -54,7 +54,6 @@ public class CharacterManager : SingletonClass<CharacterManager>
                 go = Instantiate(Singleton.HumanPrefab, position, new Quaternion(0, 0, 0, 0), Singleton.transform);
                 character = go.GetComponent<Character>();
                 character.StaticData = sData;
-                character.ResetComponents();
                 character.ResetDynamicData();
             }
             character.IsPlayer = isPlayer;
@@ -88,7 +87,6 @@ public class CharacterManager : SingletonClass<CharacterManager>
                 go = Instantiate(Singleton.HumanPrefab, dData.Position, new Quaternion(0, 0, 0, 0), Singleton.transform);
                 character = go.GetComponent<Character>();
                 character.StaticData = sData;
-                character.ResetComponents();
                 character.SetDynamicData(dData);
             }
             Debug.Log("角色生成成功：" + dData.Name);

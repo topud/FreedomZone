@@ -35,6 +35,17 @@ namespace E.Tool
         }
 
         /// <summary>
+        /// 设置图标
+        /// </summary>
+        /// <param name="color"></param>
+        public void SetSprite(Sprite sprite)
+        {
+            foreach (SpriteRenderer item in Renderers)
+            {
+                item.sprite = sprite;
+            }
+        }
+        /// <summary>
         /// 设置整体透明度
         /// </summary>
         /// <param name="color"></param>

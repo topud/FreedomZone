@@ -16,17 +16,18 @@ namespace E.Tool
         public static UnityEvent OnPlayerItemChange = new UnityEvent();
         public static UnityEvent OnPlayerInfoChange = new UnityEvent();
 
-        [Header("角色组件")]
-        public AIPath AIPath;
-        public AIDestinationSetter AIDestinationSetter;
-        public EntityUI TargetUI;
-        [SerializeField] private InHandItemController RightHandItemController;
+        public new Animator Animator { get => GetComponentInChildren<Animator>(true); }
+        public new SpriteSorter SpriteSorter { get => GetComponentInChildren<SpriteSorter>(true); }
+        public AIPath AIPath { get => GetComponent<AIPath>(); }
+        public AIDestinationSetter AIDestinationSetter { get => GetComponent<AIDestinationSetter>(); }
+        public EntityUI TargetUI { get => GetComponentInChildren<EntityUI>(true); }
+        public InHandItemController RightHandItemController { get => GetComponentInChildren<InHandItemController>(true); }
 
         [Header("角色状态")]
         [SerializeField, ReadOnly] private CharacterState state = CharacterState.Idle;
         [SerializeField, ReadOnly] private bool isPlayer = false;
         [SerializeField, ReadOnly] private int currentSpeed = 0;
-        [SerializeField, ReadOnly] private float RunBeyondDistance = 5;
+        [SerializeField, ReadOnly] private float runBeyondDistance = 5;
         [SerializeField, ReadOnly] private Item lastPutInBagItem;
         [SerializeField, ReadOnly] private List<Item> clothings = new List<Item>();
         [SerializeField, ReadOnly] private Item nearistItem;
@@ -258,10 +259,6 @@ namespace E.Tool
                 Player = null;
             }
         }
-        protected override void Reset()
-        {
-            base.Reset();
-        }
 
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
@@ -273,10 +270,27 @@ namespace E.Tool
 
             IsPlayer = data.IsPlayer;
         }
+
+        [ContextMenu("刷新数据")]
+        /// <summary>
+        /// 刷新数据
+        /// </summary>
+        public override void Refresh()
+        {
+            ResetStaticData();
+            ResetDynamicData();
+        }
+        [ContextMenu("初始化数据")]
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
+        public override void Reset()
+        {
+            base.Reset();
+        }
         /// <summary>
         /// 重置静态数据
         /// </summary>
-        [ContextMenu("重置静态数据")]
         public override void ResetStaticData()
         {
             base.ResetStaticData();
@@ -284,10 +298,9 @@ namespace E.Tool
         /// <summary>
         /// 重置动态数据
         /// </summary>
-        [ContextMenu("重置动态数据")]
-        public override void ResetDynamicData()
+        public override void ResetDynamicData(bool isAddID = true)
         {
-            base.ResetDynamicData();
+            base.ResetDynamicData(isAddID);
 
             gameObject.layer = LayerMask.NameToLayer("Character");
             gameObject.tag = IsPlayer ? "Player" : "NPC";
@@ -323,24 +336,6 @@ namespace E.Tool
                 PublishedQuests = StaticData.PublishedQuests,
                 Relationships = StaticData.Relationships
             };
-        }
-        /// <summary>
-        /// 设置组件
-        /// </summary>
-        [ContextMenu("重置组件")]
-        public override void ResetComponents()
-        {
-            base.ResetComponents();
-
-            AIPath = GetComponent<AIPath>();
-            AIDestinationSetter = GetComponent<AIDestinationSetter>();
-            TargetUI = GetComponentInChildren<EntityUI>(true);
-            RightHandItemController = GetComponentInChildren<InHandItemController>();
-
-            if (!AIPath) Debug.LogError("未找到 AIPath");
-            if (!AIDestinationSetter) Debug.LogError("未找到 AIDestinationSetter");
-            if (!TargetUI) Debug.LogError("未找到 TargetUI");
-            if (!RightHandItemController) Debug.LogError("未找到 RightHandItemController");
         }
         /// <summary>
         /// 设为玩家控制角色
@@ -1058,7 +1053,7 @@ namespace E.Tool
 
         private void CheckAIPathMaxSpeed()
         {
-            if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > RunBeyondDistance)
+            if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > runBeyondDistance)
             {
                 AIPath.maxSpeed = DynamicData.Speed.Max;
             }

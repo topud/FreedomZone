@@ -39,10 +39,6 @@ namespace E.Tool
         {
             base.OnDestroy();
         }
-        protected override void Reset()
-        {
-            base.Reset();
-        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -82,21 +78,39 @@ namespace E.Tool
         {
             base.SetDynamicData(data);
         }
-        [ContextMenu("重置静态数据")]
+
+        [ContextMenu("刷新数据")]
+        /// <summary>
+        /// 刷新数据
+        /// </summary>
+        public override void Refresh()
+        {
+            ResetStaticData();
+            ResetDynamicData();
+        }
+        [ContextMenu("初始化数据")]
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
+        public override void Reset()
+        {
+            base.Reset();
+        }
         /// <summary>
         /// 重置静态数据
         /// </summary>
         public override void ResetStaticData()
         {
             base.ResetStaticData();
+
+            SpriteSorter.SetSprite(StaticData.Icon);
         }
-        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置动态数据
         /// </summary>
-        public override void ResetDynamicData()
+        public override void ResetDynamicData(bool isAddID = true)
         {
-            base.ResetDynamicData();
+            base.ResetDynamicData(isAddID);
 
             gameObject.layer = LayerMask.NameToLayer("Building");
             gameObject.tag = "Building";
@@ -109,15 +123,6 @@ namespace E.Tool
                 Health = StaticData.Health,
             };
             Rigidbody.bodyType = RigidbodyType2D.Static;
-            GetComponent<SpriteRenderer>().sprite = StaticData.Icon;
-        }
-        [ContextMenu("重置组件")]
-        /// <summary>
-        /// 设置组件
-        /// </summary>
-        public override void ResetComponents()
-        {
-            base.ResetComponents();
         }
     }
 }

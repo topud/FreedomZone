@@ -395,5 +395,16 @@ PrefabInstance:
       propertyPath: m_Text
       value: "\u5916\u5899\u67F1\u5B50"
       objectReference: {fileID: 0}
+    - target: {fileID: 7405349792948936629, guid: 677ce1d39341bde43833ab7e4df6cc7f,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 9f72eaf31b591ef43a4bb680318c2cfb,
+        type: 3}
+    - target: {fileID: 3411724114715351055, guid: 677ce1d39341bde43833ab7e4df6cc7f,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 677ce1d39341bde43833ab7e4df6cc7f, type: 3}

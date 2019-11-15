@@ -12,12 +12,11 @@ namespace E.Tool
     [RequireComponent(typeof(AudioSource))]
     public abstract class Entity<S,D> : MonoBehaviour where S: EntityStaticData where D: EntityDynamicData
     {
-        [Header("实体组件")]
-        public Collider2D Collider;
-        public Rigidbody2D Rigidbody;
-        public AudioSource AudioSource;
-        public Animator Animator;
-        public SpriteSorter SpriteSorter;
+        public Collider2D Collider { get => GetComponent<Collider2D>(); }
+        public Rigidbody2D Rigidbody { get => GetComponent<Rigidbody2D>(); }
+        public AudioSource AudioSource { get => GetComponent<AudioSource>(); }
+        public Animator Animator { get => GetComponent<Animator>(); }
+        public SpriteSorter SpriteSorter { get => GetComponent<SpriteSorter>(); }
 
         [Header("实体数据")]
         public S StaticData;
@@ -65,12 +64,6 @@ namespace E.Tool
         protected virtual void OnDestroy()
         {
 
-        }
-        protected virtual void Reset()
-        {
-            ResetComponents();
-            ResetStaticData();
-            ResetDynamicData();
         }
 
         /// <summary>
@@ -126,24 +119,40 @@ namespace E.Tool
             }
         }
 
-        [ContextMenu("重置静态数据")]
+        [ContextMenu("刷新数据")]
+        /// <summary>
+        /// 刷新数据
+        /// </summary>
+        public virtual void Refresh()
+        {
+            ResetStaticData();
+            ResetDynamicData();
+        }
+        [ContextMenu("初始化数据")]
+        /// <summary>
+        /// 初始化数据
+        /// </summary>
+        public virtual void Reset()
+        {
+            ResetStaticData();
+            ResetDynamicData(false);
+        }
         /// <summary>
         /// 重置静态数据
         /// </summary>
         public virtual void ResetStaticData()
         {
-
-            S sData = (S)EntityStaticData.GetValue(gameObject.name);
+            string[] sts = gameObject.name.Split('-');
+            S sData = (S)EntityStaticData.GetValue(sts[0]);
             if (sData)
             {
                 StaticData = sData;
             }
         }
-        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置动态数据
         /// </summary>
-        public virtual void ResetDynamicData()
+        public virtual void ResetDynamicData(bool isAddID = true)
         {
             if (!StaticData)
             {
@@ -151,28 +160,15 @@ namespace E.Tool
                 return;
             }
 
-            name = StaticData.Name + gameObject.GetInstanceID();
+            if (isAddID)
+            {
+                name = StaticData.Name + gameObject.GetInstanceID();
+            }
+            else
+            {
+                name = StaticData.Name;
+            }
             Rigidbody.mass = StaticData.Weight;
-        }
-        [ContextMenu("重置组件")]
-        /// <summary>
-        /// 重置组件
-        /// </summary>
-        public virtual void ResetComponents()
-        {
-            //自身组件
-            Collider = GetComponent<Collider2D>();
-            Rigidbody = GetComponent<Rigidbody2D>();
-            AudioSource = GetComponent<AudioSource>();
-            //子对象组件
-            Animator = GetComponentInChildren<Animator>(true);
-            SpriteSorter = GetComponentInChildren<SpriteSorter>(true);
-
-            if (!Collider) Debug.LogError("未找到 + Collider");
-            if (!Rigidbody) Debug.LogError("未找到 Rigidbody");
-            if (!AudioSource) Debug.LogError("未找到 AudioSource");
-            if (!Animator) Debug.LogError("未找到 Animator");
-            if (!SpriteSorter) Debug.LogError("未找到 SpriteSorter");
         }
     }
 }

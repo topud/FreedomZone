@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 namespace E.Tool
@@ -11,7 +12,6 @@ namespace E.Tool
         [ReadOnly] public NodeID ID;
         [ReadOnly] public NodeType Type;
         public bool IsMainNode;
-        //[Tooltip("节点内容")] public StoryContent Content;
 
         [Tooltip("发生时间")] public DateTime Time;
         [Tooltip("发生地点")] public string Position;
@@ -55,7 +55,7 @@ namespace E.Tool
             return false;
         }
     }
-
+    
     [Serializable]
     public class NextNode
     {
@@ -102,43 +102,6 @@ namespace E.Tool
         {
             return base.GetHashCode();
         }
-    }
-
-    [Serializable]
-    public struct Condition
-    {
-        [Tooltip("条件名")] public string Key;
-        [Tooltip("默认值"), Range(-100, 100)] public int DefaultValue;
-    }
-    [Serializable]
-    public struct ConditionComparison
-    {
-        [Tooltip("条件名")] public int KeyIndex;
-        [Tooltip("对比方式")] public Comparison Comparison;
-        [Tooltip("目标值"), Range(-100, 100)] public int Value;
-
-        public void SetIndex(int index)
-        {
-            KeyIndex = index;
-        }
-        public void SetComparison(Comparison comparison)
-        {
-            Comparison = comparison;
-        }
-        public void SetValue(int value)
-        {
-            Value = value;
-        }
-    }
-
-    public enum Comparison
-    {
-        大于,
-        大于等于,
-        小于,
-        小于等于,
-        等于,
-        不等于
     }
 
     [Serializable]

@@ -15,79 +15,45 @@ MonoBehaviour:
   Describe: 
   Nodes:
   - ID:
-      Chapter: 1
-      Scene: 1
-      Part: 1
-      Branch: 4
+      Chapter: 0
+      Scene: 0
+      Part: 0
+      Branch: 0
     Type: 0
-    IsMainNode: 1
-    Position: 
-    Summary: 
+    IsMainNode: 0
+    Position: "\uFF08\u672A\u77E5\u5730\u70B9\uFF09"
+    Summary: "\uFF08\u6458\u8981\uFF09"
     ContentType: 0
     Sentences: []
     Animations: []
     NextNodes: []
     Rect:
-      x: 265
-      y: 412
-      width: 210
-      height: 110
+      x: 0
+      y: 0
+      width: 0
+      height: 0
     IsFold: 0
   - ID:
-      Chapter: 1
-      Scene: 1
-      Part: 1
-      Branch: 2
+      Chapter: 0
+      Scene: 0
+      Part: 0
+      Branch: 0
     Type: 0
-    IsMainNode: 1
-    Position: 
-    Summary: 
+    IsMainNode: 0
+    Position: "\uFF08\u672A\u77E5\u5730\u70B9\uFF09"
+    Summary: "\uFF08\u6458\u8981\uFF09"
     ContentType: 0
     Sentences: []
     Animations: []
     NextNodes: []
     Rect:
-      x: 24
-      y: 434
-      width: 210
-      height: 110
+      x: 0
+      y: 0
+      width: 0
+      height: 0
     IsFold: 0
-  - ID:
-      Chapter: 1
-      Scene: 1
-      Part: 1
-      Branch: 1
-    Type: 0
-    IsMainNode: 1
-    Position: 
-    Summary: 123135465
-    ContentType: 0
-    Sentences: []
-    Animations: []
-    NextNodes:
-    - ID:
-        Chapter: 1
-        Scene: 1
-        Part: 1
-        Branch: 4
-      Describe: 
-      Conditions:
-      - KeyIndex: 0
-        Comparison: 0
-        Value: 0
-      - KeyIndex: 0
-        Comparison: 0
-        Value: 0
-    Rect:
-      x: 40
-      y: 92
-      width: 210
-      height: 130
-    IsFold: 1
   Conditions:
-  - Key: "\u6761\u4EF61"
-    DefaultValue: 0
-  - Key: "\u6761\u4EF62"
-    DefaultValue: 10
-  - Key: "\u6761\u4EF63"
-    DefaultValue: -10
+  - Key: 1
+    DefaultValue: 18
+  - Key: 2
+    DefaultValue: -35

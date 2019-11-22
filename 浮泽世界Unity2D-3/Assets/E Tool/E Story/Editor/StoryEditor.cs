@@ -11,107 +11,164 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 using E.Tool;
+using UnityEditorInternal;
 
 namespace E.Tool
 {
     [CustomEditor(typeof(Story))]
     public class StoryEditor : Editor
     {
-        //private Story Target;
+        private Story Target;
+        private ReorderableList NodesList;
+        private ReorderableList ConditionList;
 
-        //private void OnEnable()
-        //{
-        //    Target = (Story)target;
-        //}
-        //public override void OnInspectorGUI()
-        //{
-        //    EditorGUILayout.LabelField("【故事描述】");
-        //    Target.Describe = EditorGUILayout.TextArea(Target.Describe);
+        private void OnEnable()
+        {
+            Target = (Story)target;
 
-        //    //EditorGUILayout.Space();
-        //    //EditorGUILayout.LabelField("【故事进度】");
-        //    //Target.IsPassed = EditorGUILayout.Toggle("是否已通关", Target.IsPassed);
-        //    //EditorGUILayout.TextField("全节点通过百分比", (Target.GetAllNodesPassPercentage() * 100).ToString("f2") + "% (" + Target.GetAllNodesPassFraction() + ")"); 
-        //    //EditorGUILayout.TextField("全结局解锁百分比", (Target.GetAllEndingNodesPassPercentage() * 100).ToString("f2") + "% (" + Target.GetAllEndingNodesPassFraction() + ")");
+            NodesList = new ReorderableList(serializedObject, serializedObject.FindProperty("Nodes"), true, true, true, true)
+            {
+                //设置单个元素的高度
+                elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
 
-        //    EditorGUILayout.Space();
-        //    EditorGUILayout.LabelField("【故事节点】");
-        //    if (Target.Nodes.Count > 0)
-        //    {
-        //        if (Target.GetStartNode() == null)
-        //        {
-        //            EditorGUILayout.HelpBox("请设置一个起始节点", MessageType.Warning);
-        //        }
-        //        if (Target.GetEndingNodes().Count == 0)
-        //        {
-        //            EditorGUILayout.HelpBox("请至少设置一个结局节点", MessageType.Warning);
-        //        }
-        //        foreach (StoryNode item in Target.Nodes)
-        //        {
-        //            if (!item) continue;
-        //            (List<StoryNode>)EditorGUILayout.ObjectField(item, typeof(List<StoryNode>));
-                   
-        //            //item.IsFold = EditorGUILayout.Foldout(item.IsFold, item.ID.Chapter + "-" + item.ID.Scene + "-" + item.ID.Part + "-" + item.ID.Branch, true);
-        //            //if (item.IsFold)
-        //            //{
-        //            //    EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins);
-        //            //    //节点编号
-        //            //    EditorGUILayout.LabelField("节点编号 {周目-章节-场景-片段-分支}");
-        //            //    EditorGUILayout.BeginHorizontal();
-        //            //    int chapter = EditorGUILayout.IntField(item.ID.Chapter);
-        //            //    int scene = EditorGUILayout.IntField(item.ID.Scene);
-        //            //    int part = EditorGUILayout.IntField(item.ID.Part);
-        //            //    int branch = EditorGUILayout.IntField(item.ID.Branch);
-        //            //    EditorGUILayout.EndHorizontal();
-        //            //    NodeID id = new NodeID( chapter, scene, part, branch);
-        //            //    if (!id.Equals(item.ID))
-        //            //    {
-        //            //        Target.SetNodeID(item, id);
-        //            //    }
-        //            //    //节点布局
-        //            //    EditorGUILayout.LabelField("节点布局 {X坐标-Y坐标-宽-高}");
-        //            //    EditorGUILayout.BeginHorizontal();
-        //            //    int x = EditorGUILayout.IntField(item.Rect.x);
-        //            //    int y = EditorGUILayout.IntField(item.Rect.y);
-        //            //    int w = EditorGUILayout.IntField(item.Rect.width);
-        //            //    int h = EditorGUILayout.IntField(item.Rect.height);
-        //            //    EditorGUILayout.EndHorizontal();
-        //            //    item.Rect = new RectInt(x, y, w, h);
-        //            //    //节点类型
-        //            //    NodeType type = (NodeType)EditorGUILayout.EnumPopup("节点类型", item.Type);
-        //            //    Target.SetNodeType(item, type);
-        //            //    //节点内容
-        //            //   // item.Content = (StoryContent)EditorGUILayout.ObjectField("节点内容", item.Content, typeof(StoryContent));
-        //            //    //是否已通过
-        //            //    //item.IsPassed = EditorGUILayout.Toggle("是否已通过", item.IsPassed);
-        //            //    //是否为主线
-        //            //    item.IsMainNode = EditorGUILayout.Toggle("是否为主线", item.IsMainNode);
-        //            //    //后续节点
-        //            //    int i = 0;
-        //            //    if (item.NextNodes != null)
-        //            //    {
-        //            //        i = item.NextNodes.Count;
-        //            //    }
-        //            //    EditorGUILayout.LabelField("后续节点 (" + i + ")");
-        //            //    EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins);
-        //            //    if (i > 0)
-        //            //    {
-        //            //        for (int j = 0; j < item.NextNodes.Count; j++)
-        //            //        {
-        //            //            NextNode nn = item.NextNodes[j];
-        //            //            EditorGUILayout.LabelField("选项 " + (j + 1).ToString() + " (" + nn.ID.Chapter + "-" + nn.ID.Scene + "-" + nn.ID.Part + "-" + nn.ID.Branch + ")");
-        //            //            nn.Describe = EditorGUILayout.TextArea(nn.Describe);
-        //            //        }
-        //            //    }
-        //            //    EditorGUILayout.EndVertical();
-        //            //    EditorGUILayout.EndVertical();
-        //            //}
-        //        }
-        //    }
-        //    else
-        //    {
-        //        EditorGUILayout.HelpBox("请至少创建二个节点", MessageType.Warning);
-        //    }
-        //}
+                //绘制
+                drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
+                {
+                    SerializedProperty itemData = NodesList.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.PropertyField(rect, itemData, GUIContent.none);
+                },
+
+                //背景色
+                //reorderableList.drawElementBackgroundCallback = (rect, index, isActive, isFocused) => {
+                //    GUI.backgroundColor = Color.yellow;
+                //};
+                showDefaultBackground = true,
+
+                //标题
+                drawHeaderCallback = (Rect rect) =>
+                {
+                    GUI.Label(rect, "节点");
+                },
+
+                //创建
+                onAddCallback = (ReorderableList list) =>
+                {
+                    if (list.serializedProperty != null)
+                    {
+                        list.serializedProperty.arraySize++;
+                        list.index = list.serializedProperty.arraySize - 1;
+
+                        SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                        SerializedProperty positionProperty = itemData.FindPropertyRelative("Position");
+                        SerializedProperty summaryProperty = itemData.FindPropertyRelative("Summary");
+                        positionProperty.stringValue = "（未知地点）";
+                        summaryProperty.stringValue = "（摘要）";
+                    }
+                    else
+                    {
+                        ReorderableList.defaultBehaviours.DoAddButton(list);
+                    }
+                },
+
+                //删除
+                onRemoveCallback = (ReorderableList list) =>
+                {
+                    if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个节点？", "是", "否"))
+                    {
+                        ReorderableList.defaultBehaviours.DoRemoveButton(list);
+                    }
+                },
+
+                //鼠标抬起回调
+                onMouseUpCallback = (ReorderableList list) =>
+                {
+                    Debug.Log("MouseUP");
+                },
+
+                //当选择元素回调
+                onSelectCallback = (ReorderableList list) =>
+                {
+                    //打印选中元素的索引
+                    Debug.Log(list.index);
+                }
+            };
+
+            ConditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("Conditions"), true, true, true, true)
+            {
+                //设置单个元素的高度
+                elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
+
+                //绘制
+                drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
+                {
+                    SerializedProperty itemData = ConditionList.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.PropertyField(rect, itemData, GUIContent.none);
+                },
+
+                //背景色
+                //reorderableList.drawElementBackgroundCallback = (rect, index, isActive, isFocused) => {
+                //    GUI.backgroundColor = Color.yellow;
+                //};
+                showDefaultBackground = true,
+
+                //标题
+                drawHeaderCallback = (Rect rect) =>
+                {
+                    GUI.Label(rect, "条件");
+                },
+
+                //创建
+                onAddCallback = (ReorderableList list) =>
+                {
+                    if (list.serializedProperty != null)
+                    {
+                        list.serializedProperty.arraySize++;
+                        list.index = list.serializedProperty.arraySize - 1;
+
+                        SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                        SerializedProperty nameProperty = itemData.FindPropertyRelative("Key");
+                        SerializedProperty valueProperty = itemData.FindPropertyRelative("DefaultValue");
+                        nameProperty.stringValue = "未命名";
+                        valueProperty.intValue = 0;
+                    }
+                    else
+                    {
+                        ReorderableList.defaultBehaviours.DoAddButton(list);
+                    }
+                },
+
+                //删除
+                onRemoveCallback = (ReorderableList list) =>
+                {
+                    if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个条件？", "是", "否"))
+                    {
+                        ReorderableList.defaultBehaviours.DoRemoveButton(list);
+                    }
+                },
+
+                //鼠标抬起回调
+                onMouseUpCallback = (ReorderableList list) =>
+                {
+                    Debug.Log("MouseUP");
+                },
+
+                //当选择元素回调
+                onSelectCallback = (ReorderableList list) =>
+                {
+                    //打印选中元素的索引
+                    Debug.Log(list.index);
+                }
+            };
+        }
+        public override void OnInspectorGUI()
+        {
+            EditorGUILayout.LabelField("【故事描述】");
+            Target.Describe = EditorGUILayout.TextArea(Target.Describe);
+
+            serializedObject.Update();
+            NodesList.DoLayoutList();
+            ConditionList.DoLayoutList();
+            serializedObject.ApplyModifiedProperties();
+        }
     }
 }

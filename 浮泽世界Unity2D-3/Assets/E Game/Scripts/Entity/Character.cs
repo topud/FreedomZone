@@ -966,22 +966,22 @@ namespace E.Tool
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Item item = GetRightHandItem();
-                    if (item)
-                    {
-                        Use(item);
-                    }
-                    else
-                    {
-                        Attack();
-                    }
+                    Attack();
                 }
             }
         }
         private void CheckMouseButtonDown_1()
         {
-            if (Input.GetMouseButtonDown(1))
+            if (IsPlayer)
             {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    Item item = GetRightHandItem();
+                    if (item)
+                    {
+                        Use(item);
+                    }
+                }
             }
         }
         private void CheckMouseButtonDown_2()

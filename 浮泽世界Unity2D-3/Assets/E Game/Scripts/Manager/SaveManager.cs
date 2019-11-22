@@ -177,7 +177,7 @@ public class SaveManager : SingletonClass<SaveManager>
         Save save;
         save = new Save
         {
-            NodeID = StoryManager.Singleton.NodeID
+            NodeID = StoryManager.Singleton.CurrentNodeID
         };
         foreach (Character item in CharacterManager.Characters)
         {
@@ -209,7 +209,7 @@ public class SaveManager : SingletonClass<SaveManager>
         //获取存档信息
         Save save = GetSave(fileInfo);
         //配置对应游戏对象
-        StoryManager.Singleton.NodeID = save.NodeID;
+        StoryManager.Singleton.CurrentNodeID = save.NodeID;
         foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
         {
             Character character = CharacterManager.GetCharacter(item.ID);
@@ -262,7 +262,7 @@ public class SaveManager : SingletonClass<SaveManager>
 [Serializable]
 public class Save
 {
-    public NodeID NodeID = new NodeID(0,0,0,0,0);
+    public NodeID NodeID = new NodeID(0,0,0,0);
     public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
     public List<ItemDynamicData> InteractorDynamicDatas = new List<ItemDynamicData>();
 }

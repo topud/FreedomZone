@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddaeb3ceb9edaa42a207ef610f9456d, type: 3}
+  m_Name: New Story
+  m_EditorClassIdentifier: 
+  Describe: 
+  Nodes:
+  - ID:
+      Chapter: 1
+      Scene: 1
+      Part: 1
+      Branch: 4
+    Type: 0
+    IsMainNode: 1
+    Position: 
+    Summary: 
+    ContentType: 0
+    Sentences: []
+    Animations: []
+    NextNodes: []
+    Rect:
+      x: 265
+      y: 412
+      width: 210
+      height: 110
+    IsFold: 0
+  - ID:
+      Chapter: 1
+      Scene: 1
+      Part: 1
+      Branch: 2
+    Type: 0
+    IsMainNode: 1
+    Position: 
+    Summary: 
+    ContentType: 0
+    Sentences: []
+    Animations: []
+    NextNodes: []
+    Rect:
+      x: 24
+      y: 434
+      width: 210
+      height: 110
+    IsFold: 0
+  - ID:
+      Chapter: 1
+      Scene: 1
+      Part: 1
+      Branch: 1
+    Type: 0
+    IsMainNode: 1
+    Position: 
+    Summary: 123135465
+    ContentType: 0
+    Sentences: []
+    Animations: []
+    NextNodes:
+    - ID:
+        Chapter: 1
+        Scene: 1
+        Part: 1
+        Branch: 4
+      Describe: 
+      Conditions:
+      - KeyIndex: 0
+        Comparison: 0
+        Value: 0
+      - KeyIndex: 0
+        Comparison: 0
+        Value: 0
+    Rect:
+      x: 40
+      y: 92
+      width: 210
+      height: 130
+    IsFold: 1
+  Conditions:
+  - Key: "\u6761\u4EF61"
+    DefaultValue: 0
+  - Key: "\u6761\u4EF62"
+    DefaultValue: 10
+  - Key: "\u6761\u4EF63"
+    DefaultValue: -10

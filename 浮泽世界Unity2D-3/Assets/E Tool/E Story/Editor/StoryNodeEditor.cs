@@ -14,20 +14,45 @@ using E.Tool;
 
 namespace E.Tool
 {
-    [CustomEditor(typeof(StoryContent))]
-    public class StoryContentEditor : Editor
+    [CustomEditor(typeof(StoryNode))]
+    public class StoryNodeEditor : Editor
     {
-        private StoryContent Target;
+        private StoryNode Target;
 
         private void OnEnable()
         {
-            Target = (StoryContent)target;
+            //Target = (StoryNode)target;
         }
 
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField("【阅读情况】");
-            Target.IsReaded = EditorGUILayout.ToggleLeft("已阅读过此内容", Target.IsReaded);
+            //EditorGUILayout.BeginVertical(EditorStyles.inspectorDefaultMargins);
+            //节点编号
+            EditorGUILayout.LabelField("节点编号 {章节-场景-片段-分支}");
+            EditorGUILayout.BeginHorizontal();
+            int chapter = EditorGUILayout.IntField(Target.ID.Chapter);
+            int scene = EditorGUILayout.IntField(Target.ID.Scene);
+            int part = EditorGUILayout.IntField(Target.ID.Part);
+            int branch = EditorGUILayout.IntField(Target.ID.Branch);
+            EditorGUILayout.EndHorizontal();
+            Target.ID = new NodeID(chapter, scene, part, branch);
+            //if (!id.Equals(Target.ID))
+            //{
+            //    Target.SetNodeID(Target, id);
+            //}
+            Target.IsMainNode = EditorGUILayout.Toggle("故事主线", Target.IsMainNode);
+            //节点布局
+            EditorGUILayout.LabelField("节点布局 {X坐标-Y坐标-宽-高}");
+            EditorGUILayout.BeginHorizontal();
+            int rx = EditorGUILayout.IntField(Target.Rect.x);
+            int ry = EditorGUILayout.IntField(Target.Rect.y);
+            int rw = EditorGUILayout.IntField(Target.Rect.width);
+            int rh = EditorGUILayout.IntField(Target.Rect.height);
+            EditorGUILayout.EndHorizontal();
+            Target.Rect = new RectInt(rx, ry, rw, rh);
+            //节点类型
+            Target.Type = (NodeType)EditorGUILayout.EnumPopup("节点类型", Target.Type);
+            //Target.SetNodeType(Target, type);
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("【基本信息】");
@@ -48,16 +73,16 @@ namespace E.Tool
 
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("【内容详情】");
-            Target.Type = (ContentType)EditorGUILayout.EnumPopup(Target.Type);
+            Target.ContentType = (ContentType)EditorGUILayout.EnumPopup(Target.ContentType);
             //设置内容折叠
-            switch (Target.Type)
+            switch (Target.ContentType)
             {
                 case ContentType.剧情对话:
                     if (Target.Sentences.Count > 0)
                     {
                         for (int i = 0; i < Target.Sentences.Count; i++)
                         {
-                            StoryContent.Sentence item = Target.Sentences[i];
+                            Sentence item = Target.Sentences[i];
 
                             string temp = item.Expression == null ? "旁白" : "未命名角色";
                             string temp1 = item.Speaker.Length > 0 ? item.Speaker : temp;
@@ -74,7 +99,7 @@ namespace E.Tool
                                 item.Words = EditorGUILayout.TextArea(item.Words);
 
                                 EditorGUILayout.BeginHorizontal();
-                                item.IsReaded = EditorGUILayout.ToggleLeft("已阅读过此句话", item.IsReaded);
+                                //item.IsReaded = EditorGUILayout.ToggleLeft("已阅读过此句话", item.IsReaded);
                                 if (GUILayout.Button("X"))
                                 {
                                     Target.Sentences.Remove(item);
@@ -94,7 +119,7 @@ namespace E.Tool
                     EditorGUILayout.LabelField("");
                     if (GUILayout.Button("+"))
                     {
-                        Target.Sentences.Add(new StoryContent.Sentence());
+                        Target.Sentences.Add(new Sentence());
                     }
                     EditorGUILayout.EndHorizontal();
                     break;
@@ -103,6 +128,11 @@ namespace E.Tool
                 default:
                     break;
             }
+
+
+
+
+
             serializedObject.ApplyModifiedProperties();
         }
     }

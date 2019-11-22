@@ -33,7 +33,7 @@ namespace E.Tool
 
             imgIcon = null;
             NodeID id = save.NodeID;
-            txtTitle.text =string.Format("{0}-{1}-{2}-{3}-{4}",id.Round,id.Chapter,id.Scene,id.Part,id.Branch);
+            txtTitle.text =string.Format("{0}-{1}-{2}-{3}",id.Chapter,id.Scene,id.Part,id.Branch);
             txtTime.text = Data.LastWriteTime.ToString();
             
             switch (GetComponentInParent<UIListSave>().OpenMode)

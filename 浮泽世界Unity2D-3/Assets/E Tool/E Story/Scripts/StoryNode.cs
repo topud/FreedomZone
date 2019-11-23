@@ -9,45 +9,31 @@ namespace E.Tool
     [Serializable]
     public class StoryNode
     {
-        [ReadOnly] public NodeID ID;
+        [ReadOnly] public NodeID id;
         [ReadOnly] public NodeType Type;
-        public bool IsMainNode;
+        public bool isMainNode;
 
-        [Tooltip("发生时间")] public DateTime Time;
-        [Tooltip("发生地点")] public string Position;
-        [Tooltip("摘要"), TextArea] public string Summary;
-        [Tooltip("内容形式")] public ContentType ContentType;
-        [Tooltip("剧情对话")] public List<Sentence> Sentences = new List<Sentence>();
-        [Tooltip("过场动画")] public List<Animation> Animations = new List<Animation>();
-
-        [Tooltip("节点分支选项")] public List<NextNode> NextNodes = new List<NextNode>();
-
-        [Tooltip("节点布局")] public RectInt Rect;
-        [Tooltip("节点展开")] public bool IsFold;
+        [Tooltip("简介"), TextArea] public string description;
+        [Tooltip("对话")] public List<Sentence> sentences = new List<Sentence>();
+        [Tooltip("选项")] public List<StoryNodeOption> nodeOptions = new List<StoryNodeOption>();
+        [Tooltip("布局")] public RectInt layout;
 
         public StoryNode(NodeID id, RectInt rect)
         {
-            ID = id;
+            this.id = id;
             Type = NodeType.中间节点;
-            IsMainNode = true;
-            //Content = null;
-            NextNodes = new List<NextNode>();
-            Rect = rect;
-            IsFold = false;
+            isMainNode = true;
+            nodeOptions = new List<StoryNodeOption>();
+            layout = rect;
 
-
-            Time = new DateTime(2000, 1, 1, 0, 0, 0);
-            Position = "";
-            Summary = "";
-            ContentType = ContentType.剧情对话;
-            Sentences = new List<Sentence>();
-            Animations = new List<Animation>();
+            description = "";
+            sentences = new List<Sentence>();
         }
         public bool ContainsNextNode(NodeID id)
         {
-            foreach (NextNode item in NextNodes)
+            foreach (StoryNodeOption item in nodeOptions)
             {
-                if (item.ID.Equals(id))
+                if (item.id.Equals(id))
                 {
                     return true;
                 }
@@ -55,41 +41,27 @@ namespace E.Tool
             return false;
         }
     }
-    
-    [Serializable]
-    public class NextNode
-    {
-        [Tooltip("节点的编号")] public NodeID ID;
-        [Tooltip("节点的选项描述")] public string Describe;
-        [Tooltip("节点的选项显示条件")] public List<ConditionComparison> Conditions = new List<ConditionComparison>();
-
-        public NextNode(string text, NodeID id)
-        {
-            Describe = text;
-            ID = id;
-        }
-    }
 
     [Serializable]
     public struct NodeID
     {
-        [Tooltip("章节号")] public int Chapter;
-        [Tooltip("场景号")] public int Scene;
-        [Tooltip("片段号")] public int Part;
-        [Tooltip("分支号")] public int Branch;
+        [Tooltip("章节号")] public int chapter;
+        [Tooltip("场景号")] public int scene;
+        [Tooltip("片段号")] public int part;
+        [Tooltip("分支号")] public int branch;
 
         public NodeID(int c, int s, int p, int b)
         {
-            Chapter = c;
-            Scene = s;
-            Part = p;
-            Branch = b;
+            chapter = c;
+            scene = s;
+            part = p;
+            branch = b;
         }
 
         public override bool Equals(object obj)
         {
             NodeID other = (NodeID)obj;
-            if (Chapter == other.Chapter && Scene == other.Scene && Part == other.Part && Branch == other.Branch)
+            if (chapter == other.chapter && scene == other.scene && part == other.part && branch == other.branch)
             {
                 return true;
             }
@@ -127,10 +99,5 @@ namespace E.Tool
         中间节点,
         起始节点,
         结局节点
-    }
-    public enum ContentType
-    {
-        剧情对话,
-        过场动画
     }
 }

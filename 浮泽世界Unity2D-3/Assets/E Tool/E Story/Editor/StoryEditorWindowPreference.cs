@@ -51,8 +51,8 @@ namespace E.Tool
         {
             get
             {
-                if (!EditorPrefs.HasKey("NodeWidth")) EditorPrefs.SetInt("NodeWidth", 210);
-                if (!EditorPrefs.HasKey("NodeHeight")) EditorPrefs.SetInt("NodeHeight", 110);
+                if (!EditorPrefs.HasKey("NodeWidth")) EditorPrefs.SetInt("NodeWidth", 200);
+                if (!EditorPrefs.HasKey("NodeHeight")) EditorPrefs.SetInt("NodeHeight", 60);
                 return new Vector2Int(EditorPrefs.GetInt("NodeWidth"), EditorPrefs.GetInt("NodeHeight"));
             }
             set
@@ -176,8 +176,8 @@ namespace E.Tool
 
             EditorPrefs.SetInt("ViewWidth", 3000);
             EditorPrefs.SetInt("ViewHeight", 3000);
-            EditorPrefs.SetInt("NodeWidth", 210);
-            EditorPrefs.SetInt("NodeHeight", 110);
+            EditorPrefs.SetInt("NodeWidth", 200);
+            EditorPrefs.SetInt("NodeHeight", 60);
 
             EditorPrefs.SetFloat("NormalNodeR", 0.9f);
             EditorPrefs.SetFloat("NormalNodeG", 0.9f);

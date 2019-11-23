@@ -24,7 +24,7 @@ public class StoryManager : SingletonClass<StoryManager>
         {
             foreach (NodeID id in CurrentStoryPassdNodeIDs)
             {
-                if (id.Equals(item.ID))
+                if (id.Equals(item.id))
                 {
                     nodes.Add(item);
                 }
@@ -45,7 +45,7 @@ public class StoryManager : SingletonClass<StoryManager>
             {
                 foreach (NodeID id in CurrentStoryPassdNodeIDs)
                 {
-                    if (id.Equals(item.ID))
+                    if (id.Equals(item.id))
                     {
                         nodesP.Add(item);
                     }
@@ -54,40 +54,40 @@ public class StoryManager : SingletonClass<StoryManager>
         }
         return nodesP;
     }
-        /// <summary>
-        /// 获取全节点通过百分比（分数格式）
-        /// </summary>
-        public string GetAllNodesPassFraction()
+    /// <summary>
+    /// 获取全节点通过百分比（分数格式）
+    /// </summary>
+    public string GetAllNodesPassFraction()
+    {
+        return GetPassedNodes().Count + "/" + CurrentStory.Nodes.Count;
+    }
+    /// <summary>
+    /// 获取全结局解锁百分比（分数格式）
+    /// </summary>
+    public string GetAllEndingNodesPassFraction()
+    {
+        return GetPassedEndingNodes().Count + "/" + CurrentStory.GetEndingNodes().Count;
+    }
+    /// <summary>
+    /// 获取全节点通过百分比（小数格式）
+    /// </summary>
+    public float GetAllNodesPassPercentage()
+    {
+        if (GetPassedNodes().Count == 0)
         {
-            return GetPassedNodes().Count + "/" + CurrentStory.Nodes.Count;
+            return 0;
         }
-        /// <summary>
-        /// 获取全结局解锁百分比（分数格式）
-        /// </summary>
-        public string GetAllEndingNodesPassFraction()
+        return (float)GetPassedNodes().Count / CurrentStory.Nodes.Count;
+    }
+    /// <summary>
+    /// 获取全结局解锁百分比（小数格式）
+    /// </summary>
+    public float GetAllEndingNodesPassPercentage()
+    {
+        if (CurrentStory.GetEndingNodes().Count == 0)
         {
-            return GetPassedEndingNodes().Count + "/" + CurrentStory.GetEndingNodes().Count;
+            return 0;
         }
-        /// <summary>
-        /// 获取全节点通过百分比（小数格式）
-        /// </summary>
-        public float GetAllNodesPassPercentage()
-        {
-            if (GetPassedNodes().Count == 0)
-            {
-                return 0;
-            }
-            return (float)GetPassedNodes().Count / CurrentStory.Nodes.Count;
-        }
-        /// <summary>
-        /// 获取全结局解锁百分比（小数格式）
-        /// </summary>
-        public float GetAllEndingNodesPassPercentage()
-        {
-            if (CurrentStory.GetEndingNodes().Count == 0)
-            {
-                return 0;
-            }
-            return (float)GetPassedEndingNodes().Count / CurrentStory.GetEndingNodes().Count;
-        }
+        return (float)GetPassedEndingNodes().Count / CurrentStory.GetEndingNodes().Count;
+    }
 }

@@ -1,10 +1,3 @@
-// ========================================================
-// 作者：E Star
-// 创建时间：2019-03-10 17:03:03
-// 当前版本：1.0
-// 作用描述：自定义Inspector面板显示ScriptableStory的样式
-// 挂载目标：无
-// ========================================================
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -19,14 +12,14 @@ namespace E.Tool
     public class StoryEditor : Editor
     {
         private Story Target;
-        private ReorderableList NodesList;
-        private ReorderableList ConditionList;
+        private ReorderableList nodeList;
+        private ReorderableList conditionList;
 
         private void OnEnable()
         {
             Target = (Story)target;
 
-            NodesList = new ReorderableList(serializedObject, serializedObject.FindProperty("Nodes"), true, true, true, true)
+            nodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("Nodes"), true, true, true, true)
             {
                 //设置单个元素的高度
                 elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
@@ -34,7 +27,7 @@ namespace E.Tool
                 //绘制
                 drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
                 {
-                    SerializedProperty itemData = NodesList.serializedProperty.GetArrayElementAtIndex(index);
+                    SerializedProperty itemData = nodeList.serializedProperty.GetArrayElementAtIndex(index);
                     EditorGUI.PropertyField(rect, itemData, GUIContent.none);
                 },
 
@@ -47,7 +40,7 @@ namespace E.Tool
                 //标题
                 drawHeaderCallback = (Rect rect) =>
                 {
-                    GUI.Label(rect, "节点");
+                    GUI.Label(rect, "节点列表");
                 },
 
                 //创建
@@ -59,10 +52,10 @@ namespace E.Tool
                         list.index = list.serializedProperty.arraySize - 1;
 
                         SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
-                        SerializedProperty positionProperty = itemData.FindPropertyRelative("Position");
-                        SerializedProperty summaryProperty = itemData.FindPropertyRelative("Summary");
-                        positionProperty.stringValue = "（未知地点）";
-                        summaryProperty.stringValue = "（摘要）";
+                        SerializedProperty sp1 = itemData.FindPropertyRelative("description");
+                        SerializedProperty sp2 = itemData.FindPropertyRelative("layout");
+                        sp1.stringValue = "（请输入节点简介）";
+                        sp2.rectIntValue = new RectInt(100,100, StoryEditorWindowPreference.NodeSize.x, StoryEditorWindowPreference.NodeSize.y);
                     }
                     else
                     {
@@ -93,7 +86,7 @@ namespace E.Tool
                 }
             };
 
-            ConditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("Conditions"), true, true, true, true)
+            conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("Conditions"), true, true, true, true)
             {
                 //设置单个元素的高度
                 elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
@@ -101,7 +94,7 @@ namespace E.Tool
                 //绘制
                 drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
                 {
-                    SerializedProperty itemData = ConditionList.serializedProperty.GetArrayElementAtIndex(index);
+                    SerializedProperty itemData = conditionList.serializedProperty.GetArrayElementAtIndex(index);
                     EditorGUI.PropertyField(rect, itemData, GUIContent.none);
                 },
 
@@ -114,7 +107,7 @@ namespace E.Tool
                 //标题
                 drawHeaderCallback = (Rect rect) =>
                 {
-                    GUI.Label(rect, "条件");
+                    GUI.Label(rect, "条件列表");
                 },
 
                 //创建
@@ -162,12 +155,20 @@ namespace E.Tool
         }
         public override void OnInspectorGUI()
         {
-            EditorGUILayout.LabelField("【故事描述】");
+
+            if (GUILayout.Button("打开E Story编辑器"))
+            {
+                StoryEditorWindow.Open();
+            }
+
+            EditorGUILayout.LabelField("故事描述");
             Target.Describe = EditorGUILayout.TextArea(Target.Describe);
 
+            EditorGUILayout.Space(5);
+
             serializedObject.Update();
-            NodesList.DoLayoutList();
-            ConditionList.DoLayoutList();
+            nodeList.DoLayoutList();
+            conditionList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
     }

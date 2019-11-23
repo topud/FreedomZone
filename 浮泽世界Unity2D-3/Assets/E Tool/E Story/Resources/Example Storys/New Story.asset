@@ -14,44 +14,94 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Describe: 
   Nodes:
-  - ID:
-      Chapter: 0
-      Scene: 0
-      Part: 0
-      Branch: 0
+  - id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 1
+    Type: 1
+    isMainNode: 1
+    description: 1321
+    sentences: []
+    nodeOptions:
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
+        branch: 2
+      description: 
+      conditions: []
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
+        branch: 4
+      description: 
+      conditions: []
+    layout:
+      x: 21
+      y: 61
+      width: 200
+      height: 100
+  - id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 2
     Type: 0
-    IsMainNode: 0
-    Position: "\uFF08\u672A\u77E5\u5730\u70B9\uFF09"
-    Summary: "\uFF08\u6458\u8981\uFF09"
-    ContentType: 0
-    Sentences: []
-    Animations: []
-    NextNodes: []
-    Rect:
-      x: 0
-      y: 0
-      width: 0
-      height: 0
-    IsFold: 0
-  - ID:
-      Chapter: 0
-      Scene: 0
-      Part: 0
-      Branch: 0
+    isMainNode: 1
+    description: 1
+    sentences: []
+    nodeOptions:
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
+        branch: 3
+      description: 
+      conditions: []
+    layout:
+      x: 338
+      y: 66
+      width: 200
+      height: 80
+  - id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 3
     Type: 0
-    IsMainNode: 0
-    Position: "\uFF08\u672A\u77E5\u5730\u70B9\uFF09"
-    Summary: "\uFF08\u6458\u8981\uFF09"
-    ContentType: 0
-    Sentences: []
-    Animations: []
-    NextNodes: []
-    Rect:
-      x: 0
-      y: 0
-      width: 0
-      height: 0
-    IsFold: 0
+    isMainNode: 1
+    description: 2
+    sentences: []
+    nodeOptions: []
+    layout:
+      x: 643
+      y: 226
+      width: 200
+      height: 60
+  - id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 4
+    Type: 0
+    isMainNode: 1
+    description: 333
+    sentences: []
+    nodeOptions:
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
+        branch: 3
+      description: 
+      conditions: []
+    layout:
+      x: 335
+      y: 273
+      width: 200
+      height: 80
   Conditions:
   - Key: 1
     DefaultValue: 18

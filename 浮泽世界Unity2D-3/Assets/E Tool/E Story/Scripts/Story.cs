@@ -57,7 +57,7 @@ namespace E.Tool
             NodeID id = new NodeID(1,1,1,1);
             while (ContainsID(id))
             {
-                id.Branch++;
+                id.branch++;
             }
             StoryNode node = new StoryNode(id, rect);
             Nodes.Add(node);
@@ -72,7 +72,7 @@ namespace E.Tool
         {
             foreach (StoryNode item in Nodes)
             {
-                if (item.ID.Equals(id))
+                if (item.id.Equals(id))
                 {
                     return true;
                 }
@@ -90,7 +90,7 @@ namespace E.Tool
         {
             foreach (StoryNode item in Nodes)
             {
-                if (item.ID.Equals(id))
+                if (item.id.Equals(id))
                 {
                     return item;
                 }
@@ -139,22 +139,22 @@ namespace E.Tool
                 //同步上行节点连接
                 foreach (StoryNode item in Nodes)
                 {
-                    if (item.NextNodes != null)
+                    if (item.nodeOptions != null)
                     {
-                        for (int i = 0; i < item.NextNodes.Count; i++)
+                        for (int i = 0; i < item.nodeOptions.Count; i++)
                         {
-                            if (item.NextNodes[i].ID.Equals(node.ID))
+                            if (item.nodeOptions[i].id.Equals(node.id))
                             {
-                                item.NextNodes[i].ID = id;
+                                item.nodeOptions[i].id = id;
                             }
                         }
                     }
                 }
-                node.ID = id;
+                node.id = id;
             }
             else
             {
-                Debug.LogError("此编号的节点已存在 {" + id.Chapter + "-" + id.Scene + "-" + id.Part + "-" + id.Branch + "}");
+                Debug.LogError("此编号的节点已存在 {" + id.chapter + "-" + id.scene + "-" + id.part + "-" + id.branch + "}");
             }
         }
         /// <summary>
@@ -162,7 +162,7 @@ namespace E.Tool
         /// </summary>
         public void SetNodeType(StoryNode node, NodeType nodeType)
         {
-            if (ContainsID(node.ID))
+            if (ContainsID(node.id))
             {
                 switch (nodeType)
                 {
@@ -203,16 +203,6 @@ namespace E.Tool
                 }
             }
         }
-        /// <summary>
-        /// 移除节点内容
-        /// </summary>
-        //public void RemoveNodeContent(StoryNode node)
-        //{
-        //    if (Nodes.Contains(node))
-        //    {
-        //        node.Content = null;
-        //    }
-        //}
 
         //清除
         /// <summary>
@@ -221,9 +211,9 @@ namespace E.Tool
         /// <param name="node"></param>
         public void ClearNodeDownChoices(StoryNode node)
         {
-            if (node.NextNodes != null)
+            if (node.nodeOptions != null)
             {
-                node.NextNodes.Clear();
+                node.nodeOptions.Clear();
             }
         }
         /// <summary>
@@ -234,13 +224,13 @@ namespace E.Tool
         {
             foreach (StoryNode item in Nodes)
             {
-                if (item.NextNodes != null)
+                if (item.nodeOptions != null)
                 {
-                    for (int i = 0; i < item.NextNodes.Count; i++)
+                    for (int i = 0; i < item.nodeOptions.Count; i++)
                     {
-                        if (item.NextNodes[i].ID.Equals(node.ID))
+                        if (item.nodeOptions[i].id.Equals(node.id))
                         {
-                            item.NextNodes.RemoveAt(i);
+                            item.nodeOptions.RemoveAt(i);
                             i--;
                         }
                     }

@@ -28,28 +28,33 @@ MonoBehaviour:
         chapter: 1
         scene: 1
         part: 1
-        branch: 2
-      description: 
-      conditions: []
-    - id:
-        chapter: 1
-        scene: 1
-        part: 1
         branch: 3
       description: 
-      conditions: []
+      conditions:
+      - keyIndex: 0
+        comparison: 0
+        value: 0
+      - keyIndex: 1
+        comparison: 0
+        value: 0
+      - keyIndex: 0
+        comparison: 0
+        value: 0
     - id:
         chapter: 1
         scene: 1
         part: 1
-        branch: 4
+        branch: 5
       description: 
-      conditions: []
+      conditions:
+      - keyIndex: 0
+        comparison: 0
+        value: 0
     layout:
-      x: 16
-      y: 189
-      width: 200
-      height: 120
+      x: 71
+      y: 104
+      width: 300
+      height: 182
   - id:
       chapter: 1
       scene: 1
@@ -68,10 +73,10 @@ MonoBehaviour:
       description: 
       conditions: []
     layout:
-      x: 337
-      y: 73
-      width: 200
-      height: 80
+      x: 469
+      y: 46
+      width: 300
+      height: 82
   - id:
       chapter: 1
       scene: 1
@@ -83,15 +88,15 @@ MonoBehaviour:
     sentences: []
     nodeOptions: []
     layout:
-      x: 647
-      y: 260
-      width: 200
-      height: 60
+      x: 786
+      y: 242
+      width: 300
+      height: 62
   - id:
       chapter: 1
       scene: 1
       part: 1
-      branch: 4
+      branch: 5
     Type: 0
     isMainNode: 0
     description: 
@@ -105,12 +110,12 @@ MonoBehaviour:
       description: 
       conditions: []
     layout:
-      x: 311
-      y: 376
-      width: 200
-      height: 80
+      x: 472
+      y: 415
+      width: 300
+      height: 82
   conditions:
-  - key: "\u672A\u547D\u540D"
-    value: 0
   - key: "\u672A\u547D\u540D2"
+    value: 0
+  - key: "\u672A\u547D\u540D"
     value: 0

@@ -10,13 +10,13 @@ using UnityEditorInternal;
 
 namespace E.Tool
 {
-    public class StoryEditorWindow : EditorWindow
+    public class StoryWindow : EditorWindow
     {
         //运行数据
         /// <summary>
         /// 故事编辑器窗口
         /// </summary>
-        public static StoryEditorWindow instance;
+        public static StoryWindow instance;
         /// <summary>
         /// 当前节点
         /// </summary>
@@ -33,17 +33,18 @@ namespace E.Tool
         /// 当前故事索引
         /// </summary>
         private static int currentStoryIndex = -1;
+        private static ReorderableList sens;
 
         /// <summary>
         /// 窗口实例
         /// </summary>
-        public static StoryEditorWindow Instance
+        public static StoryWindow Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = GetWindow<StoryEditorWindow>();
+                    instance = GetWindow<StoryWindow>();
                 }
                 return instance;
             }
@@ -63,7 +64,56 @@ namespace E.Tool
             get => currentNode;
             set
             {
+                if (currentNode == value) return;
                 currentNode = value;
+
+                if (currentNode == null) return;
+
+                sens = new ReorderableList(currentNode.sentences, typeof(Sentence), true, true, true, true)
+                {
+                    //设置单个元素的高度
+                    elementHeight = EditorGUIUtility.singleLineHeight * 3 + EditorGUIUtility.standardVerticalSpacing * 4,
+
+                    //绘制
+                    drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
+                    {
+                        Sentence data = (Sentence)sens.list[index];
+                        float f = OneLine * 3 - LineSpacing;
+                        data.avatar = (Sprite)EditorGUI.ObjectField(new Rect(rect.x, rect.y+ LineSpacing, f, f), data.avatar, typeof(Sprite));
+                        data.character = EditorGUI.TextField(new Rect(rect.x + f + LineSpacing, rect.y + LineSpacing, rect.width - f, LineHeight), data.character);
+                        data.words = EditorGUI.TextField(new Rect(rect.x + f + LineSpacing, rect.y + OneLine + LineSpacing, rect.width - f, OneLine + LineHeight), data.words);
+                    },
+
+                    //标题
+                    drawHeaderCallback = (Rect rect) =>
+                    {
+                        string id = string.Format("{0}-{1}-{2}-{3} 对话内容", currentNode.id.chapter, currentNode.id.scene, currentNode.id.part, currentNode.id.branch);
+                        GUI.Label(rect, id);
+                    },
+
+                    //创建
+                    onAddCallback = (ReorderableList list) =>
+                    {
+                        if (list.list != null)
+                        {
+                            list.list.Add(new Sentence ("角色名称", "对话内容"));
+                            list.index = list.list.Count - 1;
+                        }
+                        else
+                        {
+                            ReorderableList.defaultBehaviours.DoAddButton(list);
+                        }
+                    },
+
+                    //删除
+                    onRemoveCallback = (ReorderableList list) =>
+                    {
+                        if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个节点？", "是", "否"))
+                        {
+                            ReorderableList.defaultBehaviours.DoRemoveButton(list);
+                        }
+                    },
+                };
             }
         }
         /// <summary>
@@ -125,6 +175,7 @@ namespace E.Tool
             }
         }
 
+
         //窗口样式
         /// <summary>
         /// 节点编辑面板
@@ -147,7 +198,7 @@ namespace E.Tool
         /// </summary>
         private static Rect View
         {
-            get => new Rect(0, 0, StoryEditorWindowPreference.ViewSize.x, StoryEditorWindowPreference.ViewSize.y);
+            get => new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y);
         }
         /// <summary>
         /// 光标位置
@@ -297,7 +348,7 @@ namespace E.Tool
         /// </summary>
         private static void CreateStory()
         {
-            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", StoryEditorWindowPreference.StoryResourcesFolder);
+            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", StoryWindowPreference.StoryResourcesFolder);
             if (path == "") return;
             Story story = CreateInstance<Story>();
             AssetDatabase.CreateAsset(story, path);
@@ -311,7 +362,7 @@ namespace E.Tool
         {
             if (CurrentStory != null)
             {
-                CurrentStory.CreateNode(new RectInt(mousePos.x, mousePos.y, StoryEditorWindowPreference.NodeSize.x, StoryEditorWindowPreference.NodeSize.y));
+                CurrentStory.CreateNode(new RectInt(mousePos.x, mousePos.y, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y));
             }
             else
             {
@@ -454,8 +505,12 @@ namespace E.Tool
                                 xOffset = mousePos.x - item.layout.x;
                                 yOffset = mousePos.y - item.layout.y;
                                 isInNode = true;
+
                                 //选中此节点
-                                CurrentNode = item;
+                                if (!nodeEditPanel.Contains(mousePos))
+                                {
+                                    CurrentNode = item;
+                                }
                                 //Selection.activeObject = item;
                                 break;
                             }
@@ -463,19 +518,9 @@ namespace E.Tool
 
                         if (isInNode)
                         {
-                            //将选中节点置顶显示
-                            //currentStory.Nodes.Remove(currentNode);
-                            //currentStory.Nodes.Insert(currentStory.Nodes.Count, currentNode);
                         }
                         else
                         {
-                            if (nodeEditPanel.Contains(mousePos))
-                            {
-                            }
-                            else
-                            {
-                                CurrentNode = null;
-                            }
                         }
                     }
                     break;
@@ -628,7 +673,7 @@ namespace E.Tool
         private static void DrawHead()
         {
             Rect panel = new Rect(0, 0, Instance.position.width, OneLine + LineSpacing);
-            EditorGUI.DrawRect(panel, StoryEditorWindowPreference.NormalNode);
+            EditorGUI.DrawRect(panel, StoryWindowPreference.NormalNode);
 
             //故事列表下拉框
             Rect r1 = new Rect(LineSpacing, LineSpacing, 160, LineHeight);
@@ -671,9 +716,9 @@ namespace E.Tool
         private static void DrawFoot()
         {
             Rect panel = new Rect(0, Instance.position.height - OneLine - LineSpacing, Instance.position.width, OneLine + LineSpacing);
-            EditorGUI.DrawRect(panel, StoryEditorWindowPreference.NormalNode);
+            EditorGUI.DrawRect(panel, StoryWindowPreference.NormalNode);
 
-            string mousePos = "X: " + StoryEditorWindow.mousePos.x + "  Y: " + StoryEditorWindow.mousePos.y;
+            string mousePos = "X: " + StoryWindow.mousePos.x + "  Y: " + StoryWindow.mousePos.y;
             Rect r1 = new Rect(LineSpacing, panel.y + LineSpacing, 110, LineHeight);
             EditorGUI.LabelField(r1, mousePos);
 
@@ -692,46 +737,9 @@ namespace E.Tool
         {
             if (CurrentNode != null)
             {
-                int lines = 0;
-                foreach (StoryNodeOption item in CurrentNode.nodeOptions)
-                {
-                    lines += 1 + item.conditions.Count;
-                }
-                nodeEditPanel = new Rect(Instance.position.width - 320, 30, 300, OneLine * (6 + lines) + LineSpacing);
-                EditorGUI.DrawRect(nodeEditPanel, StoryEditorWindowPreference.NormalNode);
-
-                //编号
-                Rect r1 = new Rect(nodeEditPanel.x + LineSpacing, nodeEditPanel.y + LineSpacing, nodeEditPanel.width - LineSpacing * 2, LineHeight);
-                EditorGUI.LabelField(r1, "节点编号（章节-场景-片段-分支）");
-                int chapter = EditorGUI.IntField(new Rect(r1.x, r1.y + OneLine, 30, LineHeight), CurrentNode.id.chapter);
-                int scene = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 1, r1.y + OneLine, 30, LineHeight), CurrentNode.id.scene);
-                int part = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 2, r1.y + OneLine, 30, LineHeight), CurrentNode.id.part);
-                int branch = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 3, r1.y + OneLine, 30, LineHeight), CurrentNode.id.branch);
-                NodeID id = new NodeID(chapter, scene, part, branch);
-                if (!id.Equals(CurrentNode.id))
-                {
-                    CurrentStory.SetNodeID(CurrentNode, id);
-                }
-
-                //主线
-                Rect r2 = new Rect(nodeEditPanel.x + nodeEditPanel.width - 50 - LineSpacing, nodeEditPanel.y + LineSpacing, 50, LineHeight);
-                bool ismain = EditorGUI.ToggleLeft(r2, "主线", CurrentNode.isMainNode);
-                if (ismain != CurrentNode.isMainNode)
-                {
-                    CurrentNode.isMainNode = ismain;
-                }
-
-                //简介
-                Rect r3 = new Rect(r1.x, r1.y + OneLine * 2, 80, LineHeight);
-                EditorGUI.LabelField(r3, "节点简介");
-                Rect r4 = new Rect(r1.x, r1.y + OneLine * 3, r1.width, LineHeight * 2 + LineSpacing);
-                CurrentNode.description = EditorGUI.TextArea(r4, CurrentNode.description);
-
-                //选项
-                Rect r5 = new Rect(r1.x, r1.y + OneLine * 5, 80, LineHeight);
-                string str = string.Format("分支数量（{0}）", CurrentNode.nodeOptions.Count);
-                EditorGUI.LabelField(r5, str);
-                DrawNodeOptions();
+                int lines = CurrentNode.sentences.Count * 3;
+                nodeEditPanel = new Rect(Instance.position.width - StoryWindowPreference.NodeSize.x - 20, 10 + OneLine, StoryWindowPreference.NodeSize.x, lines * OneLine + LineSpacing);
+                sens.DoList(nodeEditPanel);
             }
         }
         /// <summary>
@@ -786,23 +794,28 @@ namespace E.Tool
         {
             if (node != null)
             {
-                Rect nodeRect = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
-
+                int lines = 0;
+                foreach (StoryNodeOption item in node.nodeOptions)
+                {
+                    lines += 1 + item.conditions.Count;
+                }
+                node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, (int)(StoryWindowPreference.NodeSize.y + OneLine * lines + LineSpacing));
+                Rect re = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
                 //节点背景
                 if (CurrentNode != null)
                 {
                     if (CurrentNode == node)
                     {
-                        EditorGUI.DrawRect(nodeRect, StoryEditorWindowPreference.SelectNode);
+                        EditorGUI.DrawRect(re, StoryWindowPreference.SelectNode);
                     }
                     else
                     {
-                        EditorGUI.DrawRect(nodeRect, StoryEditorWindowPreference.NormalNode);
+                        EditorGUI.DrawRect(re, StoryWindowPreference.NormalNode);
                     }
                 }
                 else
                 {
-                    EditorGUI.DrawRect(nodeRect, StoryEditorWindowPreference.NormalNode);
+                    EditorGUI.DrawRect(re, StoryWindowPreference.NormalNode);
                 }
                 //节点类型
                 switch (node.Type)
@@ -822,12 +835,24 @@ namespace E.Tool
                 }
 
                 //编号
-                Rect r1 = new Rect(nodeRect.x + LineSpacing, nodeRect.y + LineSpacing, nodeRect.width - LineSpacing * 2, LineHeight);
-                string id = string.Format("{0}-{1}-{2}-{3}", node.id.chapter, node.id.scene, node.id.part, node.id.branch);
-                EditorGUI.LabelField(r1, id);
+                Rect r1 = new Rect(node.layout.x + LineSpacing, node.layout.y + LineSpacing, node.layout.width - LineSpacing * 2, LineHeight);
+               
+
+                //编号
+                //Rect r1 = new Rect(nodeEditPanel.x + LineSpacing, nodeEditPanel.y + LineSpacing, nodeEditPanel.width - LineSpacing * 2, LineHeight);
+                EditorGUI.LabelField(new Rect(r1.x, r1.y, 60, LineHeight), "节点编号");
+                int chapter = EditorGUI.IntField(new Rect(r1.x + 60, r1.y, 30, LineHeight), node.id.chapter);
+                int scene = EditorGUI.IntField(new Rect(r1.x + 60 +(30 + LineSpacing) * 1, r1.y, 30, LineHeight), node.id.scene);
+                int part = EditorGUI.IntField(new Rect(r1.x + 60 + (30 + LineSpacing) * 2, r1.y, 30, LineHeight), node.id.part);
+                int branch = EditorGUI.IntField(new Rect(r1.x + 60 + (30 + LineSpacing) * 3, r1.y, 30, LineHeight), node.id.branch);
+                NodeID id = new NodeID(chapter, scene, part, branch);
+                if (!id.Equals(node.id))
+                {
+                    CurrentStory.SetNodeID(node, id);
+                }
 
                 //主线
-                Rect r2 = new Rect(nodeRect.x + nodeRect.width - 60 - LineSpacing, nodeRect.y + LineSpacing, 60, LineHeight);
+                Rect r2 = new Rect(node.layout.x + node.layout.width - 60 - LineSpacing, node.layout.y + LineSpacing, 60, LineHeight);
                 bool ismain = EditorGUI.ToggleLeft(r2, "主线", node.isMainNode);
                 if (ismain != node.isMainNode)
                 {
@@ -835,25 +860,25 @@ namespace E.Tool
                 }
 
                 //简介
-                Rect r3 = new Rect(r1.x, r1.y + OneLine, r1.width, LineHeight * 2);
+                Rect r4 = new Rect(r1.x, r1.y + OneLine, 60, LineHeight);
+                EditorGUI.LabelField(r4, "节点简介");
+                Rect r3 = new Rect(r1.x + 60 +LineSpacing, r1.y + OneLine, r1.width- 60- LineSpacing, StoryWindowPreference.NodeSize.y - OneLine - LineSpacing);
                 node.description = EditorGUI.TextArea(r3, node.description);
 
                 //分支
-                node.layout.height = StoryEditorWindowPreference.NodeSize.y + DrawNodeOptions(node);
-                node.layout.width = StoryEditorWindowPreference.NodeSize.x;
+                DrawNodeOptions(node);
             }
         }
         /// <summary>
         /// 绘制下个节点
         /// </summary>
-        private static int DrawNodeOptions(StoryNode node)
+        private static void DrawNodeOptions(StoryNode node)
         {
-            int height = 0;
             for (int i = 0; i < node.nodeOptions.Count; i++)
             {
                 if (CurrentStory.ContainsID(node.nodeOptions[i].id))
                 {
-                    height += DrawNodeOption(node, node.nodeOptions[i], out bool isRemove);
+                    DrawNodeOption(node, node.nodeOptions[i], out bool isRemove);
                     if (isRemove)
                     {
                         node.nodeOptions.RemoveAt(i);
@@ -865,61 +890,11 @@ namespace E.Tool
                     node.nodeOptions.RemoveAt(i);
                 }
             }
-            return height;
         }
         /// <summary>
-        /// 绘制下个节点
-        /// </summary>
-        private static int DrawNodeOptions()
-        {
-            int height = 0;
-            for (int i = 0; i < CurrentNode.nodeOptions.Count; i++)
-            {
-                if (CurrentStory.ContainsID(CurrentNode.nodeOptions[i].id))
-                {
-                    height += DrawNodeOption(CurrentNode, CurrentNode.nodeOptions[i]);
-                }
-                else
-                {
-                    CurrentNode.nodeOptions.RemoveAt(i);
-                }
-            }
-            return height;
-        }
-        /// <summary>
-        /// 绘制下个节点
+        /// 绘制分支选项
         /// </summary>
         private static int DrawNodeOption(StoryNode node, StoryNodeOption nodeOption, out bool isRemove)
-        {
-            int height = (int)OneLine;
-            int index = node.nodeOptions.IndexOf(nodeOption);
-            Rect nextNodeRect = new Rect(node.layout.x, node.layout.y + StoryEditorWindowPreference.NodeSize.y + OneLine * index, node.layout.width, OneLine);
-            NodeID nextNodeID = nodeOption.id;
-
-            //删除按钮
-            isRemove = GUI.Button(new Rect(nextNodeRect.x + nextNodeRect.width, nextNodeRect.y, OneLine, OneLine), "X");
-
-            //描述
-            Rect r1 = new Rect(nextNodeRect.x + LineSpacing, nextNodeRect.y, nextNodeRect.width - 60 - LineSpacing, LineHeight);
-            nodeOption.description = EditorGUI.TextField(r1, nodeOption.description);
-
-            //编号
-            string label = string.Format("{0}-{1}-{2}-{3}", nextNodeID.chapter, nextNodeID.scene, nextNodeID.part, nextNodeID.branch);
-            Rect r2 = new Rect(nextNodeRect.x + r1.width + LineSpacing * 2, nextNodeRect.y, 60, LineHeight);
-            EditorGUI.LabelField(r2, label);
-
-            //绘制连接曲线
-            StoryNode nnode = CurrentStory.GetNode(nextNodeID);
-            Vector2 start = new Vector2(nextNodeRect.x + nextNodeRect.width + 20, nextNodeRect.y + 10);
-            Vector2 end = new Vector2(nnode.layout.x - 20, nnode.layout.y + 10);
-            DrawCurve(start, end, node.isMainNode && nnode.isMainNode, Vector3.right, Vector3.left);
-
-            return height;
-        }
-        /// <summary>
-        /// 绘制下个节点
-        /// </summary>
-        private static int DrawNodeOption(StoryNode node, StoryNodeOption nodeOption)
         {
             int index = node.nodeOptions.IndexOf(nodeOption);
 
@@ -928,21 +903,25 @@ namespace E.Tool
             {
                 yOffsetLine += node.nodeOptions[i].conditions.Count + 1;
             }
-            Rect nodeOptionRect = new Rect(nodeEditPanel.x, nodeEditPanel.y + OneLine * (yOffsetLine + 6) + LineSpacing, nodeEditPanel.width, OneLine * (1 + nodeOption.conditions.Count));
+            Rect nodeOptionRect = new Rect(node.layout.x, node.layout.y + StoryWindowPreference.NodeSize.y + OneLine * yOffsetLine+ LineSpacing, node.layout.width, OneLine * (1 + nodeOption.conditions.Count));
+            //Rect nodeOptionRect = new Rect(nodeEditPanel.x, nodeEditPanel.y + OneLine * (yOffsetLine + 6) + LineSpacing, nodeEditPanel.width, OneLine * (1 + nodeOption.conditions.Count));
             NodeID nextNodeID = nodeOption.id;
 
-            //描述
-            Rect r1 = new Rect(nodeOptionRect.x + 60 + LineSpacing * 2, nodeOptionRect.y, nodeOptionRect.width - 120 - LineSpacing * 4, LineHeight);
-            nodeOption.description = EditorGUI.TextField(r1, nodeOption.description);
+            //删除按钮
+            isRemove = GUI.Button(new Rect(nodeOptionRect.x + nodeOptionRect.width, nodeOptionRect.y, LineHeight, LineHeight), "X");
 
             //编号
             string label = string.Format("{0}-{1}-{2}-{3}", nextNodeID.chapter, nextNodeID.scene, nextNodeID.part, nextNodeID.branch);
             Rect r2 = new Rect(nodeOptionRect.x + LineSpacing, nodeOptionRect.y, 60, LineHeight);
             EditorGUI.LabelField(r2, label);
 
+            //描述
+            Rect r1 = new Rect(nodeOptionRect.x + 60 + LineSpacing * 2, nodeOptionRect.y, nodeOptionRect.width - 60 - LineHeight - LineSpacing * 4, LineHeight);
+            nodeOption.description = EditorGUI.TextField(r1, nodeOption.description);
+
             //条件
-            Rect r3 = new Rect(nodeOptionRect.x + nodeOptionRect.width - 60 - LineSpacing, nodeOptionRect.y, 60, LineHeight);
-            if (GUI.Button(r3, "添加条件"))
+            Rect r3 = new Rect(nodeOptionRect.x + nodeOptionRect.width - LineHeight - LineSpacing, nodeOptionRect.y, LineHeight, LineHeight);
+            if (GUI.Button(r3, "+"))
             {
                 nodeOption.conditions.Add(new ConditionComparison());
             }
@@ -968,6 +947,13 @@ namespace E.Tool
                 }
             }
 
+
+            //绘制连接曲线
+            StoryNode nnode = CurrentStory.GetNode(nextNodeID);
+            Vector2 start = new Vector2(nodeOptionRect.x + nodeOptionRect.width + 20, nodeOptionRect.y + 10);
+            Vector2 end = new Vector2(nnode.layout.x - 20, nnode.layout.y + StoryWindowPreference.NodeSize.y / 2);
+            DrawCurve(start, end, node.isMainNode && nnode.isMainNode, Vector3.right, Vector3.left);
+
             return (int)nodeOptionRect.height;
         }
         /// <summary>
@@ -976,7 +962,7 @@ namespace E.Tool
         /// <param name="node"></param>
         private static void DrawUpButton(StoryNode node)
         {
-            Rect rect = new Rect(node.layout.x - OneLine, node.layout.y, OneLine, OneLine);
+            Rect rect = new Rect(node.layout.x - LineHeight, node.layout.y, LineHeight, StoryWindowPreference.NodeSize.y);
             if (GUI.Button(rect, "←"))
             {
                 downNode = node;
@@ -989,7 +975,7 @@ namespace E.Tool
         /// <param name="node"></param>
         private static void DrawDownButton(StoryNode node)
         {
-            Rect rect = new Rect(node.layout.x + node.layout.width, node.layout.y + StoryEditorWindowPreference.NodeSize.y - OneLine, OneLine, OneLine);
+            Rect rect = new Rect(node.layout.x + node.layout.width, node.layout.y, LineHeight, StoryWindowPreference.NodeSize.y);
             if (GUI.Button(rect, "→"))
             {
                 upNode = node;
@@ -1003,14 +989,14 @@ namespace E.Tool
         {
             if (upNode != null)
             {
-                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + OneLine, upNode.layout.y + StoryEditorWindowPreference.NodeSize.y - OneLine / 2);
+                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + OneLine, upNode.layout.y + StoryWindowPreference.NodeSize.y / 2);
                 Vector2 end = mousePos;
                 DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
             if (downNode != null)
             {
                 Vector2 start = mousePos;
-                Vector2 end = new Vector2(downNode.layout.x - OneLine, downNode.layout.y + OneLine / 2);
+                Vector2 end = new Vector2(downNode.layout.x - OneLine, downNode.layout.y + StoryWindowPreference.NodeSize.y / 2);
                 DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
         }
@@ -1034,11 +1020,11 @@ namespace E.Tool
             //绘制线条
             if (isMainLine)
             {
-                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryEditorWindowPreference.MainLine, null, 4);
+                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryWindowPreference.MainLine, null, 4);
             }
             else
             {
-                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryEditorWindowPreference.BranchLine, null, 3);
+                Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryWindowPreference.BranchLine, null, 3);
             }
         }
         /// <summary>

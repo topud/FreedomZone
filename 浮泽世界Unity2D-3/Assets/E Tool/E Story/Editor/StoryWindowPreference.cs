@@ -10,7 +10,7 @@ using E.Tool;
 
 namespace E.Tool
 {
-    public class StoryEditorWindowPreference : EditorWindow
+    public class StoryWindowPreference : EditorWindow
     {
         /// <summary>
         /// 故事资产文件夹路径
@@ -51,7 +51,7 @@ namespace E.Tool
         {
             get
             {
-                if (!EditorPrefs.HasKey("NodeWidth")) EditorPrefs.SetInt("NodeWidth", 200);
+                if (!EditorPrefs.HasKey("NodeWidth")) EditorPrefs.SetInt("NodeWidth", 300);
                 if (!EditorPrefs.HasKey("NodeHeight")) EditorPrefs.SetInt("NodeHeight", 60);
                 return new Vector2Int(EditorPrefs.GetInt("NodeWidth"), EditorPrefs.GetInt("NodeHeight"));
             }
@@ -176,7 +176,7 @@ namespace E.Tool
 
             EditorPrefs.SetInt("ViewWidth", 3000);
             EditorPrefs.SetInt("ViewHeight", 3000);
-            EditorPrefs.SetInt("NodeWidth", 200);
+            EditorPrefs.SetInt("NodeWidth", 300);
             EditorPrefs.SetInt("NodeHeight", 60);
 
             EditorPrefs.SetFloat("NormalNodeR", 0.9f);

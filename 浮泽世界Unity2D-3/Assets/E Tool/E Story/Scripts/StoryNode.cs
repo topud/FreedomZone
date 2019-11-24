@@ -80,20 +80,17 @@ namespace E.Tool
     }
 
     [Serializable]
-    public struct Sentence
+    public class Sentence
     {
-        [Tooltip("角色名称")] public string Speaker;
-        [Tooltip("角色表情")] public Sprite Expression;
-        [Tooltip("角色说话内容"), TextArea(1, 10)] public string Words;
-
-        [Tooltip("节点展开")] public bool IsFold;
+        [Tooltip("角色名称")] public string character;
+        [Tooltip("角色表情")] public Sprite avatar;
+        [Tooltip("对话内容"), TextArea(1, 10)] public string words;
 
         public Sentence(string speaker, string words)
         {
-            Speaker = speaker;
-            Expression = null;
-            Words = words;
-            IsFold = true;
+            character = speaker;
+            avatar = null;
+            this.words = words;
         }
     }
 

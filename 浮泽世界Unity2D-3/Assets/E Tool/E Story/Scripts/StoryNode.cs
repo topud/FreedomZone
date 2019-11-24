@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
+using UnityEditorInternal;
 using UnityEngine;
 
 namespace E.Tool
@@ -16,6 +17,7 @@ namespace E.Tool
         [Tooltip("简介"), TextArea] public string description;
         [Tooltip("对话")] public List<Sentence> sentences = new List<Sentence>();
         [Tooltip("选项")] public List<StoryNodeOption> nodeOptions = new List<StoryNodeOption>();
+
         [Tooltip("布局")] public RectInt layout;
 
         public StoryNode(NodeID id, RectInt rect)
@@ -29,6 +31,7 @@ namespace E.Tool
             description = "";
             sentences = new List<Sentence>();
         }
+
         public bool ContainsNextNode(NodeID id)
         {
             foreach (StoryNodeOption item in nodeOptions)

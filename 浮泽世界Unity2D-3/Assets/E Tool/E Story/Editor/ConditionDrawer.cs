@@ -29,8 +29,8 @@ namespace E.Tool
 
 
                 //找到每个属性的序列化值
-                SerializedProperty nameProperty = property.FindPropertyRelative("Key");
-                SerializedProperty valueProperty = property.FindPropertyRelative("DefaultValue");
+                SerializedProperty nameProperty = property.FindPropertyRelative("key");
+                SerializedProperty valueProperty = property.FindPropertyRelative("value");
 
                 //绘制name
                 nameProperty.stringValue = EditorGUI.TextField(nameRect, "名称", nameProperty.stringValue);

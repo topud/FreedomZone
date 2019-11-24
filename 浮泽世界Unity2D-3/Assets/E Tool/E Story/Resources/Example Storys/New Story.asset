@@ -12,16 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fddaeb3ceb9edaa42a207ef610f9456d, type: 3}
   m_Name: New Story
   m_EditorClassIdentifier: 
-  Describe: 
-  Nodes:
+  description: 
+  nodes:
   - id:
       chapter: 1
       scene: 1
       part: 1
       branch: 1
-    Type: 1
+    Type: 0
     isMainNode: 1
-    description: 1321
+    description: 
     sentences: []
     nodeOptions:
     - id:
@@ -35,22 +35,29 @@ MonoBehaviour:
         chapter: 1
         scene: 1
         part: 1
+        branch: 3
+      description: 
+      conditions: []
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
         branch: 4
       description: 
       conditions: []
     layout:
-      x: 21
-      y: 61
+      x: 16
+      y: 189
       width: 200
-      height: 100
+      height: 120
   - id:
       chapter: 1
       scene: 1
       part: 1
       branch: 2
     Type: 0
-    isMainNode: 1
-    description: 1
+    isMainNode: 0
+    description: 
     sentences: []
     nodeOptions:
     - id:
@@ -61,8 +68,8 @@ MonoBehaviour:
       description: 
       conditions: []
     layout:
-      x: 338
-      y: 66
+      x: 337
+      y: 73
       width: 200
       height: 80
   - id:
@@ -72,12 +79,12 @@ MonoBehaviour:
       branch: 3
     Type: 0
     isMainNode: 1
-    description: 2
+    description: 
     sentences: []
     nodeOptions: []
     layout:
-      x: 643
-      y: 226
+      x: 647
+      y: 260
       width: 200
       height: 60
   - id:
@@ -86,8 +93,8 @@ MonoBehaviour:
       part: 1
       branch: 4
     Type: 0
-    isMainNode: 1
-    description: 333
+    isMainNode: 0
+    description: 
     sentences: []
     nodeOptions:
     - id:
@@ -98,12 +105,12 @@ MonoBehaviour:
       description: 
       conditions: []
     layout:
-      x: 335
-      y: 273
+      x: 311
+      y: 376
       width: 200
       height: 80
-  Conditions:
-  - Key: 1
-    DefaultValue: 18
-  - Key: 2
-    DefaultValue: -35
+  conditions:
+  - key: "\u672A\u547D\u540D"
+    value: 0
+  - key: "\u672A\u547D\u540D2"
+    value: 0

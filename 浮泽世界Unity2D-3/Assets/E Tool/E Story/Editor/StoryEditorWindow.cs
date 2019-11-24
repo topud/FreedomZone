@@ -18,10 +18,6 @@ namespace E.Tool
         /// </summary>
         public static StoryEditorWindow instance;
         /// <summary>
-        /// 当前故事
-        /// </summary>
-        private static Story currentStory;
-        /// <summary>
         /// 当前节点
         /// </summary>
         private static StoryNode currentNode;
@@ -36,13 +32,7 @@ namespace E.Tool
         /// <summary>
         /// 当前故事索引
         /// </summary>
-        private static int selectStoryIndex = -1;
-        /// <summary>
-        /// 是否显示节点编辑面板
-        /// </summary>
-        private static bool showNodeEditPanel = false;
-
-        private static ReorderableList nodeOptionList;
+        private static int currentStoryIndex = -1;
 
         /// <summary>
         /// 窗口实例
@@ -74,95 +64,39 @@ namespace E.Tool
             set
             {
                 currentNode = value;
-
-                nodeOptionList = new ReorderableList(CurrentNode.nodeOptions, typeof(StoryNodeOption), true, true, false, true)
+            }
+        }
+        /// <summary>
+        /// 当前故事
+        /// </summary>
+        public static Story CurrentStory
+        {
+            get
+            {
+                if (CurrentStoryIndex >= 0 && CurrentStoryIndex < Storys.Count)
                 {
-                    //设置单个元素的高度
-                    elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
-
-                    //绘制
-                    drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
-                    {
-                        StoryNodeOption data = (StoryNodeOption)nodeOptionList.list[index];
-                        data.description = EditorGUI.TextField(rect, data.description);
-                    },
-
-                    //背景色
-                    //reorderableList.drawElementBackgroundCallback = (rect, index, isActive, isFocused) => {
-                    //    GUI.backgroundColor = Color.yellow;
-                    //};
-                    showDefaultBackground = true,
-
-                    //标题
-                    drawHeaderCallback = (Rect rect) =>
-                    {
-                        GUI.Label(rect, "选项列表");
-                    },
-
-                    //创建
-                    onAddCallback = (ReorderableList list) =>
-                    {
-                        if (list.serializedProperty != null)
-                        {
-                            list.serializedProperty.arraySize++;
-                            list.index = list.serializedProperty.arraySize - 1;
-
-                            SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
-                            SerializedProperty sp1 = itemData.FindPropertyRelative("description");
-                            sp1.stringValue = "（请输入节点简介）";
-                        }
-                        else
-                        {
-                            ReorderableList.defaultBehaviours.DoAddButton(list);
-                        }
-                    },
-
-                    //删除
-                    onRemoveCallback = (ReorderableList list) =>
-                    {
-                        if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个节点？", "是", "否"))
-                        {
-                            ReorderableList.defaultBehaviours.DoRemoveButton(list);
-                        }
-                    },
-
-                    //鼠标抬起回调
-                    onMouseUpCallback = (ReorderableList list) =>
-                    {
-                        Debug.Log("MouseUP");
-                    },
-
-                    //当选择元素回调
-                    onSelectCallback = (ReorderableList list) =>
-                    {
-                        //打印选中元素的索引
-                        Debug.Log(list.index);
-                    }
-                };
+                    return Storys[CurrentStoryIndex];
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
         /// <summary>
         /// 当前故事索引
         /// </summary>
-        public static int SelectStoryIndex
+        public static int CurrentStoryIndex
         {
             get
             {
-                return selectStoryIndex;
+                return currentStoryIndex;
             }
             set
             {
-                if (selectStoryIndex != value)
+                if (currentStoryIndex != value)
                 {
-                    selectStoryIndex = value;
-                    if (selectStoryIndex == -1)
-                    {
-                        CloseCurrentStory();
-                    }
-                    else
-                    {
-                        OpenStory(Storys[selectStoryIndex]);
-                    }
+                    currentStoryIndex = value;
                 }
             }
         }
@@ -254,9 +188,33 @@ namespace E.Tool
         {
             if (story != null)
             {
-                currentStory = story;
-                Selection.activeObject = currentStory;
-                Instance.ShowNotification(new GUIContent("已打开 " + currentStory.name));
+                for (int i = 0; i < Storys.Count; i++)
+                {
+                    if (Storys[i] == story)
+                    {
+                        OpenStory(i);
+                        break;
+                    }
+                }
+                Selection.activeObject = CurrentStory;
+                Instance.ShowNotification(new GUIContent("已打开 " + CurrentStory.name));
+            }
+            else
+            {
+                Debug.LogError("未打开故事：对象为空");
+            }
+        }
+        /// <summary>
+        /// 打开故事
+        /// </summary>
+        /// <param name="story"></param>
+        private static void OpenStory(int index)
+        {
+            if (index >= 0 && index < Storys.Count)
+            {
+                CurrentStoryIndex = index;
+                Selection.activeObject = CurrentStory;
+                Instance.ShowNotification(new GUIContent("已打开 " + CurrentStory.name));
             }
             else
             {
@@ -270,14 +228,14 @@ namespace E.Tool
         /// </summary>
         private static void CloseCurrentStory()
         {
-            if (currentStory == null)
+            if (CurrentStory == null)
             {
                 Instance.ShowNotification(new GUIContent("当前未打开故事"));
             }
             else
             {
-                Instance.ShowNotification(new GUIContent("已关闭 " + currentStory.name));
-                currentStory = null;
+                Instance.ShowNotification(new GUIContent("已关闭 " + CurrentStory.name));
+                CurrentStoryIndex = -1;
             }
         }
 
@@ -306,7 +264,7 @@ namespace E.Tool
             string names = "已载入故事 {";
             for (int i = 0; i < Storys.Count; i++)
             {
-                if (i < Storys.Count-1)
+                if (i < Storys.Count - 1)
                 {
                     names += Storys[i].name + ", ";
                 }
@@ -323,10 +281,7 @@ namespace E.Tool
             else
             {
                 Debug.Log("未找到任何故事，请确保其位于Resources文件夹内。");
-                currentStory = null;
             }
-
-            Instance.ShowNotification(new GUIContent("已刷新"));
         }
         /// <summary>
         /// 刷新鼠标坐标
@@ -354,9 +309,9 @@ namespace E.Tool
         /// </summary>
         private static void CreateNode()
         {
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
-                currentStory.CreateNode(new RectInt(mousePos.x, mousePos.y, StoryEditorWindowPreference.NodeSize.x, StoryEditorWindowPreference.NodeSize.y));
+                CurrentStory.CreateNode(new RectInt(mousePos.x, mousePos.y, StoryEditorWindowPreference.NodeSize.x, StoryEditorWindowPreference.NodeSize.y));
             }
             else
             {
@@ -373,20 +328,21 @@ namespace E.Tool
         /// </summary>
         private static void DeleteCurrentStory()
         {
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
-                string str = "确认要删除故事 {" + currentStory.name + "} 以及其所有节点吗？本地文件也将一并删除，这将无法恢复。";
+                string str = "确认要删除故事 {" + CurrentStory.name + "} 以及其所有节点吗？本地文件也将一并删除，这将无法恢复。";
                 if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
                 {
-                    if (currentStory.Nodes != null)
+                    if (CurrentStory.nodes != null)
                     {
-                        currentStory.Nodes.Clear();
-                        Debug.Log("已删除所有 {" + currentStory.name + "} 的故事节点");
+                        CurrentStory.nodes.Clear();
+                        Debug.Log("已删除所有 {" + CurrentStory.name + "} 的故事节点");
                     }
                     string path = GetCurrentStoryPath();
                     AssetDatabase.DeleteAsset(path);
                     AssetDatabase.Refresh();
                     Debug.Log("已删除故事 {" + path + "}");
+                    CurrentStoryIndex = -1;
                 }
             }
             else
@@ -401,10 +357,10 @@ namespace E.Tool
         /// </summary>
         private static void SaveCurrentStory()
         {
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
                 AssetDatabase.SaveAssets();
-                Instance.ShowNotification(new GUIContent("已保存 " + currentStory.name));
+                Instance.ShowNotification(new GUIContent("已保存 " + CurrentStory.name));
             }
             else
             {
@@ -419,10 +375,10 @@ namespace E.Tool
         /// <returns></returns>
         private static string GetCurrentStoryPath()
         {
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
                 UnityEngine.Object ob = Selection.activeObject;
-                Selection.activeObject = currentStory;
+                Selection.activeObject = CurrentStory;
                 string[] strs = Selection.assetGUIDs;
                 Selection.activeObject = ob;
                 return AssetDatabase.GUIDToAssetPath(strs[0]);
@@ -449,27 +405,27 @@ namespace E.Tool
                 case 4:
                     break;
                 case 5:
-                    currentStory.ClearNodeUpChoices(CurrentNode);
-                    currentStory.ClearNodeDownChoices(CurrentNode);
+                    CurrentStory.ClearNodeUpChoices(CurrentNode);
+                    CurrentStory.ClearNodeDownChoices(CurrentNode);
                     break;
                 case 6:
                     break;
                 case 7:
-                    currentStory.RemoveNode(CurrentNode);
+                    CurrentStory.RemoveNode(CurrentNode);
                     break;
                 case 8:
                     break;
                 case 9:
-                    currentStory.SetNodeType(CurrentNode, NodeType.起始节点);
+                    CurrentStory.SetNodeType(CurrentNode, NodeType.起始节点);
                     break;
                 case 10:
-                    currentStory.SetNodeType(CurrentNode, NodeType.中间节点);
+                    CurrentStory.SetNodeType(CurrentNode, NodeType.中间节点);
                     break;
                 case 11:
-                    currentStory.SetNodeType(CurrentNode, NodeType.结局节点);
+                    CurrentStory.SetNodeType(CurrentNode, NodeType.结局节点);
                     break;
                 case 12:
-                    currentStory.ClearNodes();
+                    CurrentStory.ClearNodes();
                     break;
 
                 default:
@@ -487,11 +443,11 @@ namespace E.Tool
             switch (Event.current.type)
             {
                 case EventType.MouseDown:
-                    if (currentStory != null && currentStory.Nodes != null)
+                    if (CurrentStory != null && CurrentStory.nodes != null)
                     {
                         //获取当前选中节点
                         bool isInNode = false;
-                        foreach (StoryNode item in currentStory.Nodes)
+                        foreach (StoryNode item in CurrentStory.nodes)
                         {
                             if (item.layout.Contains(mousePos))
                             {
@@ -500,13 +456,13 @@ namespace E.Tool
                                 isInNode = true;
                                 //选中此节点
                                 CurrentNode = item;
+                                //Selection.activeObject = item;
                                 break;
                             }
                         }
 
                         if (isInNode)
                         {
-                            showNodeEditPanel = true;
                             //将选中节点置顶显示
                             //currentStory.Nodes.Remove(currentNode);
                             //currentStory.Nodes.Insert(currentStory.Nodes.Count, currentNode);
@@ -518,7 +474,7 @@ namespace E.Tool
                             }
                             else
                             {
-                                showNodeEditPanel = false;
+                                CurrentNode = null;
                             }
                         }
                     }
@@ -530,9 +486,9 @@ namespace E.Tool
                     break;
                 case EventType.MouseDrag:
                     RefreshMousePosition();
-                    if (currentStory)
+                    if (CurrentStory)
                     {
-                        if (currentStory.Nodes.Contains(CurrentNode))
+                        if (CurrentStory.nodes.Contains(CurrentNode))
                         {
                             if (CurrentNode.layout.Contains(mousePos))
                             {
@@ -546,7 +502,7 @@ namespace E.Tool
                 case EventType.KeyUp:
                     if (Event.current.keyCode == KeyCode.Delete && CurrentNode != null)
                     {
-                        currentStory.RemoveNode(CurrentNode);
+                        CurrentStory.RemoveNode(CurrentNode);
                     }
                     break;
                 case EventType.ScrollWheel:
@@ -676,7 +632,11 @@ namespace E.Tool
 
             //故事列表下拉框
             Rect r1 = new Rect(LineSpacing, LineSpacing, 160, LineHeight);
-            SelectStoryIndex = EditorGUI.Popup(r1, SelectStoryIndex, StoryNames);
+            int index =  EditorGUI.Popup(r1, CurrentStoryIndex, StoryNames);
+            if (index != CurrentStoryIndex)
+            {
+                OpenStory(index);
+            }
 
             //快捷按钮
             if (GUI.Button(new Rect(160 + LineSpacing * 2, LineSpacing, 40, LineHeight), "创建"))
@@ -730,62 +690,48 @@ namespace E.Tool
         /// </summary>
         private static void DrawNodeEditPanel()
         {
-            if (showNodeEditPanel)
+            if (CurrentNode != null)
             {
-                nodeEditPanel = new Rect(Instance.position.width - 320, 30, 300, 300);
+                int lines = 0;
+                foreach (StoryNodeOption item in CurrentNode.nodeOptions)
+                {
+                    lines += 1 + item.conditions.Count;
+                }
+                nodeEditPanel = new Rect(Instance.position.width - 320, 30, 300, OneLine * (6 + lines) + LineSpacing);
                 EditorGUI.DrawRect(nodeEditPanel, StoryEditorWindowPreference.NormalNode);
 
-                if (CurrentNode != null)
+                //编号
+                Rect r1 = new Rect(nodeEditPanel.x + LineSpacing, nodeEditPanel.y + LineSpacing, nodeEditPanel.width - LineSpacing * 2, LineHeight);
+                EditorGUI.LabelField(r1, "节点编号（章节-场景-片段-分支）");
+                int chapter = EditorGUI.IntField(new Rect(r1.x, r1.y + OneLine, 30, LineHeight), CurrentNode.id.chapter);
+                int scene = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 1, r1.y + OneLine, 30, LineHeight), CurrentNode.id.scene);
+                int part = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 2, r1.y + OneLine, 30, LineHeight), CurrentNode.id.part);
+                int branch = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 3, r1.y + OneLine, 30, LineHeight), CurrentNode.id.branch);
+                NodeID id = new NodeID(chapter, scene, part, branch);
+                if (!id.Equals(CurrentNode.id))
                 {
-                    //编号
-                    Rect r1 = new Rect(nodeEditPanel.x + LineSpacing, nodeEditPanel.y + LineSpacing, nodeEditPanel.width - LineSpacing * 2, LineHeight);
-                    EditorGUI.LabelField(r1, "章节-场景-片段-分支");
-                    int chapter = EditorGUI.IntField(new Rect(r1.x, r1.y + OneLine, 30, LineHeight), CurrentNode.id.chapter);
-                    int scene = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 1, r1.y + OneLine, 30, LineHeight), CurrentNode.id.scene);
-                    int part = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 2, r1.y + OneLine, 30, LineHeight), CurrentNode.id.part);
-                    int branch = EditorGUI.IntField(new Rect(r1.x + (30 + LineSpacing) * 3, r1.y + OneLine, 30, LineHeight), CurrentNode.id.branch);
-                    NodeID id = new NodeID(chapter, scene, part, branch);
-                    if (!id.Equals(CurrentNode.id))
-                    {
-                        currentStory.SetNodeID(CurrentNode, id);
-                    }
-
-                    //主线
-                    Rect r2 = new Rect(nodeEditPanel.x + nodeEditPanel.width - 50 - LineSpacing, nodeEditPanel.y + LineSpacing, 50, LineHeight);
-                    bool ismain = EditorGUI.ToggleLeft(r2, "主线", CurrentNode.isMainNode);
-                    if (ismain != CurrentNode.isMainNode)
-                    {
-                        CurrentNode.isMainNode = ismain;
-                    }
-
-                    //简介
-                    Rect r3 = new Rect(r1.x, r1.y + OneLine * 2, 80, LineHeight);
-                    EditorGUI.LabelField(r3, "节点简介");
-                    Rect r4 = new Rect(r1.x, r1.y + OneLine * 3, r1.width, LineHeight * 2 + LineSpacing);
-                    CurrentNode.description = EditorGUI.TextArea(r4, CurrentNode.description);
-
-                    //
-
-                    //for (int j = 0; j < node.NextNodes[i].Conditions.Count; j++)
-                    //{
-                    //    node.NextNodes[i].Conditions[j].SetIndex
-                    //        ( EditorGUI.Popup(new Rect(nodeRect.x + 10, nodeRect.y + 20 * i + baseHeight + 20 * (j + 1), 80 + addWidth, 16),
-                    //        node.NextNodes[i].Conditions[j].KeyIndex, CurrentStory.ConditionKeys) );
-                    //    node.NextNodes[i].Conditions[j].SetComparison
-                    //        ((Comparison)EditorGUI.EnumPopup(new Rect(nodeRect.x + 90, nodeRect.y + 20 * i + baseHeight + 20 * (j + 1), 80 + addWidth, 16),
-                    //        GUIContent.none, node.NextNodes[i].Conditions[j].Comparison));
-                    //    node.NextNodes[i].Conditions[j].SetValue
-                    //        (EditorGUI.IntField(new Rect(nodeRect.x + 170, nodeRect.y + 20 * i + baseHeight + 20 * (j + 1), 30 + addWidth, 16),
-                    //        GUIContent.none, node.NextNodes[i].Conditions[j].Value));
-                    //}
-
-                    Rect r5 = new Rect(r1.x, r1.y + OneLine * 5, r1.width, 200);
-                    nodeOptionList.DoList(r5);
+                    CurrentStory.SetNodeID(CurrentNode, id);
                 }
-                else
+
+                //主线
+                Rect r2 = new Rect(nodeEditPanel.x + nodeEditPanel.width - 50 - LineSpacing, nodeEditPanel.y + LineSpacing, 50, LineHeight);
+                bool ismain = EditorGUI.ToggleLeft(r2, "主线", CurrentNode.isMainNode);
+                if (ismain != CurrentNode.isMainNode)
                 {
-                    EditorGUI.LabelField(new Rect(nodeEditPanel.x + 20, nodeEditPanel.y + 20, 120, 20), "请选择一个节点");
+                    CurrentNode.isMainNode = ismain;
                 }
+
+                //简介
+                Rect r3 = new Rect(r1.x, r1.y + OneLine * 2, 80, LineHeight);
+                EditorGUI.LabelField(r3, "节点简介");
+                Rect r4 = new Rect(r1.x, r1.y + OneLine * 3, r1.width, LineHeight * 2 + LineSpacing);
+                CurrentNode.description = EditorGUI.TextArea(r4, CurrentNode.description);
+
+                //选项
+                Rect r5 = new Rect(r1.x, r1.y + OneLine * 5, 80, LineHeight);
+                string str = string.Format("分支数量（{0}）", CurrentNode.nodeOptions.Count);
+                EditorGUI.LabelField(r5, str);
+                DrawNodeOptions();
             }
         }
         /// <summary>
@@ -794,7 +740,7 @@ namespace E.Tool
         private static void DrawContextMenu()
         {
             GenericMenu menu = new GenericMenu();
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
                 menu.AddItem(new GUIContent("创建节点"), false, DoMethod, 2);
 
@@ -809,7 +755,7 @@ namespace E.Tool
                 }
                 else
                 {
-                    if (currentStory.Nodes != null)
+                    if (CurrentStory.nodes != null)
                     {
                         menu.AddItem(new GUIContent("删除所有节点"), false, DoMethod, 12);
                     }
@@ -822,11 +768,11 @@ namespace E.Tool
         /// </summary>
         private static void DrawStory()
         {
-            if (currentStory != null)
+            if (CurrentStory != null)
             {
-                if (currentStory.Nodes != null)
+                if (CurrentStory.nodes != null)
                 {
-                    foreach (StoryNode item in currentStory.Nodes)
+                    foreach (StoryNode item in CurrentStory.nodes)
                     {
                         DrawNode(item);
                     }
@@ -893,21 +839,21 @@ namespace E.Tool
                 node.description = EditorGUI.TextArea(r3, node.description);
 
                 //分支
-                node.layout.height = StoryEditorWindowPreference.NodeSize.y + DrawNextNodes(node);
+                node.layout.height = StoryEditorWindowPreference.NodeSize.y + DrawNodeOptions(node);
                 node.layout.width = StoryEditorWindowPreference.NodeSize.x;
             }
         }
         /// <summary>
         /// 绘制下个节点
         /// </summary>
-        private static int DrawNextNodes(StoryNode node)
+        private static int DrawNodeOptions(StoryNode node)
         {
             int height = 0;
             for (int i = 0; i < node.nodeOptions.Count; i++)
             {
-                if (currentStory.ContainsID(node.nodeOptions[i].id))
+                if (CurrentStory.ContainsID(node.nodeOptions[i].id))
                 {
-                    height += DrawNextNode(node, node.nodeOptions[i], out bool isRemove);
+                    height += DrawNodeOption(node, node.nodeOptions[i], out bool isRemove);
                     if (isRemove)
                     {
                         node.nodeOptions.RemoveAt(i);
@@ -924,19 +870,38 @@ namespace E.Tool
         /// <summary>
         /// 绘制下个节点
         /// </summary>
-        private static int DrawNextNode(StoryNode node, StoryNodeOption nextNode, out bool isRemove)
+        private static int DrawNodeOptions()
         {
-            int height = 20;
-            int index = node.nodeOptions.IndexOf(nextNode);
+            int height = 0;
+            for (int i = 0; i < CurrentNode.nodeOptions.Count; i++)
+            {
+                if (CurrentStory.ContainsID(CurrentNode.nodeOptions[i].id))
+                {
+                    height += DrawNodeOption(CurrentNode, CurrentNode.nodeOptions[i]);
+                }
+                else
+                {
+                    CurrentNode.nodeOptions.RemoveAt(i);
+                }
+            }
+            return height;
+        }
+        /// <summary>
+        /// 绘制下个节点
+        /// </summary>
+        private static int DrawNodeOption(StoryNode node, StoryNodeOption nodeOption, out bool isRemove)
+        {
+            int height = (int)OneLine;
+            int index = node.nodeOptions.IndexOf(nodeOption);
             Rect nextNodeRect = new Rect(node.layout.x, node.layout.y + StoryEditorWindowPreference.NodeSize.y + OneLine * index, node.layout.width, OneLine);
-            NodeID nextNodeID = nextNode.id;
+            NodeID nextNodeID = nodeOption.id;
 
             //删除按钮
             isRemove = GUI.Button(new Rect(nextNodeRect.x + nextNodeRect.width, nextNodeRect.y, OneLine, OneLine), "X");
 
             //描述
             Rect r1 = new Rect(nextNodeRect.x + LineSpacing, nextNodeRect.y, nextNodeRect.width - 60 - LineSpacing, LineHeight);
-            nextNode.description = EditorGUI.TextField(r1, nextNode.description);
+            nodeOption.description = EditorGUI.TextField(r1, nodeOption.description);
 
             //编号
             string label = string.Format("{0}-{1}-{2}-{3}", nextNodeID.chapter, nextNodeID.scene, nextNodeID.part, nextNodeID.branch);
@@ -944,12 +909,66 @@ namespace E.Tool
             EditorGUI.LabelField(r2, label);
 
             //绘制连接曲线
-            StoryNode nnode = currentStory.GetNode(nextNodeID);
+            StoryNode nnode = CurrentStory.GetNode(nextNodeID);
             Vector2 start = new Vector2(nextNodeRect.x + nextNodeRect.width + 20, nextNodeRect.y + 10);
             Vector2 end = new Vector2(nnode.layout.x - 20, nnode.layout.y + 10);
             DrawCurve(start, end, node.isMainNode && nnode.isMainNode, Vector3.right, Vector3.left);
 
             return height;
+        }
+        /// <summary>
+        /// 绘制下个节点
+        /// </summary>
+        private static int DrawNodeOption(StoryNode node, StoryNodeOption nodeOption)
+        {
+            int index = node.nodeOptions.IndexOf(nodeOption);
+
+            int yOffsetLine = 0;
+            for (int i = index - 1; i > -1; i--)
+            {
+                yOffsetLine += node.nodeOptions[i].conditions.Count + 1;
+            }
+            Rect nodeOptionRect = new Rect(nodeEditPanel.x, nodeEditPanel.y + OneLine * (yOffsetLine + 6) + LineSpacing, nodeEditPanel.width, OneLine * (1 + nodeOption.conditions.Count));
+            NodeID nextNodeID = nodeOption.id;
+
+            //描述
+            Rect r1 = new Rect(nodeOptionRect.x + 60 + LineSpacing * 2, nodeOptionRect.y, nodeOptionRect.width - 120 - LineSpacing * 4, LineHeight);
+            nodeOption.description = EditorGUI.TextField(r1, nodeOption.description);
+
+            //编号
+            string label = string.Format("{0}-{1}-{2}-{3}", nextNodeID.chapter, nextNodeID.scene, nextNodeID.part, nextNodeID.branch);
+            Rect r2 = new Rect(nodeOptionRect.x + LineSpacing, nodeOptionRect.y, 60, LineHeight);
+            EditorGUI.LabelField(r2, label);
+
+            //条件
+            Rect r3 = new Rect(nodeOptionRect.x + nodeOptionRect.width - 60 - LineSpacing, nodeOptionRect.y, 60, LineHeight);
+            if (GUI.Button(r3, "添加条件"))
+            {
+                nodeOption.conditions.Add(new ConditionComparison());
+            }
+
+            for (int j = 0; j < nodeOption.conditions.Count; j++)
+            {
+                Rect re = new Rect(nodeOptionRect.x + 60 + LineSpacing * 2, nodeOptionRect.y + OneLine * (j + 1), nodeOptionRect.width - 60 - LineSpacing * 2, LineHeight);
+
+                Rect re1 = new Rect(re.x, re.y, 80, LineHeight);
+                nodeOption.conditions[j].keyIndex = EditorGUI.Popup(re1, nodeOption.conditions[j].keyIndex, CurrentStory.ConditionKeys);
+
+                Rect re2 = new Rect(re.x + 80 + LineSpacing, re.y, 80, LineHeight);
+                nodeOption.conditions[j].comparison = (Comparison)EditorGUI.EnumPopup(re2, GUIContent.none, nodeOption.conditions[j].comparison);
+
+                Rect re3 = new Rect(re.x + 160 + LineSpacing * 2, re.y, re.width - 160 - LineSpacing * 4 - LineHeight, LineHeight);
+                nodeOption.conditions[j].value = EditorGUI.IntField(re3, GUIContent.none, nodeOption.conditions[j].value);
+
+                Rect re4 = new Rect(re.x + re.width - LineHeight - LineSpacing, re.y, LineHeight, LineHeight);
+                if (GUI.Button(re4, "X"))
+                {
+                    nodeOption.conditions.RemoveAt(j);
+                    j--;
+                }
+            }
+
+            return (int)nodeOptionRect.height;
         }
         /// <summary>
         /// 绘制节点上按钮
@@ -984,14 +1003,14 @@ namespace E.Tool
         {
             if (upNode != null)
             {
-                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + OneLine, upNode.layout.y + StoryEditorWindowPreference.NodeSize.y - OneLine/2);
+                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + OneLine, upNode.layout.y + StoryEditorWindowPreference.NodeSize.y - OneLine / 2);
                 Vector2 end = mousePos;
-                DrawCurve(start, end , true, Vector3.right, Vector3.left);
+                DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
             if (downNode != null)
             {
                 Vector2 start = mousePos;
-                Vector2 end = new Vector2(downNode.layout.x - OneLine, downNode.layout.y + OneLine/2);
+                Vector2 end = new Vector2(downNode.layout.x - OneLine, downNode.layout.y + OneLine / 2);
                 DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
         }
@@ -1037,7 +1056,7 @@ namespace E.Tool
         {
             if (Storys.Count > 0)
             {
-                SelectStoryIndex = 0;
+                OpenStory(0);
             }
         }
         private void Update()
@@ -1050,7 +1069,7 @@ namespace E.Tool
 
             Rect rect = new Rect(0, OneLine + LineSpacing, position.width, position.height - (OneLine * 2 + LineSpacing * 2));
             Vector2 v = GUI.BeginScrollView(rect, scrollPos, View);
-            scrollPos = new Vector2Int((int)v.x ,(int)v.y);
+            scrollPos = new Vector2Int((int)v.x, (int)v.y);
             DrawBG();
             DrawTempCurve();
             DrawStory();

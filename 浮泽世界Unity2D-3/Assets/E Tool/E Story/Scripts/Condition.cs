@@ -8,7 +8,7 @@ namespace E.Tool
     [Serializable]
     public struct Condition
     {
-        [Tooltip("条件名")] public string Key;
-        [Tooltip("默认值"), Range(-100, 100)] public int DefaultValue;
+        [Tooltip("条件名")] public string key;
+        [Tooltip("默认值"), Range(-100, 100)] public int value;
     }
 }

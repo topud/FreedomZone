@@ -6,24 +6,11 @@ using UnityEngine;
 namespace E.Tool
 {
     [Serializable]
-    public struct ConditionComparison
+    public class ConditionComparison
     {
-        [Tooltip("条件索引")] public int KeyIndex;
-        [Tooltip("对比方式")] public Comparison Comparison;
-        [Tooltip("目标值"), Range(-100, 100)] public int Value;
-
-        public void SetIndex(int index)
-        {
-            KeyIndex = index;
-        }
-        public void SetComparison(Comparison comparison)
-        {
-            Comparison = comparison;
-        }
-        public void SetValue(int value)
-        {
-            Value = value;
-        }
+        [Tooltip("条件索引")] public int keyIndex;
+        [Tooltip("对比方式")] public Comparison comparison;
+        [Tooltip("目标值"), Range(-100, 100)] public int value;
     }
 
     public enum Comparison

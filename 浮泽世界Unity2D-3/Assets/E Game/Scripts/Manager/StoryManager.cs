@@ -20,7 +20,7 @@ public class StoryManager : SingletonClass<StoryManager>
     public List<StoryNode> GetPassedNodes()
     {
         List<StoryNode> nodes = new List<StoryNode>();
-        foreach (StoryNode item in CurrentStory.Nodes)
+        foreach (StoryNode item in CurrentStory.nodes)
         {
             foreach (NodeID id in CurrentStoryPassdNodeIDs)
             {
@@ -59,7 +59,7 @@ public class StoryManager : SingletonClass<StoryManager>
     /// </summary>
     public string GetAllNodesPassFraction()
     {
-        return GetPassedNodes().Count + "/" + CurrentStory.Nodes.Count;
+        return GetPassedNodes().Count + "/" + CurrentStory.nodes.Count;
     }
     /// <summary>
     /// 获取全结局解锁百分比（分数格式）
@@ -77,7 +77,7 @@ public class StoryManager : SingletonClass<StoryManager>
         {
             return 0;
         }
-        return (float)GetPassedNodes().Count / CurrentStory.Nodes.Count;
+        return (float)GetPassedNodes().Count / CurrentStory.nodes.Count;
     }
     /// <summary>
     /// 获取全结局解锁百分比（小数格式）

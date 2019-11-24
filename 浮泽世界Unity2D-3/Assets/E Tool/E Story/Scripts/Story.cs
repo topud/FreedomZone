@@ -1,10 +1,3 @@
-// ========================================================
-// 作者：E Star
-// 创建时间：2019-02-27 01:18:23
-// 当前版本：1.0
-// 作用描述：可序列化故事类
-// 挂载目标：无
-// ========================================================
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -16,22 +9,22 @@ namespace E.Tool
     [CreateAssetMenu(menuName = "E Story", order = 0)]
     public class Story : StaticDataDictionary<Story>
     {
-        [Tooltip("故事描述"), TextArea(1, 10)] public string Describe;
-        public List<StoryNode> Nodes = new List<StoryNode>();
-        public List<Condition> Conditions = new List<Condition>();
+        [Tooltip("故事描述"), TextArea(1, 10)] public string description;
+        public List<StoryNode> nodes = new List<StoryNode>();
+        public List<Condition> conditions = new List<Condition>();
 
         public string[] ConditionKeys
         {
             get
             {
-                int count = Conditions.Count;
+                int count = conditions.Count;
                 string[] keys;
                 if (count > 0)
                 {
                     keys = new string[count];
-                    for (int i = 0; i < Conditions.Count; i++)
+                    for (int i = 0; i < conditions.Count; i++)
                     {
-                        keys[i] = Conditions[i].Key;
+                        keys[i] = conditions[i].key;
                     }
                 }
                 else
@@ -49,9 +42,9 @@ namespace E.Tool
         /// <returns></returns>
         public StoryNode CreateNode(RectInt rect)
         {
-            if (Nodes == null)
+            if (nodes == null)
             {
-                Nodes = new List<StoryNode>();
+                nodes = new List<StoryNode>();
             }
 
             NodeID id = new NodeID(1,1,1,1);
@@ -60,7 +53,7 @@ namespace E.Tool
                 id.branch++;
             }
             StoryNode node = new StoryNode(id, rect);
-            Nodes.Add(node);
+            nodes.Add(node);
             return node;
         }
         /// <summary>
@@ -70,7 +63,7 @@ namespace E.Tool
         /// <returns></returns>
         public bool ContainsID(NodeID id)
         {
-            foreach (StoryNode item in Nodes)
+            foreach (StoryNode item in nodes)
             {
                 if (item.id.Equals(id))
                 {
@@ -88,7 +81,7 @@ namespace E.Tool
         /// <returns></returns>
         public StoryNode GetNode(NodeID id)
         {
-            foreach (StoryNode item in Nodes)
+            foreach (StoryNode item in nodes)
             {
                 if (item.id.Equals(id))
                 {
@@ -102,7 +95,7 @@ namespace E.Tool
         /// </summary>
         public StoryNode GetStartNode()
         {
-            foreach (StoryNode item in Nodes)
+            foreach (StoryNode item in nodes)
             {
                 if (item.Type == NodeType.起始节点)
                 {
@@ -117,7 +110,7 @@ namespace E.Tool
         public List<StoryNode> GetEndingNodes()
         {
             List<StoryNode> nodes = new List<StoryNode>();
-            foreach (StoryNode item in Nodes)
+            foreach (StoryNode item in this.nodes)
             {
                 if (item.Type == NodeType.结局节点)
                 {
@@ -137,7 +130,7 @@ namespace E.Tool
             if (!ContainsID(id))
             {
                 //同步上行节点连接
-                foreach (StoryNode item in Nodes)
+                foreach (StoryNode item in nodes)
                 {
                     if (item.nodeOptions != null)
                     {
@@ -169,7 +162,7 @@ namespace E.Tool
                     case NodeType.中间节点:
                         break;
                     case NodeType.起始节点:
-                        foreach (StoryNode item in Nodes)
+                        foreach (StoryNode item in nodes)
                         {
                             if (item.Type == NodeType.起始节点)
                             {
@@ -194,12 +187,12 @@ namespace E.Tool
         /// </summary>
         public void RemoveNode(StoryNode node)
         {
-            if (Nodes.Contains(node))
+            if (nodes.Contains(node))
             {
                 string str = "确认要删除此节点吗？";
                 if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
                 {
-                    Nodes.Remove(node);
+                    nodes.Remove(node);
                 }
             }
         }
@@ -222,7 +215,7 @@ namespace E.Tool
         /// <param name="node"></param>
         public void ClearNodeUpChoices(StoryNode node)
         {
-            foreach (StoryNode item in Nodes)
+            foreach (StoryNode item in nodes)
             {
                 if (item.nodeOptions != null)
                 {
@@ -245,7 +238,7 @@ namespace E.Tool
             string str = "确认要清空所有节点吗？";
             if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
             {
-                Nodes.Clear();
+                nodes.Clear();
             }
         }
     }

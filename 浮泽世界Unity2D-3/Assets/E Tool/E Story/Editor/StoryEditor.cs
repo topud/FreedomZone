@@ -19,7 +19,7 @@ namespace E.Tool
         {
             Target = (Story)target;
 
-            nodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("Nodes"), true, true, true, true)
+            nodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("nodes"), true, true, false, true)
             {
                 //设置单个元素的高度
                 elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
@@ -86,7 +86,7 @@ namespace E.Tool
                 }
             };
 
-            conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("Conditions"), true, true, true, true)
+            conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("conditions"), true, true, true, true)
             {
                 //设置单个元素的高度
                 elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
@@ -119,8 +119,8 @@ namespace E.Tool
                         list.index = list.serializedProperty.arraySize - 1;
 
                         SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
-                        SerializedProperty nameProperty = itemData.FindPropertyRelative("Key");
-                        SerializedProperty valueProperty = itemData.FindPropertyRelative("DefaultValue");
+                        SerializedProperty nameProperty = itemData.FindPropertyRelative("key");
+                        SerializedProperty valueProperty = itemData.FindPropertyRelative("value");
                         nameProperty.stringValue = "未命名";
                         valueProperty.intValue = 0;
                     }
@@ -162,7 +162,7 @@ namespace E.Tool
             }
 
             EditorGUILayout.LabelField("故事描述");
-            Target.Describe = EditorGUILayout.TextArea(Target.Describe);
+            Target.description = EditorGUILayout.TextArea(Target.description);
 
             EditorGUILayout.Space(5);
 

@@ -43,7 +43,7 @@ namespace E.Tool
                 SerializedProperty sp3 = property.FindPropertyRelative("sentences");
                 SerializedProperty sp4 = property.FindPropertyRelative("nodeOptions");
 
-                EditorGUI.LabelField(r1, string.Format("节点编号：{0}-{1}-{2}-{3}  对话数量：{4}  选项数量：{5}",
+                EditorGUI.LabelField(r1, string.Format("节点编号：{0}-{1}-{2}-{3}  对话数量：{4}  分支数量：{5}",
                     sp1_1.intValue, sp1_2.intValue, sp1_3.intValue, sp1_4.intValue, sp3.arraySize, sp4.arraySize));
                 sp2.stringValue = EditorGUI.TextField(r2, "节点简介", sp2.stringValue);
             }

@@ -50,7 +50,7 @@ namespace E.Tool
                 {
                     if (list.list != null)
                     {
-                        list.list.Add(new Sentence("角色名称", "对话内容"));
+                        list.list.Add(new Sentence("角色名称", "发言内容"));
                         list.index = list.list.Count - 1;
                     }
                     else
@@ -62,7 +62,7 @@ namespace E.Tool
                 //删除
                 onRemoveCallback = (ReorderableList list) =>
                 {
-                    if (EditorUtility.DisplayDialog("警告", "是否真的要删除这句话？", "是", "否"))
+                    if (EditorUtility.DisplayDialog("警告", "是否要删除这条发言？", "是", "否"))
                     {
                         ReorderableList.defaultBehaviours.DoRemoveButton(list);
                     }

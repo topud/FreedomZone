@@ -68,7 +68,7 @@ namespace E.Tool
                 //删除
                 onRemoveCallback = (ReorderableList list) =>
                 {
-                    if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个条件？", "是", "否"))
+                    if (EditorUtility.DisplayDialog("警告", "是否要删除这个条件？", "是", "否"))
                     {
                         ReorderableList.defaultBehaviours.DoRemoveButton(list);
                     }
@@ -134,7 +134,7 @@ namespace E.Tool
                 //删除
                 onRemoveCallback = (ReorderableList list) =>
                 {
-                    if (EditorUtility.DisplayDialog("警告", "是否真的要删除这个节点？", "是", "否"))
+                    if (EditorUtility.DisplayDialog("警告", "是否要删除这个节点？", "是", "否"))
                     {
                         ReorderableList.defaultBehaviours.DoRemoveButton(list);
                     }

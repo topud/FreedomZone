@@ -10,9 +10,6 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f2d75a21f2273b74bb6675beef1f145d, type: 3}
-  m_Name: New Sentences
+  m_Name: "\u5267\u60C5\u7247\u6BB52"
   m_EditorClassIdentifier: 
-  sentences:
-  - character: 
-    avatar: {fileID: 0}
-    words: 
+  sentences: []

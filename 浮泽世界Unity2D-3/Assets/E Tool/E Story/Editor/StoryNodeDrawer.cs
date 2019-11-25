@@ -28,10 +28,6 @@ namespace E.Tool
                 {
                     y = r2.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing
                 };
-                Rect r4 = new Rect(r3)
-                {
-                    y = r3.y + EditorGUIUtility.singleLineHeight + EditorGUIUtility.standardVerticalSpacing
-                };
 
                 //找到每个属性的序列化值
                 SerializedProperty sp1 = property.FindPropertyRelative("id");
@@ -43,9 +39,10 @@ namespace E.Tool
                 SerializedProperty sp3 = property.FindPropertyRelative("sentences");
                 SerializedProperty sp4 = property.FindPropertyRelative("nodeOptions");
 
-                EditorGUI.LabelField(r1, string.Format("节点编号：{0}-{1}-{2}-{3}  对话数量：{4}  分支数量：{5}",
-                    sp1_1.intValue, sp1_2.intValue, sp1_3.intValue, sp1_4.intValue, sp3.arraySize, sp4.arraySize));
+                EditorGUI.LabelField(r1, string.Format("节点编号：{0}-{1}-{2}-{3}  分支数量：{4}",
+                    sp1_1.intValue, sp1_2.intValue, sp1_3.intValue, sp1_4.intValue,  sp4.arraySize));
                 sp2.stringValue = EditorGUI.TextField(r2, "节点简介", sp2.stringValue);
+                sp3.objectReferenceValue = EditorGUI.ObjectField(r3, "剧情内容", sp3.objectReferenceValue, typeof(Sentences));
             }
         }
     }

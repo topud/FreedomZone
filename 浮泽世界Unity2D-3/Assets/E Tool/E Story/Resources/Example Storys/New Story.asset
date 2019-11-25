@@ -22,24 +22,8 @@ MonoBehaviour:
     Type: 0
     isMainNode: 1
     description: 
-    sentences: []
+    sentences: {fileID: 11400000, guid: 9a02209027b6c184696a865183e155eb, type: 2}
     nodeOptions:
-    - id:
-        chapter: 1
-        scene: 1
-        part: 1
-        branch: 3
-      description: 
-      conditions:
-      - keyIndex: 0
-        comparison: 0
-        value: 0
-      - keyIndex: 1
-        comparison: 0
-        value: 0
-      - keyIndex: 0
-        comparison: 0
-        value: 0
     - id:
         chapter: 1
         scene: 1
@@ -50,11 +34,18 @@ MonoBehaviour:
       - keyIndex: 0
         comparison: 0
         value: 0
+    - id:
+        chapter: 1
+        scene: 1
+        part: 1
+        branch: 2
+      description: 
+      conditions: []
     layout:
-      x: 71
-      y: 104
+      x: 91
+      y: 58
       width: 300
-      height: 182
+      height: 142
   - id:
       chapter: 1
       scene: 1
@@ -63,55 +54,26 @@ MonoBehaviour:
     Type: 0
     isMainNode: 0
     description: 
-    sentences: []
-    nodeOptions:
-    - id:
-        chapter: 1
-        scene: 1
-        part: 1
-        branch: 3
-      description: 
-      conditions: []
+    sentences: {fileID: 0}
+    nodeOptions: []
     layout:
-      x: 469
-      y: 46
+      x: 470
+      y: 310
       width: 300
       height: 82
   - id:
       chapter: 1
       scene: 1
       part: 1
-      branch: 3
+      branch: 5
     Type: 0
     isMainNode: 1
     description: 
-    sentences: []
+    sentences: {fileID: 0}
     nodeOptions: []
     layout:
-      x: 786
-      y: 242
-      width: 300
-      height: 62
-  - id:
-      chapter: 1
-      scene: 1
-      part: 1
-      branch: 5
-    Type: 0
-    isMainNode: 0
-    description: 
-    sentences: []
-    nodeOptions:
-    - id:
-        chapter: 1
-        scene: 1
-        part: 1
-        branch: 3
-      description: 
-      conditions: []
-    layout:
-      x: 472
-      y: 415
+      x: 496
+      y: 83
       width: 300
       height: 82
   conditions:

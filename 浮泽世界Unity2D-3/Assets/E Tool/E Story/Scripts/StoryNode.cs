@@ -15,7 +15,7 @@ namespace E.Tool
         public bool isMainNode;
 
         [Tooltip("简介"), TextArea] public string description;
-        [Tooltip("对话")] public List<Sentence> sentences = new List<Sentence>();
+        [Tooltip("对话")] public Sentences sentences;
         [Tooltip("选项")] public List<StoryNodeOption> nodeOptions = new List<StoryNodeOption>();
 
         [Tooltip("布局")] public RectInt layout;
@@ -25,11 +25,11 @@ namespace E.Tool
             this.id = id;
             Type = NodeType.中间节点;
             isMainNode = true;
-            nodeOptions = new List<StoryNodeOption>();
-            layout = rect;
 
             description = "";
-            sentences = new List<Sentence>();
+            //sentences = new List<Sentence>();
+            nodeOptions = new List<StoryNodeOption>();
+            layout = rect;
         }
 
         public bool ContainsNextNode(NodeID id)
@@ -76,21 +76,6 @@ namespace E.Tool
         public override int GetHashCode()
         {
             return base.GetHashCode();
-        }
-    }
-
-    [Serializable]
-    public class Sentence
-    {
-        [Tooltip("角色名称")] public string character;
-        [Tooltip("角色表情")] public Sprite avatar;
-        [Tooltip("对话内容"), TextArea(1, 10)] public string words;
-
-        public Sentence(string speaker, string words)
-        {
-            character = speaker;
-            avatar = null;
-            this.words = words;
         }
     }
 

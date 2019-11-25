@@ -19,6 +19,8 @@ namespace E.Tool
         {
             Target = (Story)target;
 
+            float svs = EditorGUIUtility.standardVerticalSpacing;
+            float slh = EditorGUIUtility.singleLineHeight;
             conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("conditions"), true, true, true, true)
             {
                 //设置单个元素的高度
@@ -88,7 +90,7 @@ namespace E.Tool
             nodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("nodes"), true, true, false, false)
             {
                 //设置单个元素的高度
-                elementHeight = EditorGUIUtility.singleLineHeight * 2 + EditorGUIUtility.standardVerticalSpacing * 3,
+                elementHeight = slh * 3 + svs * 4,
 
                 //绘制
                 drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>

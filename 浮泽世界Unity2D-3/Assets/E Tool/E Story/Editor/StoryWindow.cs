@@ -171,12 +171,12 @@ namespace E.Tool
         /// <summary>
         /// 打开窗口
         /// </summary>
-        [MenuItem("Tools/E Story/打开编辑器窗口 %#w", false, 0)]
+        [MenuItem("Window/E Tool/E Story %#w")]
         public static void Open()
         {
             Initialize();
             Refresh();
-            Debug.Log("已打开故事编辑器");
+            Debug.Log("已打开 E Story");
         }
         /// <summary>
         /// 打开故事

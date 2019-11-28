@@ -8,7 +8,7 @@ namespace E.Tool
     [CreateAssetMenu(menuName = "E Story Sentences", order = 1)]
     public class Sentences : StaticDataDictionary<Sentences>
     {
-        [Tooltip("对话")] public List<Sentence> sentences = new List<Sentence>();
+        [Tooltip("对话")] public Sentence[] sentences;
     }
 
     [Serializable]

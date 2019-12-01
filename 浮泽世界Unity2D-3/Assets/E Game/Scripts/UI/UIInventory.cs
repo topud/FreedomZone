@@ -7,9 +7,9 @@ public class UIInventory : UIListBase<Item, UISlotItem>
 {
     public override void LoadData()
     {
-        if (Character.Player)
+        if (Character.player)
         {
-            Datas.AddRange(Character.Player.Items);
+            Datas.AddRange(Character.player.Items);
         }
     }
 }

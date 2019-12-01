@@ -22,11 +22,11 @@ namespace E.Tool
         protected virtual void OnEnable()
         {
             Refresh();
-            Character.OnPlayerItemChange.AddListener(Refresh);
+            Character.onPlayerItemChange.AddListener(Refresh);
         }
         protected virtual void OnDisable()
         {
-            Character.OnPlayerItemChange.RemoveListener(Refresh);
+            Character.onPlayerItemChange.RemoveListener(Refresh);
         }
 
         public virtual void Clear()

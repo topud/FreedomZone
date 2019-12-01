@@ -12,16 +12,22 @@ namespace E.Tool
     [RequireComponent(typeof(AIDestinationSetter))]
     public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
-        public static Character Player;
-        public static UnityEvent OnPlayerItemChange = new UnityEvent();
-        public static UnityEvent OnPlayerInfoChange = new UnityEvent();
+        public static Character player;
+        public static UnityEvent onPlayerItemChange = new UnityEvent();
+        public static UnityEvent onPlayerInfoChange = new UnityEvent();
 
-        public new Animator Animator { get => GetComponentInChildren<Animator>(true); }
-        public new SpriteSorter SpriteSorter { get => GetComponentInChildren<SpriteSorter>(true); }
-        public AIPath AIPath { get => GetComponent<AIPath>(); }
-        public AIDestinationSetter AIDestinationSetter { get => GetComponent<AIDestinationSetter>(); }
-        public EntityUI TargetUI { get => GetComponentInChildren<EntityUI>(true); }
-        public InHandItemController RightHandItemController { get => GetComponentInChildren<InHandItemController>(true); }
+        public new Animator Animator
+        { get => GetComponentInChildren<Animator>(true); }
+        public new SpriteSorter SpriteSorter
+        { get => GetComponentInChildren<SpriteSorter>(true); }
+        public AIPath AIPath
+        { get => GetComponent<AIPath>(); }
+        public AIDestinationSetter AIDestinationSetter
+        { get => GetComponent<AIDestinationSetter>(); }
+        public EntityUI TargetUI
+        { get => GetComponentInChildren<EntityUI>(true); }
+        public InHandItemController RightHandItemController
+        { get => GetComponentInChildren<InHandItemController>(true); }
 
         [Header("角色状态")]
         [SerializeField, ReadOnly] private CharacterState state = CharacterState.Idle;
@@ -55,12 +61,12 @@ namespace E.Tool
             {
                 if (value)
                 {
-                    if (Player)
+                    if (player)
                     {
-                        Player.IsPlayer = false;
+                        player.IsPlayer = false;
                     }
 
-                    Player = this;
+                    player = this;
                     AIPath.enabled = false;
                     CameraManager.SetFollow(transform);
                 }
@@ -256,7 +262,7 @@ namespace E.Tool
 
             if (IsPlayer)
             {
-                Player = null;
+                player = null;
             }
         }
 
@@ -438,7 +444,7 @@ namespace E.Tool
                 PutRightHandItemInBag();
                 PutItemInRightHand(item);
 
-                OnPlayerItemChange.Invoke();
+                onPlayerItemChange.Invoke();
                 Debug.Log(string.Format("已拾取 {0}", item.name));
             }
             else
@@ -514,7 +520,7 @@ namespace E.Tool
 
                 Items.Remove(item);
 
-                OnPlayerItemChange.Invoke();
+                onPlayerItemChange.Invoke();
                 Debug.Log(string.Format("已丢弃 {0}", item.name));
             }
             else
@@ -614,7 +620,7 @@ namespace E.Tool
             PutRightHandItemInBag();
             PutItemInRightHand(Items[last]);
 
-            OnPlayerItemChange.Invoke();
+            onPlayerItemChange.Invoke();
         }
         /// <summary>
         /// 拿出下一个物品
@@ -644,7 +650,7 @@ namespace E.Tool
             PutRightHandItemInBag();
             PutItemInRightHand(Items[next]);
 
-            OnPlayerItemChange.Invoke();
+            onPlayerItemChange.Invoke();
         }
 
         /// <summary>

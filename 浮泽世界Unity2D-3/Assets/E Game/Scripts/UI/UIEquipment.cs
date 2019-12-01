@@ -14,7 +14,7 @@ namespace E.Tool
 
         private void Start()
         {
-            Data = Character.Player;
+            Data = Character.player;
         }
         private void Update()
         {

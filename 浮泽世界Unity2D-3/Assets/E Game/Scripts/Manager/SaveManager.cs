@@ -168,7 +168,7 @@ public class SaveManager : SingletonClass<SaveManager>
             Debug.LogError("存档失败，指定文件不存在 " + fileInfo.FullName);
             return;
         }
-        if (!Character.Player)
+        if (!Character.player)
         {
             Debug.LogError("存档失败，玩家对象没有生成");
             return;

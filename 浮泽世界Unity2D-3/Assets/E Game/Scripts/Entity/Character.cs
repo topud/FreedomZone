@@ -212,6 +212,7 @@ namespace E.Tool
                         CheckMouseScrollWheelWithAlt();
                         CheckMouseScrollWheelWithoutAlt();
 
+                        CheckWatch();
                         CheckPlayerFaceTo();
                         CheckPlayerAnimation();
 
@@ -1067,6 +1068,35 @@ namespace E.Tool
             {
                 AIPath.maxSpeed = DynamicData.Speed.Now;
             }
+        }
+        private void CheckWatch()
+        {
+            Vector3 dirM = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            dirM.z = 0;
+            Vector3 dirA = dirM - transform.position;
+            Vector3 dirB = new Vector3(1, 0, 0);
+            float angle = Vector3.Angle(dirB, dirA);
+
+            float y = 0.5f;
+            if (dirM.y > transform.position.y)
+            {
+                if (angle > 90)
+                {
+                    angle = 180 - angle;
+                }
+                y = 0.5f + angle / 180;
+            }
+            else
+            {
+                if (angle > 90)
+                {
+                    angle = 180 - angle;
+                }
+                y = 0.5f - angle / 180;
+            }
+
+            //Debug.Log(y);
+            Animator.SetFloat("Y", y);
         }
         private void CheckPlayerFaceTo()
         {

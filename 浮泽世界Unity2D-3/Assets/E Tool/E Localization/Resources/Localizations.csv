@@ -1,0 +1,10 @@
+id,ch,en,jp
+ui.menu.back,返回,Back,バック
+ui.gameMode,游戏模式,Game modes,ゲームモード
+ui.gameMode.choose,选择游戏模式,Choose a game mode,ゲームモードを選択します
+ui.gameMode.single,单人玩家,Single player,シングルプレーヤー
+ui.gameMode.multi,多人,Multiplayer,マルチプレイ
+ui.gameMode.local,本地多人,Local multiplayer,ローカルマルチプレイ
+ui.gameMode.online,在线多人游戏,Online multiplayer,オンラインマルチプレイヤー
+story.sentence.1.1.1.1,01,02,03
+story.character.Ria,璃亚,Ria,リア

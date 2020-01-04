@@ -21,17 +21,15 @@ MonoBehaviour:
   - year: 1999
     make: Chevy
     model: Venture "Extended Edition"
-    description: 
+    description: "\u770B\u770B"
     price: 4900
   - year: 1999
     make: Chevy
     model: Venture "Extended Edition, Very Large"
-    description: 
+    description: 123
     price: 5000
   - year: 1996
     make: Jeep
     model: Grand Cherokee
-    description: 'MUST SELL!
-
-      air, moon roof, loaded'
+    description: MUST SELL! air, moon roof, loaded
     price: 4799

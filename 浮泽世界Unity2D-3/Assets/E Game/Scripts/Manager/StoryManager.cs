@@ -5,13 +5,29 @@ using E.Tool;
 
 public class StoryManager : SingletonClass<StoryManager>
 {
-    public List<Story> Storys;
-    public List<Story> PassdStorys;
-    public Story CurrentStory;
+    private static Story currentStory;
 
     public List<NodeID> CurrentStoryPassdNodeIDs;
     public NodeID CurrentNodeID;
     public StoryNode CurrentNode;
+
+    public static Story CurrentStory 
+    {
+        get 
+        {
+            if (!currentStory)
+            {
+                currentStory = Instantiate(Story.GetValue("示例故事"));
+            };
+            return currentStory; 
+        }
+        set => currentStory = value;
+    }
+    public static List<Condition> Conditions 
+    {
+        get=> CurrentStory.conditions;
+        set => CurrentStory.conditions = value;
+    }
 
 
     /// <summary>

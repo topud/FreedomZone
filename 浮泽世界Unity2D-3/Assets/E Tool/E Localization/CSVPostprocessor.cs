@@ -44,30 +44,35 @@ namespace E.Tool
             }
         }
 
-        [MenuItem("Tools/E Localization/CSV to Asset")]
+        [MenuItem("Tools/E Localization/Sample CSV to Asset")]
         public static void Deserialize()
         {
             Selection.activeObject.GetInstanceID();
             string[] strs = Selection.assetGUIDs;
-
-            string path = AssetDatabase.GUIDToAssetPath(strs[0]);
-
-            if (path.IndexOf("/sample.csv") != -1)
+            foreach (string item in strs)
             {
-                TextAsset data = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
-                string assetfile = path.Replace(".csv", ".asset");
-                CSVExample gm = AssetDatabase.LoadAssetAtPath<CSVExample>(assetfile);
-                if (gm == null)
+                string path = AssetDatabase.GUIDToAssetPath(item);
+                if (path.IndexOf(".csv") != -1)
                 {
-                    gm = ScriptableObject.CreateInstance<CSVExample>();
-                    AssetDatabase.CreateAsset(gm, assetfile);
+                    TextAsset data = AssetDatabase.LoadAssetAtPath<TextAsset>(path);
+                    string assetfile = path.Replace(".csv", ".asset");
+                    CSVExample gm = AssetDatabase.LoadAssetAtPath<CSVExample>(assetfile);
+                    if (gm == null)
+                    {
+                        gm = ScriptableObject.CreateInstance<CSVExample>();
+                        AssetDatabase.CreateAsset(gm, assetfile);
+                    }
+
+                    gm.m_Sample = CSVSerializer.Deserialize<Sample>(data.text);
+
+                    EditorUtility.SetDirty(gm);
+                    AssetDatabase.SaveAssets();
+                    Debug.Log("资产生成：" + path);
                 }
-
-                gm.m_Sample = CSVSerializer.Deserialize<CSVExample.Sample>(data.text);
-
-                EditorUtility.SetDirty(gm);
-                AssetDatabase.SaveAssets();
-                Debug.Log("资产已重新导入：" + path);
+                else
+                {
+                    Debug.LogError("对象不是csv文件：" + path);
+                }
             }
         }
     }

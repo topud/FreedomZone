@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class UIInventory : UIListBase<Item, UISlotItem>
+public class UIInventory : UIList<Item, UISlotItem>
 {
     public override void LoadData()
     {
-        if (Character.player)
+        if (CharacterManager.Player)
         {
-            Datas.AddRange(Character.player.Items);
+            Datas.AddRange(CharacterManager.Player.Items);
         }
     }
 }

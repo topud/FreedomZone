@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1186703784107450710}
   - component: {fileID: 127979291631510774}
   - component: {fileID: 332539109037714496}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: ItemTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -69,8 +69,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8129716939466539546}
-  m_Layer: 8
-  m_Name: Entity Triggers
+  m_Layer: 0
+  m_Name: Trigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 6143582976125162693}
   - component: {fileID: 4479844840341166049}
   - component: {fileID: 7152723720917008642}
-  m_Layer: 8
+  m_Layer: 0
   m_Name: CharacterTrigger
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -40,6 +40,10 @@ namespace E.Tool
         public void SetChat(string str)
         {
             PanTalk.GetComponentInChildren<Text>().text = str;
+
+            float time = str.Length;
+            CancelInvoke();
+            Invoke("HideChat", time);
         }
         public void ShowChat()
         {

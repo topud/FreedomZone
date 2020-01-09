@@ -45,7 +45,7 @@ public class AppStudentCard : PhoneApp
 
     private void Start()
     {
-        if (!Target) Target = Character.player;
+        if (!Target) Target = CharacterManager.Player;
     }
 
     private void Update()

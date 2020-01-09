@@ -24,7 +24,5 @@ namespace E.Tool
         [Tooltip("当前接受的任务")] public List<Quest> AcceptedQuests = new List<Quest>();
         [Tooltip("当前发布的任务")] public List<Quest> PublishedQuests = new List<Quest>();
         [Tooltip("当前人际关系")] public List<Relationship> Relationships = new List<Relationship>();
-
-        [Tooltip("是否为玩家操控角色"), ReadOnly] public bool IsPlayer = false;
     }
 }

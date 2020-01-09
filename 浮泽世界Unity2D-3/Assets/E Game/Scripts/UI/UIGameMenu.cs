@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 namespace E.Tool
 {
-    public class UIGameMenu : UIBasePanel
+    public class UIGameMenu : UIBase
     {
         [SerializeField] private Button btnBack;
         [SerializeField] private Button btnSave;

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using E.Tool;
 
-public class UIItemDetail : UIBasePanel
+public class UIItemDetail : UIBase
 {
     [Header("视图")]
     [SerializeField] private Text txtName;

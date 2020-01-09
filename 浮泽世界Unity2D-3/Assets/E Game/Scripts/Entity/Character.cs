@@ -12,7 +12,6 @@ namespace E.Tool
     [RequireComponent(typeof(AIDestinationSetter))]
     public class Character : Entity<CharacterStaticData, CharacterDynamicData>
     {
-        public static Character player;
         public static UnityEvent onPlayerItemChange = new UnityEvent();
         public static UnityEvent onPlayerInfoChange = new UnityEvent();
 
@@ -31,7 +30,7 @@ namespace E.Tool
 
         [Header("角色状态")]
         [SerializeField, ReadOnly] private CharacterState state = CharacterState.Idle;
-        [SerializeField, ReadOnly] private bool isPlayer = false;
+        [SerializeField, ReadOnly] private InteractiveMode mode = InteractiveMode.Survey;
         [SerializeField, ReadOnly] private int currentSpeed = 0;
         [SerializeField, ReadOnly] private float runBeyondDistance = 5;
         [SerializeField, ReadOnly] private Item lastPutInBagItem;
@@ -52,31 +51,20 @@ namespace E.Tool
             private set => state = value;
         }
         /// <summary>
+        /// 交互模式
+        /// </summary>
+        public InteractiveMode Mode
+        { 
+            get => mode;
+            private set => mode = value; 
+        }
+        /// <summary>
         /// 是否玩家控制角色
         /// </summary>
         public bool IsPlayer
         {
-            get => isPlayer;
-            set
-            {
-                if (value)
-                {
-                    if (player)
-                    {
-                        player.IsPlayer = false;
-                    }
-
-                    player = this;
-                    AIPath.enabled = false;
-                    CameraManager.SetFollow(transform);
-                }
-                else
-                {
-                    AIPath.enabled = true;
-                }
-                isPlayer = value;
-                DynamicData.IsPlayer = value;
-            }
+            get => CharacterManager.Player == this;
+            set => CharacterManager.Player = value ? this : null;
         }
         /// <summary>
         /// 穿着物品
@@ -197,7 +185,11 @@ namespace E.Tool
             {
                 if (IsPlayer)
                 {
-                    if (!UIManager.IsShowAnyUI)
+                    if (UIManager.IsShowAnyUI)
+                    {
+                        RightHandItemController.SetIsLookAtCursor(false);
+                    }
+                    else
                     {
                         CheckNearistItem();
                         CheckNearistCharacter();
@@ -205,7 +197,8 @@ namespace E.Tool
 
                         CheckKeyUp_E();
                         CheckKeyUp_F();
-                        CheckKeyUp_Q();
+                        CheckKeyUp_Q(); 
+                        CheckKeyUp_Tab();
                         CheckMouseButtonDown_0();
                         CheckMouseButtonDown_1();
                         CheckMouseButtonDown_2();
@@ -217,10 +210,6 @@ namespace E.Tool
                         CheckPlayerAnimation();
 
                         RightHandItemController.SetIsLookAtCursor(true);
-                    }
-                    else
-                    {
-                        RightHandItemController.SetIsLookAtCursor(false);
                     }
                 }
                 else
@@ -260,13 +249,19 @@ namespace E.Tool
         protected override void OnDestroy()
         {
             base.OnDestroy();
-
-            if (IsPlayer)
-            {
-                player = null;
-            }
+        }
+        public override void OnPointerEnter()
+        {
+            //Debug.Log("光标进入 " + name);
+            SpriteSorter.SetAlpha(0.5f);
+        }
+        public override void OnPointerExit()
+        {
+            //Debug.Log("光标离开 " + name);
+            SpriteSorter.SetAlpha(1f);
         }
 
+        //数据
         /// <summary>
         /// 设置数据，默认用于从存档读取数据
         /// </summary>
@@ -274,10 +269,7 @@ namespace E.Tool
         public override void SetDynamicData(CharacterDynamicData data)
         {
             base.SetDynamicData(data);
-
-            IsPlayer = data.IsPlayer;
         }
-
         [ContextMenu("刷新数据")]
         /// <summary>
         /// 刷新数据
@@ -317,8 +309,7 @@ namespace E.Tool
             if (!StaticData) return;
 
             TargetUI.SetName(StaticData.Name);
-            TargetUI.HideName();
-            TargetUI.HideChat();
+            TargetUI.HideAll();
 
             DynamicData = new CharacterDynamicData
             {
@@ -344,15 +335,29 @@ namespace E.Tool
                 Relationships = StaticData.Relationships
             };
         }
-        /// <summary>
-        /// 设为玩家控制角色
-        /// </summary>
-        [ContextMenu("设为玩家控制角色")]
-        public void SetPlayer()
-        {
-            IsPlayer = true;
-        }
 
+        //行为
+        /// <summary>
+        /// 切换交互模式
+        /// </summary>
+        public void SwitchMode()
+        {
+            switch (Mode)
+            {
+                case InteractiveMode.Survey:
+                    Mode = InteractiveMode.Fight;
+                    UIManager.Singleton.UICharacterStatus.Show();
+                    Debug.Log("切换至战斗模式");
+                    break;
+                case InteractiveMode.Fight:
+                    Mode = InteractiveMode.Survey;
+                    UIManager.Singleton.UICharacterStatus.Hide();
+                    Debug.Log("切换至调查模式");
+                    break;
+                default:
+                    break;
+            }
+        }
         /// <summary>
         /// 更改当前生命值上限
         /// </summary>
@@ -389,7 +394,23 @@ namespace E.Tool
                 if (DynamicData.Power.AutoChangeable) DynamicData.Power.Now += (int)(0.1 * DynamicData.Power.AutoChangeRate);
             }
         }
+        /// <summary>
+        /// 攻击
+        /// </summary>
+        public void Attack()
+        {
+            Animator.SetTrigger("Attack");
+        }
 
+        //物品
+        /// <summary>
+        /// 是否在视野内
+        /// </summary>
+        /// <returns></returns>
+        public bool IsInView(Item target)
+        {
+            return Vector2.Distance(target.transform.position, transform.position) < 5;
+        }
         /// <summary>
         /// 检测物品是否在拾取范围
         /// </summary>
@@ -424,7 +445,6 @@ namespace E.Tool
         {
             return Items.IndexOf(item);
         }
-
         /// <summary>
         /// 拾取物品
         /// </summary>
@@ -466,15 +486,16 @@ namespace E.Tool
                 Debug.LogError("没有物品可调查");
                 return;
             }
-            TargetUI.ShowChat();
-            if (IsNearby(item))
+            if (IsInView(item))
             {
+                TargetUI.ShowChat();
                 TargetUI.SetChat(item.StaticData.Describe);
             }
             else
             {
+                TargetUI.ShowChat();
                 TargetUI.SetChat("我需要靠近点才能仔细观察。");
-                Debug.LogError(string.Format("无法调查 {0}，因距离过远", item.name));
+                Debug.LogWarning(string.Format("无法调查 {0}，因距离过远", item.name));
             }
         }
         /// <summary>
@@ -653,7 +674,6 @@ namespace E.Tool
 
             onPlayerItemChange.Invoke();
         }
-
         /// <summary>
         /// 获取右手上的物品
         /// </summary>
@@ -688,6 +708,24 @@ namespace E.Tool
             RightHandItemController.RemoveItem();
         }
 
+        //角色
+        /// <summary>
+        /// 是否在视野内
+        /// </summary>
+        /// <returns></returns>
+        public bool IsInView(Character target)
+        {
+            return Vector2.Distance(target.transform.position, transform.position) < 8;
+        }
+        /// <summary>
+        /// 检测角色是否在对话范围
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        public bool IsNearby(Character target)
+        {
+            return NearbyCharacters.Contains(target);
+        }
         /// <summary>
         /// 与角色对话
         /// </summary>
@@ -720,35 +758,21 @@ namespace E.Tool
         /// <param name="item"></param>
         public void Survey(Character target)
         {
-            if (IsNearby(target))
+            if (IsInView(target))
             {
-                target.TargetUI.HideAll();
+                //target.TargetUI.HideAll();
                 TargetUI.ShowChat();
                 TargetUI.SetChat(target.StaticData.Describe);
             }
             else
             {
-                Debug.LogError(string.Format("无法调查 {0}，因距离过远", target.StaticData.Name));
+                TargetUI.ShowChat();
+                TargetUI.SetChat("我需要靠近点才能仔细观察。");
+                Debug.LogWarning(string.Format("无法调查 {0}，因距离过远", target.name));
             }
         }
-        /// <summary>
-        /// 检测角色是否在对话范围
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        public bool IsNearby(Character target)
-        {
-            return NearbyCharacters.Contains(target);
-        }
 
-        /// <summary>
-        /// 攻击
-        /// </summary>
-        public void Attack()
-        {
-            Animator.SetTrigger("Attack");
-        }
-
+        //检测
         private void CheckMove()
         {
             float horizontal = Input.GetAxis("Horizontal");
@@ -868,21 +892,21 @@ namespace E.Tool
             //如果改变了最近的实体
             if (isChangeNearistEntity)
             {
-                CancelInvoke();
-                TargetUI.HideChat();
+                //CancelInvoke();
+                //TargetUI.HideChat();
                 if (NearistEntity)
                 {
-                    if (NearistEntity.GetComponent<Item>())
-                    {
-                        Invoke("ShowItemTip", 0);
-                    }
-                    else if (NearistEntity.GetComponent<Character>())
-                    {
-                        Invoke("ShowCharacterTip", 0);
-                    }
-                    else
-                    {
-                    }
+                    //if (NearistEntity.GetComponent<Item>())
+                    //{
+                    //    Invoke("ShowItemTip", 0);
+                    //}
+                    //else if (NearistEntity.GetComponent<Character>())
+                    //{
+                    //    Invoke("ShowCharacterTip", 0);
+                    //}
+                    //else
+                    //{
+                    //}
                 }
                 if (lastNearistEntity)
                 {
@@ -902,22 +926,6 @@ namespace E.Tool
                 {
                 }
                 lastNearistEntity = NearistEntity;
-            }
-        }
-        private void ShowItemTip()
-        {
-            if (!TargetUI.IsShowChat())
-            {
-                TargetUI.SetChat("[E]拾取\n[F]调查");
-                TargetUI.ShowChat();
-            }
-        }
-        private void ShowCharacterTip()
-        {
-            if (!TargetUI.IsShowChat())
-            {
-                TargetUI.SetChat("[E]对话\n[F]调查");
-                TargetUI.ShowChat();
             }
         }
 
@@ -966,6 +974,13 @@ namespace E.Tool
         {
 
         }
+        private void CheckKeyUp_Tab()
+        {
+            if (Input.GetKeyUp(KeyCode.Tab))
+            {
+                SwitchMode();
+            }
+        }
 
         private void CheckMouseButtonDown_0()
         {
@@ -973,7 +988,34 @@ namespace E.Tool
             {
                 if (Input.GetMouseButtonDown(0))
                 {
-                    Attack();
+                    switch (Mode)
+                    {
+                        case InteractiveMode.Survey:
+                            if (EventManager.EventSystem.IsPointerOverGameObject())
+                            {
+                                GameObject go = EventManager.GetOverGameObject();
+                                Item item = go.GetComponent<Item>();
+                                Character character = go.GetComponent<Character>();
+                                if (item)
+                                {
+                                    Survey(item);
+                                }
+                                if (character)
+                                {
+                                    Survey(character);
+                                }
+                            }
+                            else
+                            {
+                                TargetUI.HideAll();
+                            }
+                            break;
+                        case InteractiveMode.Fight:
+                            Attack();
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
@@ -981,7 +1023,7 @@ namespace E.Tool
         {
             if (IsPlayer)
             {
-                if (Input.GetMouseButtonDown(0))
+                if (Input.GetMouseButtonDown(1))
                 {
                     Item item = GetRightHandItem();
                     if (item)
@@ -1134,5 +1176,10 @@ namespace E.Tool
         Rest = 3,
         Talk = 4,
         Dead = 5
+    }
+    public enum InteractiveMode
+    {
+        Survey = 0,
+        Fight = 1
     }
 }

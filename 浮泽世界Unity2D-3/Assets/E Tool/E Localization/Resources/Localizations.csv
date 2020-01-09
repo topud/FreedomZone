@@ -1,16 +1,16 @@
-﻿id,ch,en,jp
+id,ch,en,jp
 
-ui.menu.back,杩斿洖,Back,銉愩儍銈､
-ui.gameMode,娓告垙妯″紡,Game modes,銈层兗銉犮儮銉笺儔
+ui.menu.back,返回,Back,バッ�?
+ui.gameMode,游戏模式,Game modes,ゲームモード
 
-ui.gameMode.choose,閫夋嫨娓告垙妯″紡,Choose a game mode,銈层兗銉犮儮銉笺儔銈掗伕鎶炪仐銇俱仚
+ui.gameMode.choose,选择游戏模式,Choose a game mode,ゲームモードを選択します
 
-ui.gameMode.single,鍗曚汉鐜╁,Single player,銈枫兂銈般儷銉椼儸銉笺儰銉､
-ui.gameMode.multi,澶氫汉,Multiplayer,銉炪儷銉併儣銉偆
+ui.gameMode.single,单人玩�?,Single player,シングルプレーヤ�?
+ui.gameMode.multi,多人,Multiplayer,マルチプ�?��
 
-ui.gameMode.local,鏈湴澶氫汉,Local multiplayer,銉兗銈儷銉炪儷銉併儣銉偆
+ui.gameMode.local,�?��多人,Local multiplayer,�?���?��マルチプ�?��
 
-ui.gameMode.online,鍦ㄧ嚎澶氫汉娓告垙,Online multiplayer,銈兂銉┿偆銉炽優銉儊銉椼儸銈ゃ儰銉､
+ui.gameMode.online,在线多人游戏,Online multiplayer,�?��ラインマ�?��プレイヤ�?
 story.sentence.1.1.1.1,01,02,03
 
-story.character.Ria,鐠冧簹,Ria,銉偄
+story.character.Ria,璃亚,Ria,�?��

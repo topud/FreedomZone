@@ -38,14 +38,14 @@ namespace E.Tool
             }
 
             //隐藏名称
-            if (character.IsPlayer)
-            {
-                if (target)
-                {
-                    target.TargetUI.HideAll();
-                    character.TargetUI.HideAll();
-                }
-            }
+            //if (character.IsPlayer)
+            //{
+            //    if (target)
+            //    {
+            //        target.TargetUI.HideAll();
+            //        character.TargetUI.HideAll();
+            //    }
+            //}
         }
     }
 }

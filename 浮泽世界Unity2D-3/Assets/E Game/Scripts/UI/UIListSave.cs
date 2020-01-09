@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIListSave : UIListBase<FileInfo, UISlotSave>
+    public class UIListSave : UIList<FileInfo, UISlotSave>
     {
         [SerializeField] private Button btnCreate;
         [SerializeField] private Button btnClear;

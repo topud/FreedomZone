@@ -4,7 +4,7 @@ using System;
 
 namespace E.Tool
 {
-    public class UIEquipment : UIBasePanel
+    public class UIEquipment : UIBase
     {
         [Header("视图")]
         [SerializeField] private Text txtName;
@@ -14,14 +14,10 @@ namespace E.Tool
 
         private void Start()
         {
-            Data = Character.player;
+            Data = CharacterManager.Player;
         }
         private void Update()
         {
-            if (Data)
-            {
-                txtName.text = Data.StaticData.Name;
-            }
         }
     }
 }

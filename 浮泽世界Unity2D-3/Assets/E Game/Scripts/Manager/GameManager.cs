@@ -58,7 +58,7 @@ public class GameManager : SingletonClass<GameManager>
     {
         if (SceneManager.GetActiveScene().name == "Game")
         {
-            if (Character.player == null)
+            if (!CharacterManager.Player)
             {
                 Character player = CharacterManager.GetCharacter("璃亚");
                 player.IsPlayer = true;
@@ -81,7 +81,7 @@ public class GameManager : SingletonClass<GameManager>
                 //未选择存档时开始新存档
                 if (selectSave == null)
                 {
-                    if (Character.player == null)
+                    if (!CharacterManager.Player)
                     {
                         Character player = CharacterManager.SpawnCharacter("库娅", new Vector2(165, 5), true);
                         Character npc = CharacterManager.SpawnCharacter("从人", new Vector2(170, 10));

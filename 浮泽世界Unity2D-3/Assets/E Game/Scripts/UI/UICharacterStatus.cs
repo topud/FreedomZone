@@ -4,7 +4,7 @@ using System;
 
 namespace E.Tool
 {
-    public class UICharacterStatus : UIBasePanel
+    public class UICharacterStatus : UIBase
     {
         [Header("组件")]
         [SerializeField] private Slider sldHealth;
@@ -18,7 +18,7 @@ namespace E.Tool
 
         private void Start()
         {
-            Data = Character.player;
+            Data = CharacterManager.Player;
         }
         private void Update()
         {

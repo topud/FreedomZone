@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Pathfinding;
 
@@ -17,6 +19,7 @@ namespace E.Tool
         public AudioSource AudioSource { get => GetComponent<AudioSource>(); }
         public Animator Animator { get => GetComponent<Animator>(); }
         public SpriteSorter SpriteSorter { get => GetComponent<SpriteSorter>(); }
+        public EventTrigger EventTrigger { get => GetComponent<EventTrigger>(); }
 
         [Header("实体数据")]
         public S StaticData;
@@ -64,6 +67,17 @@ namespace E.Tool
         protected virtual void OnDestroy()
         {
 
+        }
+
+        public virtual void OnPointerEnter()
+        {
+            //Debug.Log("光标进入 " + name);
+            SpriteSorter.SetAlpha(0.5f);
+        }
+        public virtual void OnPointerExit()
+        {
+            //Debug.Log("光标离开 " + name);
+            SpriteSorter.SetAlpha(1f);
         }
 
         /// <summary>

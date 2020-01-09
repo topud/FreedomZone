@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIPopup : UIBasePanel
+    public class UIPopup : UIBase
     {
         [SerializeField] private Text txtMessage;
         [SerializeField] private GameObject btnsOnlyYes;

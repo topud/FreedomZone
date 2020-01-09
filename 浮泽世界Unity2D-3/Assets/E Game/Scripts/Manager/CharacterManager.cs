@@ -10,7 +10,36 @@ public class CharacterManager : SingletonClass<CharacterManager>
     public GameObject HumanPrefab;
 
     [Header("数据")]
+    [SerializeField] private Character player;
     [SerializeField, ReadOnly] private List<Character> characters = new List<Character>();
+
+    public static Character Player 
+    {
+        get
+        {
+            if (Singleton)
+            {
+                return Singleton.player;
+            }
+            else return null;
+        }
+        set 
+        {
+            if (Singleton.player)
+            {
+                if (Singleton.player != value)
+                {
+                    Singleton.player.AIPath.enabled = false;
+                }
+            }
+            if (value)
+            {
+                value.AIPath.enabled = true;
+                CameraManager.SetFollow(value.transform);
+            }
+            Singleton.player = value;
+        }
+    }
     public static List<Character> Characters
     {
         get
@@ -24,6 +53,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
             return Singleton.characters;
         }
     }
+
 
     private void OnEnable()
     {

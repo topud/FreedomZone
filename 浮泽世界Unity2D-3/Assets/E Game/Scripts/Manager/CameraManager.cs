@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Cinemachine;
 using E.Tool;
 
@@ -10,6 +11,9 @@ public class CameraManager : SingletonClass<CameraManager>
     public Camera MainCamera;
     public Camera MinimapCamera;
     public CinemachineVirtualCamera VirtualCamera;
+
+    public static Physics2DRaycaster Physics2DRaycaster
+    { get => Singleton.GetComponentInChildren<Physics2DRaycaster>(); }
 
     public static void SetFollow(Transform target)
     {

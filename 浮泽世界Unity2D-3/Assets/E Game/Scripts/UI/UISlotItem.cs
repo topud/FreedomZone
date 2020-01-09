@@ -47,28 +47,28 @@ namespace E.Tool
         }
         public void OnClickMiddleMouse()
         {
-            Item item = Character.player.GetRightHandItem();
+            Item item = CharacterManager.Player.GetRightHandItem();
             if (item)
             {
                 if (item == Data)
                 {
-                    Character.player.PutRightHandItemInBag();
+                    CharacterManager.Player.PutRightHandItemInBag();
                 }
                 else
                 {
-                    Character.player.PutRightHandItemInBag();
-                    Character.player.PutItemInRightHand(Data);
+                    CharacterManager.Player.PutRightHandItemInBag();
+                    CharacterManager.Player.PutItemInRightHand(Data);
                 }
             }
             else
             {
-                Character.player.PutItemInRightHand(Data);
+                CharacterManager.Player.PutItemInRightHand(Data);
             }
             Character.onPlayerItemChange.Invoke();
         }
         public void OnClickRightMouse()
         {
-            Character.player.Use(Data);
+            CharacterManager.Player.Use(Data);
         }
         public override void OnBeginDrag()
         {
@@ -92,7 +92,7 @@ namespace E.Tool
         public override void UpdateData()
         {
             imgIcon.sprite = Data.StaticData.Icon;
-            imgFrame.color = Character.player.GetRightHandItem() == Data ? clrSelected : clrDefault;
+            imgFrame.color = CharacterManager.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
             imgPower.fillAmount = Data.DynamicData.Power.NowPercent;
             imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
         }

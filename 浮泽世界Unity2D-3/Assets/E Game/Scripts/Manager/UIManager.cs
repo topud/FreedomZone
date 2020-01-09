@@ -15,10 +15,10 @@ namespace E.Tool
         public UIItemDetail UIItemDetail;
         public UICharacterStatus UICharacterStatus;
         public UIEquipment UIEquipment;
+        public UIHelp UIHelp;
         [Space(5)]
         public UIListSave UISave;
         public UISetting UISetting;
-        public UIHelp UIHelp;
         public UILoading UILoading;
         public UIPopup UIPopup;
 
@@ -44,8 +44,9 @@ namespace E.Tool
             {
                 return (Singleton.UIInventory.IsEnable && Singleton.UIInventory.IsShow) ||
                     (Singleton.UIItemDetail.IsEnable && Singleton.UIItemDetail.IsShow) ||
-                    (Singleton.UICharacterStatus.IsEnable && Singleton.UICharacterStatus.IsShow )||
+                    //(Singleton.UICharacterStatus.IsEnable && Singleton.UICharacterStatus.IsShow) ||
                     (Singleton.UIEquipment.IsEnable && Singleton.UIEquipment.IsShow);
+                    //(Singleton.UIHelp.IsEnable && Singleton.UIHelp.IsShow);
             }
         }
         public static bool IsShowAnyUIPublic
@@ -54,7 +55,6 @@ namespace E.Tool
             {
                 return (Singleton.UISave.IsEnable && Singleton.UISave.IsShow )||
                     (Singleton.UISetting.IsEnable && Singleton.UISetting.IsShow) ||
-                    (Singleton.UIHelp.IsEnable && Singleton.UIHelp.IsShow) ||
                     (Singleton.UILoading.IsEnable && Singleton.UILoading.IsShow) ||
                     (Singleton.UIPopup.IsEnable && Singleton.UIPopup.IsShow);
             }
@@ -67,6 +67,8 @@ namespace E.Tool
         private void Start()
         {
             CheckUIType();
+
+            UIHelp.Show();
         }
         private void Update()
         {
@@ -125,12 +127,12 @@ namespace E.Tool
                 if (!UIItemDetail.IsEnable) UIItemDetail.IsEnable = true;
                 if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
                 if (!UIEquipment.IsEnable) UIEquipment.IsEnable = true;
-
+                if (!UIHelp.IsEnable) UIHelp.IsEnable = true;
+                //if (!UIHelp.IsShow) UIHelp.Show();
             }
 
             if (!UISave.IsEnable) UISave.IsEnable = true;
             if (!UISetting.IsEnable) UISetting.IsEnable = true;
-            if (!UIHelp.IsEnable) UIHelp.IsEnable = true;
             if (!UILoading.IsEnable) UILoading.IsEnable = true;
             if (!UIPopup.IsEnable) UIPopup.IsEnable = true;
         }
@@ -148,13 +150,15 @@ namespace E.Tool
                         UIInventory.Hide();
                         if (UIItemDetail.IsShow) UIItemDetail.Hide();
                         if (UIEquipment.IsShow) UIEquipment.Hide();
+                        UIHelp.Show();
                     }
                     else
                     {
                         UIInventory.Show();
-                        Character.player.ShowDetail(Character.player.GetRightHandItem());
+                        CharacterManager.Player.ShowDetail(CharacterManager.Player.GetRightHandItem());
                         if (!UIEquipment.IsShow) UIItemDetail.Show();
                         if (!UIEquipment.IsShow) UIEquipment.Show();
+                        UIHelp.Hide();
                     }
                 }
             }
@@ -192,6 +196,7 @@ namespace E.Tool
                 }
             }
         }
+
         public void ShowCurrentUIMenu()
         {
             if (GameManager.IsInLobby)
@@ -209,12 +214,12 @@ namespace E.Tool
             if (UIItemDetail.IsShow) UIItemDetail.Hide();
             if (UIEquipment.IsShow) UIEquipment.Hide();
             if (UICharacterStatus.IsShow) UICharacterStatus.Hide();
+            if (UIHelp.IsShow) UIHelp.Hide();
         }
         private void HideUIPublic()
         {
             if (UISetting.IsShow) UISetting.Hide();
             if (UISave.IsShow) UISave.Hide();
-            if (UIHelp.IsShow) UIHelp.Hide();
             if (UILoading.IsShow) UILoading.Hide();
             if (UIPopup.IsShow) UIPopup.Hide();
         }

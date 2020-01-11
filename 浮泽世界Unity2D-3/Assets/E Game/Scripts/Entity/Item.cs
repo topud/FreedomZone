@@ -8,8 +8,10 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
-        public GameObject SwitchableObject { get => transform.Find("SwitchableObject").gameObject; }
-
+        public GameObject SwitchableObject 
+        {
+            get => transform.Find("SwitchableObject").gameObject; 
+        }
         public bool IsUsing
         {
             get
@@ -37,6 +39,10 @@ namespace E.Tool
                 }
                 return isUsing;
             }
+        }
+        public bool IsPowerEnough
+        {
+            get => DynamicData.Power.Now > 0;
         }
 
         protected override void Awake()
@@ -160,49 +166,46 @@ namespace E.Tool
             return (StaticData.Capacity > 0) ? (float)vo / StaticData.Capacity : 0;
         }
 
-        public void TrySwitchUse()
+        /// <summary>
+        /// 使用物品
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="user"></param>
+        public void Use(Character target)
         {
+            string info = "";
             switch (StaticData.Type)
             {
                 case ItemType.Food:
+                    target.DynamicData.Skills.AddRange(StaticData.Skills);
+                    target.DynamicData.Buffs.AddRange(StaticData.Buffs);
                     break;
                 case ItemType.Weapon:
                     break;
                 case ItemType.Book:
                     break;
                 case ItemType.Clothing:
+                    target.Clothings.Add(this);
+                    target.Items.Remove(this);
                     break;
                 case ItemType.Bag:
                     break;
                 case ItemType.Switch:
-                    if (SwitchableObject)
-                    {
-                        if (IsUsing)
-                        {
-                            SwitchableObject.SetActive(false);
-                            Debug.Log("关闭了 " + name);
-                        }
-                        else
-                        {
-                            if (DynamicData.Power.Now > 0)
-                            {
-                                SwitchableObject.SetActive(true);
-                                Debug.Log("打开了 " + name);
-                            }
-                            else
-                            {
-                                Debug.Log("能量不足，无法打开 " + name);
-                            }
-                        }
-                    }
+                    info = Switch();
                     break;
                 case ItemType.Other:
                     break;
                 default:
                     break;
             }
+            if (!string.IsNullOrEmpty(info))
+            {
+                target.TargetUI.ShowChat();
+                target.TargetUI.SetChat(info);
+            }
+            Debug.Log(target.name + " 使用了" + name);
         }
-        public void CheckHealth()
+        private void CheckHealth()
         {
             if (IsUsing)
             {
@@ -228,7 +231,7 @@ namespace E.Tool
                 }
             }
         }
-        public void CheckPower()
+        private void CheckPower()
         {
             switch (StaticData.Type)
             {
@@ -243,10 +246,10 @@ namespace E.Tool
                 case ItemType.Bag:
                     break;
                 case ItemType.Switch:
-                    if (DynamicData.Power.Now == 0)
+                    if (!IsPowerEnough)
                     {
                         if (IsUsing)
-                        { TrySwitchUse(); }
+                        { SwitchOff(); }
                     }
                     break;
                 case ItemType.Other:
@@ -255,5 +258,49 @@ namespace E.Tool
                     break;
             }
         }
+
+        #region Switch
+        private string Switch()
+        {
+            string info = "";
+            if (StaticData.Type != ItemType.Switch)
+            {
+                Debug.LogError(name + " 不是开关型物品");
+                return info;
+            }
+            if (!SwitchableObject)
+            {
+                Debug.LogError("切换对象不存在");
+                return info;
+            }
+            if (IsUsing)
+            {
+                SwitchOff();
+                return info;
+            }
+            else
+            {
+                if (IsPowerEnough)
+                {
+                    SwitchOn();
+                }
+                else
+                {
+                    info = string.Format("能量不足，无法打开{0}", StaticData.Name);
+                }
+                return info;
+            }
+        }
+        private void SwitchOn()
+        {
+            SwitchableObject.SetActive(true);
+            Debug.Log("打开了 " + name);
+        }
+        private void SwitchOff()
+        {
+            SwitchableObject.SetActive(false);
+            Debug.Log("关闭了 " + name);
+        }
+        #endregion
     }
 }

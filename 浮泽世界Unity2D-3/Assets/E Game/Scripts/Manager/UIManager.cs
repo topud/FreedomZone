@@ -155,8 +155,8 @@ namespace E.Tool
                     else
                     {
                         UIInventory.Show();
-                        CharacterManager.Player.ShowDetail(CharacterManager.Player.GetRightHandItem());
-                        if (!UIEquipment.IsShow) UIItemDetail.Show();
+                        UIItemDetail.SetData(CharacterManager.Player.GetRightHandItem());
+                        if (!UIItemDetail.IsShow) UIItemDetail.Show();
                         if (!UIEquipment.IsShow) UIEquipment.Show();
                         UIHelp.Hide();
                     }

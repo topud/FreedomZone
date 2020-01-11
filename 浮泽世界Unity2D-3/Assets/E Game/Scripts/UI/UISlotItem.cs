@@ -11,6 +11,7 @@ namespace E.Tool
         [SerializeField] private Image imgFrame;
         [SerializeField] private Image imgHealth;
         [SerializeField] private Image imgPower;
+        [SerializeField] private Image imgHand;
         [SerializeField] private Color clrDefault;
         [SerializeField] private Color clrSelected;
         private UIInventory uiInventory;
@@ -26,13 +27,27 @@ namespace E.Tool
                 UpdateData();
             }
         }
-        public void OnClickLeftMouse()
+
+        public override void SetData(Item data)
+        {
+
+            Data = data;
+            UpdateData();
+        }
+        public override void UpdateData()
+        {
+            imgIcon.sprite = Data.StaticData.Icon;
+            imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
+            imgPower.fillAmount = Data.DynamicData.Power.NowPercent;
+            imgHand.enabled = CharacterManager.Player.IsInHandOrBag(Data);
+        }
+
+        public void Show()
         {
             if (UIManager.Singleton.UIItemDetail.IsShow)
             {
-                if (UIManager.Singleton.UIItemDetail.Item == Data)
+                if (UIManager.Singleton.UIItemDetail.data == Data)
                 {
-                    //UIManager.Singleton.UIItemDetail.Hide();
                 }
                 else
                 {
@@ -45,57 +60,5 @@ namespace E.Tool
                 UIManager.Singleton.UIItemDetail.Show();
             }
         }
-        public void OnClickMiddleMouse()
-        {
-            Item item = CharacterManager.Player.GetRightHandItem();
-            if (item)
-            {
-                if (item == Data)
-                {
-                    CharacterManager.Player.PutRightHandItemInBag();
-                }
-                else
-                {
-                    CharacterManager.Player.PutRightHandItemInBag();
-                    CharacterManager.Player.PutItemInRightHand(Data);
-                }
-            }
-            else
-            {
-                CharacterManager.Player.PutItemInRightHand(Data);
-            }
-            Character.onPlayerItemChange.Invoke();
-        }
-        public void OnClickRightMouse()
-        {
-            CharacterManager.Player.Use(Data);
-        }
-        public override void OnBeginDrag()
-        {
-        }
-        public override void OnDrag()
-        {
-        }
-        public override void OnEndDrag()
-        {
-        }
-        public override void OnDrop()
-        {
-        }
-
-        public override void SetData(Item data)
-        {
-
-            Data = data;
-            UpdateData();
-        }
-        public override void UpdateData()
-        {
-            imgIcon.sprite = Data.StaticData.Icon;
-            imgFrame.color = CharacterManager.Player.GetRightHandItem() == Data ? clrSelected : clrDefault;
-            imgPower.fillAmount = Data.DynamicData.Power.NowPercent;
-            imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
-        }
-
     }
 }

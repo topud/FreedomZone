@@ -31,12 +31,12 @@ namespace E.Tool
         }
 
 
-        public void Show()
+        public virtual void Show()
         {
             Animator.SetTrigger("Show");
             IsShow = true;
         }
-        public void Hide()
+        public virtual void Hide()
         {
             Animator.SetTrigger("Hide");
             IsShow = false;

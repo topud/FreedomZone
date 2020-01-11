@@ -29,6 +29,8 @@ public class InHandItemController : MonoBehaviour
     public void SetItem(Item item, bool isLookAtCursor)
     {
         Item = item;
+        Item.SetPosition(true);
+        Item.gameObject.SetActive(true);
 
         copyPosition.self = Item.transform;
         copyRendererOrder.self = Item.SpriteSorter.Renderers[0];
@@ -38,10 +40,13 @@ public class InHandItemController : MonoBehaviour
         copyPosition.Update();
         lookAt.Update();
     }
-    public void RemoveItem()
+    public void RemoveItem(bool active)
     {
         if (Item)
         {
+            Item.gameObject.SetActive(active);
+            Item.SetPosition(false);
+
             copyPosition.self = null;
             copyRendererOrder.self = null;
             lookAt.self = null;

@@ -414,206 +414,183 @@ namespace E.Tool
         /// <summary>
         /// 检测物品是否在拾取范围
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public bool IsNearby(Item item)
+        public bool IsNearby(Item target)
         {
-            return NearbyItems.Contains(item);
+            return NearbyItems.Contains(target);
         }
         /// <summary>
-        /// 检测玩家是否携带物品
+        /// 检测物品是否被携带携带
         /// </summary>
         /// <returns></returns>
-        public bool IsCarrying(Item item)
+        public bool IsCarrying(Item target)
         {
-            return Items.Contains(item);
+            return Items.Contains(target);
         }
         /// <summary>
-        /// 检测玩家是否携带物品
+        /// 检测物品是否被玩家穿着
         /// </summary>
         /// <returns></returns>
-        public bool IsWearing(Item item)
+        public bool IsWearing(Item target)
         {
-            return Clothings.Contains(item);
+            return Clothings.Contains(target);
+        }
+        /// <summary>
+        /// 检测物品是否在玩家手上
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public bool IsInHandOrBag(Item target)
+        {
+            Item item = CharacterManager.Player.GetRightHandItem();
+            return item && target && item == target;
         }
         /// <summary>
         /// 获取物品排序
         /// </summary>
-        /// <param name="item"></param>
+        /// <param name="target"></param>
         /// <returns></returns>
-        public int GetIndex(Item item)
+        public int GetIndex(Item target)
         {
-            return Items.IndexOf(item);
+            return Items.IndexOf(target);
         }
         /// <summary>
         /// 拾取物品
         /// </summary>
-        /// <param name="item"></param>
-        public void PickUp(Item item)
+        /// <param name="target"></param>
+        public void PickUp(Item target)
         {
-            if (!item)
+            if (IsNearby(target))
             {
-                Debug.LogError("没有物品可拾取");
-                return;
-            }
-            if (IsNearby(item))
-            {
-                NearbyItems.Remove(item);
+                NearbyItems.Remove(target);
 
-                item.gameObject.SetActive(false);
-                Items.Add(item);
-                PutRightHandItemInBag();
-                PutItemInRightHand(item);
+                target.gameObject.SetActive(false);
+                Items.Add(target);
+                PutItemInRightHand(target, true);
 
                 onPlayerItemChange.Invoke();
-                Debug.Log(string.Format("已拾取 {0}", item.name));
+                Debug.Log(string.Format("已拾取 {0}", target.name));
             }
             else
             {
                 TargetUI.ShowChat();
                 TargetUI.SetChat("它太远了，我捡不到。");
-                Debug.LogError(string.Format("无法拾取 {0}，因距离过远", item.name));
             }
         }
         /// <summary>
         /// 调查物品
         /// </summary>
-        /// <param name="item"></param>
-        public void Survey(Item item)
+        /// <param name="target"></param>
+        public void Survey(Item target)
         {
-            if (!item)
-            {
-                Debug.LogError("没有物品可调查");
-                return;
-            }
-            if (IsInView(item))
+            if (IsInView(target))
             {
                 TargetUI.ShowChat();
-                TargetUI.SetChat(item.StaticData.Describe);
+                TargetUI.SetChat(target.StaticData.Describe);
             }
             else
             {
                 TargetUI.ShowChat();
-                TargetUI.SetChat("我需要靠近点才能仔细观察。");
-                Debug.LogWarning(string.Format("无法调查 {0}，因距离过远", item.name));
+                TargetUI.SetChat("我需要靠近点才能仔细观察");
             }
-        }
-        /// <summary>
-        /// 显示细节
-        /// </summary>
-        /// <param name="item"></param>
-        public void ShowDetail(Item item)
-        {
-            if (!item)
-            {
-                Debug.LogError("没有物品可显示细节");
-                return;
-            }
-            UIManager.Singleton.UIItemDetail.SetData(item);
-            if (!UIManager.Singleton.UIItemDetail.IsShow)
-            {
-                UIManager.Singleton.UIItemDetail.Show();
-            }
-
-            Debug.Log(item.StaticData.Name);
         }
         /// <summary>
         /// 丢弃物品
         /// </summary>
-        /// <param name="item"></param>
-        public void Discard(Item item)
+        /// <param name="target"></param>
+        public void Discard(Item target)
         {
-            if (!item)
+            if (IsCarrying(target))
             {
-                Debug.LogError("没有物品可丢弃");
-                return;
-            }
-            if (IsCarrying(item))
-            {
-                item.transform.position = transform.position;
-                item.gameObject.SetActive(true);
-
-                if (GetRightHandItem() == item)
-                {
-                    RightHandItemController.Item.gameObject.SetActive(true);
-                    RightHandItemController.Item.SetPosition(false);
-                    RightHandItemController.RemoveItem();
-                }
-
-                Items.Remove(item);
+                RightHandItemController.RemoveItem(GetRightHandItem() == target);
+                Items.Remove(target);
+                target.transform.position = transform.position;
 
                 onPlayerItemChange.Invoke();
-                Debug.Log(string.Format("已丢弃 {0}", item.name));
+                Debug.Log(string.Format("已丢弃 {0}", target.name));
             }
             else
             {
-                Debug.LogError(string.Format("无法丢弃 {0}，因未携带该物品", item.name));
-            }
-        }
-        /// <summary>
-        /// 使用物品
-        /// </summary>
-        /// <param name="item"></param>
-        public void Use(Item item)
-        {
-            if (!item)
-            {
-                Debug.LogError("没有物品可使用");
-                return;
-            }
-            if (IsCarrying(item))
-            {
-                switch (item.StaticData.Type)
-                {
-                    case ItemType.Food:
-                        DynamicData.Skills.AddRange(item.StaticData.Skills);
-                        DynamicData.Buffs.AddRange(item.StaticData.Buffs);
-                        break;
-                    case ItemType.Weapon:
-                        break;
-                    case ItemType.Book:
-                        break;
-                    case ItemType.Clothing:
-                        Clothings.Add(item);
-                        Items.Remove(item);
-                        break;
-                    case ItemType.Bag:
-                        break;
-                    case ItemType.Switch:
-                        item.TrySwitchUse();
-                        break;
-                    case ItemType.Other:
-                        break;
-                    default:
-                        break;
-                }
-                Debug.Log("使用了" + item.name);
-            }
-            else
-            {
-                Debug.LogError(string.Format("无法使用 {0}，因未携带该物品", item.name));
+                Debug.LogWarning(string.Format("无法丢弃 {0}，因未携带该物品", target.name));
             }
         }
         /// <summary>
         /// 投掷物品
         /// </summary>
-        /// <param name="item"></param>
-        public void Throw(Item item)
+        /// <param name="target"></param>
+        public void Throw(Item target)
         {
-            if (item)
+            if (target)
             {
                 Debug.Log("没有物品可投掷");
                 return;
             }
-            if (IsCarrying(item))
+            if (IsCarrying(target))
             {
                 //item.Use();
             }
             else
             {
-                Debug.LogError(string.Format("无法投掷 {0}，因未携带该物品", item.StaticData.Name));
+                Debug.LogError(string.Format("无法投掷 {0}，因未携带该物品", target.StaticData.Name));
             }
         }
+        /// <summary>
+        /// 使用物品
+        /// </summary>
+        /// <param name="target"></param>
+        public void Use(Item target)
+        {
+            if (IsCarrying(target))
+            {
+                target.Use(this);
+            }
+            else
+            {
+                if (IsNearby(target))
+                {
+                    target.Use(this);
+                }
+                else
+                {
+                    TargetUI.ShowChat();
+                    TargetUI.SetChat("那东西离我太远了，我无法操作它");
+                }
+            }
+        }
+        /// <summary>
+        /// 移交物品
+        /// </summary>
+        /// <param name="targetItem"></param>
+        /// <param name="targetCharacter"></param>
+        public void GiveTo(Character target)
+        {
+            Item item = GetRightHandItem();
+            if (item)
+            {
+                if (IsNearby(target))
+                {
+                    Items.Remove(item);
+                    RightHandItemController.RemoveItem(true);
+
+                    target.Items.Add(item);
+                    target.PutItemInRightHand(item, target.IsPlayer);
+
+                    onPlayerItemChange.Invoke();
+                    Debug.Log(string.Format("{0} 把 {1} 给了 {2}", name, item.name, target.name));
+                }
+                else
+                {
+                    //TargetUI.ShowChat();
+                    //TargetUI.SetChat("我需要靠近点才能才能把手上的东西给他");
+                }
+            }
+            else
+            {
+                Debug.LogWarning(string.Format("手中没有物品可移交"));
+            }
+        }
+
         /// <summary>
         /// 拿出上一个物品
         /// </summary>
@@ -639,8 +616,7 @@ namespace E.Tool
                 if (last < 0) last = Items.Count - 1;
             }
 
-            PutRightHandItemInBag();
-            PutItemInRightHand(Items[last]);
+            PutItemInRightHand(Items[last], true);
 
             onPlayerItemChange.Invoke();
         }
@@ -658,7 +634,7 @@ namespace E.Tool
             }
             else if (Items.Count == 1 && item)
             {
-                Debug.LogError("身上只有一个物品，无需切换");
+                Debug.LogWarning("身上只有一个物品，无需切换");
                 return;
             }
 
@@ -669,8 +645,7 @@ namespace E.Tool
                 if (next > Items.Count - 1) next = 0;
             }
 
-            PutRightHandItemInBag();
-            PutItemInRightHand(Items[next]);
+            PutItemInRightHand(Items[next], true);
 
             onPlayerItemChange.Invoke();
         }
@@ -685,14 +660,13 @@ namespace E.Tool
         /// <summary>
         /// 将物品放在右手
         /// </summary>
-        /// <param name="item"></param>
-        public void PutItemInRightHand(Item item)
+        /// <param name="target"></param>
+        public void PutItemInRightHand(Item target, bool isLookAtCursor)
         {
-            RightHandItemController.SetItem(item, true);
-            item.SetPosition(true);
-            item.gameObject.SetActive(true);
+            PutRightHandItemInBag();
+            RightHandItemController.SetItem(target, isLookAtCursor);
 
-            Debug.Log(item.StaticData.Name + " 放在手中");
+            Debug.Log(string.Format("{0} 把 {1} 放在手中", name, target.StaticData.Name));
         }
         /// <summary>
         /// 将右手物品放在背包
@@ -701,11 +675,27 @@ namespace E.Tool
         public void PutRightHandItemInBag()
         {
             if (!GetRightHandItem()) return;
-            Debug.Log(RightHandItemController.Item.StaticData.Name + " 放入背包");
 
-            RightHandItemController.Item.gameObject.SetActive(false);
-            RightHandItemController.Item.SetPosition(false);
-            RightHandItemController.RemoveItem();
+            Item item = RightHandItemController.Item;
+            RightHandItemController.RemoveItem(false);
+
+            Debug.Log(string.Format("{0} 把 {1} 放入背包", name, item.StaticData.Name));
+        }
+        /// <summary>
+        /// 切换物品位置
+        /// </summary>
+        /// <param name="target"></param>
+        public void SwitchItemPosition(Item target)
+        {
+            if (IsInHandOrBag(target))
+            {
+                PutRightHandItemInBag();
+            }
+            else
+            {
+                PutItemInRightHand(target, true);
+            }
+            onPlayerItemChange.Invoke();
         }
 
         //角色
@@ -715,7 +705,7 @@ namespace E.Tool
         /// <returns></returns>
         public bool IsInView(Character target)
         {
-            return Vector2.Distance(target.transform.position, transform.position) < 8;
+            return Vector2.Distance(target.transform.position, transform.position) < 7;
         }
         /// <summary>
         /// 检测角色是否在对话范围
@@ -736,6 +726,7 @@ namespace E.Tool
             {
                 if (target.StaticData.RandomStorys.Count > 0)
                 {
+                    TargetUI.HideChat();
                     target.TargetUI.HideName();
                     target.TargetUI.ShowChat();
                     string content = target.StaticData.RandomStorys[new System.Random().Next(0, target.StaticData.RandomStorys.Count)];
@@ -744,12 +735,16 @@ namespace E.Tool
                 }
                 else
                 {
-                    Debug.Log(string.Format("{0} 没有什么想说的", target.StaticData.Name));
+                    string str = string.Format("{0}好像没有什么想说的", target.StaticData.Name);
+                    TargetUI.ShowChat();
+                    TargetUI.SetChat(str);
                 }
             }
             else
             {
-                Debug.LogError(string.Format("无与 {0} 对话，因距离过远", target.StaticData.Name));
+                string str = string.Format("我需要靠近点才能和{0}对话", target.StaticData.Name);
+                TargetUI.ShowChat();
+                TargetUI.SetChat(str);
             }
         }
         /// <summary>
@@ -767,8 +762,7 @@ namespace E.Tool
             else
             {
                 TargetUI.ShowChat();
-                TargetUI.SetChat("我需要靠近点才能仔细观察。");
-                Debug.LogWarning(string.Format("无法调查 {0}，因距离过远", target.name));
+                TargetUI.SetChat("我需要靠近点才能认出是谁。");
             }
         }
 
@@ -967,7 +961,10 @@ namespace E.Tool
         {
             if (Input.GetKeyUp(KeyCode.Q))
             {
-                Discard(GetRightHandItem());
+                if (GetRightHandItem())
+                {
+                    Discard(GetRightHandItem());
+                }
             }
         }
         private void CheckKeyUp_F1()
@@ -984,51 +981,90 @@ namespace E.Tool
 
         private void CheckMouseButtonDown_0()
         {
-            if (IsPlayer)
+            if (Input.GetMouseButtonDown(0))
             {
-                if (Input.GetMouseButtonDown(0))
+                TargetUI.HideAll();
+
+                switch (Mode)
                 {
-                    switch (Mode)
-                    {
-                        case InteractiveMode.Survey:
-                            if (EventManager.EventSystem.IsPointerOverGameObject())
+                    case InteractiveMode.Survey:
+                        if (EventManager.EventSystem.IsPointerOverGameObject())
+                        {
+                            GameObject go = EventManager.GetOverGameObject();
+                            Item item = go.GetComponent<Item>();
+                            Character character = go.GetComponent<Character>();
+                            if (item)
                             {
-                                GameObject go = EventManager.GetOverGameObject();
-                                Item item = go.GetComponent<Item>();
-                                Character character = go.GetComponent<Character>();
-                                if (item)
-                                {
-                                    Survey(item);
-                                }
-                                if (character)
-                                {
-                                    Survey(character);
-                                }
+                                Survey(item);
                             }
-                            else
+                            if (character)
                             {
-                                TargetUI.HideAll();
+                                Survey(character);
                             }
-                            break;
-                        case InteractiveMode.Fight:
-                            Attack();
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    case InteractiveMode.Fight:
+                        Attack();
+                        break;
+                    default:
+                        break;
                 }
             }
         }
         private void CheckMouseButtonDown_1()
         {
-            if (IsPlayer)
+            if (Input.GetMouseButtonDown(1))
             {
-                if (Input.GetMouseButtonDown(1))
+                Item handItem = GetRightHandItem();
+                bool isGetRightHandItem = handItem;
+                bool isPointerOverItem = EventManager.EventSystem.IsPointerOverGameObject();
+                GameObject go;
+                Item targetItem;
+                Character targetCharacter;
+                if (isPointerOverItem)
                 {
-                    Item item = GetRightHandItem();
-                    if (item)
+                    go = EventManager.GetOverGameObject();
+                    targetItem = go.GetComponent<Item>();
+                    targetCharacter = go.GetComponent<Character>();
+                }
+                else
+                {
+                    targetItem = null;
+                    targetCharacter = null;
+                }
+
+                TargetUI.HideAll();
+
+                if (isGetRightHandItem)
+                {
+                    if (isPointerOverItem)
                     {
-                        Use(item);
+                        if (targetItem)
+                        {
+                            Use(targetItem);
+                        }
+                        if (targetCharacter)
+                        {
+                            GiveTo(targetCharacter);
+                        }
+                    }
+                    else
+                    {
+                        Use(handItem);
+                    }
+                }
+                else
+                {
+                    if (isPointerOverItem)
+                    {
+                        if (targetItem)
+                        {
+                            Use(targetItem);
+                        }
+                        if (targetCharacter)
+                        {
+                            ChatWith(targetCharacter);
+                        }
                     }
                 }
             }
@@ -1037,6 +1073,8 @@ namespace E.Tool
         {
             if (Input.GetMouseButtonDown(2))
             {
+                TargetUI.HideAll();
+
                 if (GetRightHandItem())
                 {
                     lastPutInBagItem = GetRightHandItem();
@@ -1044,7 +1082,7 @@ namespace E.Tool
                 }
                 else
                 {
-                    if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem);
+                    if (lastPutInBagItem) PutItemInRightHand(lastPutInBagItem, true);
                 }
             }
         }
@@ -1058,15 +1096,11 @@ namespace E.Tool
                     if (GetRightHandItem())
                     {
                         TakeOutLastItem();
-                        if (UIManager.Singleton.UIItemDetail.IsShow)
-                        {
-                            ShowDetail(GetRightHandItem());
-                        }
                     }
                     else
                     {
                         if (lastPutInBagItem)
-                            PutItemInRightHand(lastPutInBagItem);
+                            PutItemInRightHand(lastPutInBagItem, true);
                         else
                             TakeOutLastItem();
                     }
@@ -1076,15 +1110,11 @@ namespace E.Tool
                     if (GetRightHandItem())
                     {
                         TakeOutNextItem();
-                        if (UIManager.Singleton.UIItemDetail.IsShow)
-                        {
-                            ShowDetail(GetRightHandItem());
-                        }
                     }
                     else
                     {
                         if (lastPutInBagItem)
-                            PutItemInRightHand(lastPutInBagItem);
+                            PutItemInRightHand(lastPutInBagItem, true);
                         else
                             TakeOutNextItem();
                     }

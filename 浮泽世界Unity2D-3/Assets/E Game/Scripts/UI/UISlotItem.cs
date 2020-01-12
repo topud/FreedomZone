@@ -14,12 +14,10 @@ namespace E.Tool
         [SerializeField] private Image imgHand;
         [SerializeField] private Color clrDefault;
         [SerializeField] private Color clrSelected;
-        private UIInventory uiInventory;
 
-        private void Awake()
-        {
-            uiInventory = GetComponentInParent<UIInventory>();
-        }
+        private UIInventory UIInventory { get => GetComponentInParent<UIInventory>(); }
+        private UIItemDetail UIItemDetail { get => UIManager.Singleton.UIItemDetail; }
+
         private void Update()
         {
             if (Data)
@@ -30,34 +28,33 @@ namespace E.Tool
 
         public override void SetData(Item data)
         {
-
             Data = data;
             UpdateData();
         }
         public override void UpdateData()
         {
             imgIcon.sprite = Data.StaticData.Icon;
-            imgHealth.fillAmount = Data.DynamicData.Health.NowPercent;
-            imgPower.fillAmount = Data.DynamicData.Power.NowPercent;
+            imgHealth.fillAmount = Data.DynamicData.health.NowPercent;
+            imgPower.fillAmount = Data.DynamicData.power.NowPercent;
             imgHand.enabled = CharacterManager.Player.IsInHandOrBag(Data);
         }
 
         public void Show()
         {
-            if (UIManager.Singleton.UIItemDetail.IsShow)
+            if (UIItemDetail.IsShow)
             {
-                if (UIManager.Singleton.UIItemDetail.data == Data)
+                if (UIItemDetail.data == Data)
                 {
                 }
                 else
                 {
-                    UIManager.Singleton.UIItemDetail.SetData(Data);
+                    UIItemDetail.SetData(Data);
                 }
             }
             else
             {
-                UIManager.Singleton.UIItemDetail.SetData(Data);
-                UIManager.Singleton.UIItemDetail.Show();
+                UIItemDetail.SetData(Data);
+                UIItemDetail.Show();
             }
         }
     }

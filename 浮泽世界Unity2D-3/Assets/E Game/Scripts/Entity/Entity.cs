@@ -31,10 +31,10 @@ namespace E.Tool
             set
             {
                 items = value;
-                DynamicData.ItemIDs.Clear();
+                DynamicData.itemIDs.Clear();
                 foreach (Item item in Items)
                 {
-                    DynamicData.ItemIDs.Add(item.gameObject.GetInstanceID());
+                    DynamicData.itemIDs.Add(item.gameObject.GetInstanceID());
                 }
             }
         }
@@ -50,7 +50,7 @@ namespace E.Tool
         }
         protected virtual void Update()
         {
-            DynamicData.Position = transform.position;
+            DynamicData.position = transform.position;
         }
         protected virtual void FixedUpdate()
         {
@@ -110,10 +110,10 @@ namespace E.Tool
             if (data.Name == StaticData.Name)
             {
                 DynamicData = data;
-                transform.position = data.Position;
+                transform.position = data.position;
 
                 Items.Clear();
-                foreach (int item in DynamicData.ItemIDs)
+                foreach (int item in DynamicData.itemIDs)
                 {
                     Item it = ItemManager.GetItem(item);
                     if (it)

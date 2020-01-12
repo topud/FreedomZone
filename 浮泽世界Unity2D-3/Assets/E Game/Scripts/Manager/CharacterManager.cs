@@ -108,13 +108,13 @@ public class CharacterManager : SingletonClass<CharacterManager>
         {
             if (sData.Prefab)
             {
-                go = Instantiate(sData.Prefab, dData.Position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
                 character = go.GetComponent<Character>();
                 character.SetDynamicData(dData);
             }
             else
             {
-                go = Instantiate(Singleton.HumanPrefab, dData.Position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(Singleton.HumanPrefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
                 character = go.GetComponent<Character>();
                 character.StaticData = sData;
                 character.SetDynamicData(dData);

@@ -25,7 +25,7 @@ namespace E.Tool
                         break;
                     case ItemType.Book:
                         break;
-                    case ItemType.Clothing:
+                    case ItemType.Ammo:
                         break;
                     case ItemType.Bag:
                         break;
@@ -42,7 +42,7 @@ namespace E.Tool
         }
         public bool IsPowerEnough
         {
-            get => DynamicData.Power.Now > 0;
+            get => DynamicData.power.Now > 0;
         }
 
         protected override void Awake()
@@ -136,17 +136,17 @@ namespace E.Tool
                 ID = gameObject.GetInstanceID(),
                 //Position
 
-                 Health = StaticData.Health,
-                 Power = StaticData.Power,
+                 health = StaticData.Health,
+                 power = StaticData.Power,
                  //ItemInstanceIDs
              };
         }
 
         /// <summary>
-        /// 设置位置状态
+        /// 设置碰撞状态
         /// </summary>
         /// <param name="isInHand"></param>
-        public void SetPosition(bool isInHand)
+        public void SetCollider(bool isInHand)
         {
             Collider.enabled = !isInHand;
             SpriteSorter.enabled = !isInHand;
@@ -177,16 +177,14 @@ namespace E.Tool
             switch (StaticData.Type)
             {
                 case ItemType.Food:
-                    target.DynamicData.Skills.AddRange(StaticData.Skills);
-                    target.DynamicData.Buffs.AddRange(StaticData.Buffs);
+                    target.DynamicData.skills.AddRange(StaticData.Skills);
+                    target.DynamicData.buffs.AddRange(StaticData.Buffs);
                     break;
                 case ItemType.Weapon:
                     break;
                 case ItemType.Book:
                     break;
-                case ItemType.Clothing:
-                    target.Clothings.Add(this);
-                    target.Items.Remove(this);
+                case ItemType.Ammo:
                     break;
                 case ItemType.Bag:
                     break;
@@ -217,12 +215,12 @@ namespace E.Tool
                         break;
                     case ItemType.Book:
                         break;
-                    case ItemType.Clothing:
+                    case ItemType.Ammo:
                         break;
                     case ItemType.Bag:
                         break;
                     case ItemType.Switch:
-                        DynamicData.Power.Now -= 1;
+                        DynamicData.power.Now -= 1;
                         break;
                     case ItemType.Other:
                         break;
@@ -241,7 +239,7 @@ namespace E.Tool
                     break;
                 case ItemType.Book:
                     break;
-                case ItemType.Clothing:
+                case ItemType.Ammo:
                     break;
                 case ItemType.Bag:
                     break;

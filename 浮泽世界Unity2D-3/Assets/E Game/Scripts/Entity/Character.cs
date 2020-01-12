@@ -14,6 +14,7 @@ namespace E.Tool
     {
         public static UnityEvent onPlayerItemChange = new UnityEvent();
         public static UnityEvent onPlayerInfoChange = new UnityEvent();
+        public static UnityEvent onNearbyItemChange = new UnityEvent();
 
         public new Animator Animator
         { get => GetComponentInChildren<Animator>(true); }
@@ -34,7 +35,6 @@ namespace E.Tool
         [SerializeField, ReadOnly] private int currentSpeed = 0;
         [SerializeField, ReadOnly] private float runBeyondDistance = 5;
         [SerializeField, ReadOnly] private Item lastPutInBagItem;
-        [SerializeField, ReadOnly] private List<Item> clothings = new List<Item>();
         [SerializeField, ReadOnly] private Item nearistItem;
         [SerializeField, ReadOnly] private Character nearistCharacter;
         [SerializeField, ReadOnly] private GameObject nearistEntity;
@@ -67,22 +67,6 @@ namespace E.Tool
             set => CharacterManager.Player = value ? this : null;
         }
         /// <summary>
-        /// 穿着物品
-        /// </summary>
-        public List<Item> Clothings
-        {
-            get => clothings;
-            set
-            {
-                clothings = value;
-                DynamicData.Clothings.Clear();
-                foreach (Item item in Items)
-                {
-                    DynamicData.Clothings.Add(item.gameObject.GetInstanceID());
-                }
-            }
-        }
-        /// <summary>
         /// 是否面朝右边
         /// </summary>
         public bool IsFaceRight
@@ -103,7 +87,7 @@ namespace E.Tool
         {
             get
             {
-                return DynamicData.Health.Now > 0;
+                return DynamicData.health.Now > 0;
             }
         }
         /// <summary>
@@ -317,22 +301,22 @@ namespace E.Tool
                 ID = gameObject.GetInstanceID(),
                 //Position
 
-                Health = StaticData.Health,
-                Mind = StaticData.Mind,
-                Power = StaticData.Power,
-                Speed = StaticData.Speed,
-                IQ = StaticData.IQ,
-                Strength = StaticData.Strength,
-                Defense = StaticData.Defense,
+                health = StaticData.Health,
+                mind = StaticData.Mind,
+                power = StaticData.Power,
+                speed = StaticData.Speed,
+                iq = StaticData.IQ,
+                strength = StaticData.Strength,
+                defense = StaticData.Defense,
 
-                RMB = StaticData.RMB,
-                FZB = StaticData.FZB,
+                rmb = StaticData.RMB,
+                fzb = StaticData.FZB,
                 //ItemInstanceIDs
-                Skills = new List<Skill>(StaticData.Skills),
-                Buffs = StaticData.Buffs,
-                AcceptedQuests = StaticData.AcceptedQuests,
-                PublishedQuests = StaticData.PublishedQuests,
-                Relationships = StaticData.Relationships
+                skills = new List<Skill>(StaticData.Skills),
+                buffs = StaticData.Buffs,
+                acceptedQuests = StaticData.AcceptedQuests,
+                publishedQuests = StaticData.PublishedQuests,
+                relationships = StaticData.Relationships
             };
         }
 
@@ -363,14 +347,14 @@ namespace E.Tool
         /// </summary>
         public void ChangeHealthMax(int value)
         {
-            DynamicData.Health.Max += value;
+            DynamicData.health.Max += value;
         }
         /// <summary>
         /// 更改当前生命值
         /// </summary>
         public void ChangeHealthNow(int value)
         {
-            DynamicData.Health.Now += value;
+            DynamicData.health.Now += value;
         }
         /// <summary>
         /// 复活
@@ -378,20 +362,20 @@ namespace E.Tool
         /// <param name="healthP"></param>
         public void Revive(float healthP = 1, float mindP = 1, float powerP = 1)
         {
-            DynamicData.Health.Now = (int)(DynamicData.Health.Max * healthP);
-            DynamicData.Mind.Now = (int)(DynamicData.Mind.Max * mindP);
-            DynamicData.Power.Now = (int)(DynamicData.Power.Max * powerP);
+            DynamicData.health.Now = (int)(DynamicData.health.Max * healthP);
+            DynamicData.mind.Now = (int)(DynamicData.mind.Max * mindP);
+            DynamicData.power.Now = (int)(DynamicData.power.Max * powerP);
         }
         /// <summary>
         /// 恢复
         /// </summary>
         public void Recover()
         {
-            if (enabled && DynamicData.Health.Now > 0)
+            if (enabled && DynamicData.health.Now > 0)
             {
-                if (DynamicData.Health.AutoChangeable) DynamicData.Health.Now += (int)(0.1 * DynamicData.Health.AutoChangeRate);
-                if (DynamicData.Mind.AutoChangeable) DynamicData.Mind.Now += (int)(0.1 * DynamicData.Mind.AutoChangeRate);
-                if (DynamicData.Power.AutoChangeable) DynamicData.Power.Now += (int)(0.1 * DynamicData.Power.AutoChangeRate);
+                if (DynamicData.health.AutoChangeable) DynamicData.health.Now += (int)(0.1 * DynamicData.health.AutoChangeRate);
+                if (DynamicData.mind.AutoChangeable) DynamicData.mind.Now += (int)(0.1 * DynamicData.mind.AutoChangeRate);
+                if (DynamicData.power.AutoChangeable) DynamicData.power.Now += (int)(0.1 * DynamicData.power.AutoChangeRate);
             }
         }
         /// <summary>
@@ -424,17 +408,9 @@ namespace E.Tool
         /// 检测物品是否被携带携带
         /// </summary>
         /// <returns></returns>
-        public bool IsCarrying(Item target)
+        public bool IsHave(Item target)
         {
             return Items.Contains(target);
-        }
-        /// <summary>
-        /// 检测物品是否被玩家穿着
-        /// </summary>
-        /// <returns></returns>
-        public bool IsWearing(Item target)
-        {
-            return Clothings.Contains(target);
         }
         /// <summary>
         /// 检测物品是否在玩家手上
@@ -459,7 +435,7 @@ namespace E.Tool
         /// 拾取物品
         /// </summary>
         /// <param name="target"></param>
-        public void PickUp(Item target)
+        public void PickUp(Item target, bool toHand = true)
         {
             if (IsNearby(target))
             {
@@ -467,9 +443,14 @@ namespace E.Tool
 
                 target.gameObject.SetActive(false);
                 Items.Add(target);
-                PutItemInRightHand(target, true);
+
+                if (toHand)
+                {
+                    PutItemInRightHand(target, true);
+                }
 
                 onPlayerItemChange.Invoke();
+                onNearbyItemChange.Invoke();
                 Debug.Log(string.Format("已拾取 {0}", target.name));
             }
             else
@@ -499,15 +480,26 @@ namespace E.Tool
         /// 丢弃物品
         /// </summary>
         /// <param name="target"></param>
-        public void Discard(Item target)
+        public void Drop(Item target)
         {
-            if (IsCarrying(target))
+            if (IsHave(target))
             {
-                RightHandItemController.RemoveItem(GetRightHandItem() == target);
+                if (GetRightHandItem() && GetRightHandItem() == target)
+                {
+                    RightHandItemController.RemoveItem(true);
+                    lastPutInBagItem = null;
+                }
+                else
+                {
+                    target.gameObject.SetActive(true);
+                    target.SetCollider(false);
+                }
                 Items.Remove(target);
-                target.transform.position = transform.position;
+                target.transform.position = transform.position - new Vector3(0, 0.5f, 0);
+                target.transform.localScale = new Vector3(1, 1, 1);
 
                 onPlayerItemChange.Invoke();
+                onNearbyItemChange.Invoke();
                 Debug.Log(string.Format("已丢弃 {0}", target.name));
             }
             else
@@ -526,7 +518,7 @@ namespace E.Tool
                 Debug.Log("没有物品可投掷");
                 return;
             }
-            if (IsCarrying(target))
+            if (IsHave(target))
             {
                 //item.Use();
             }
@@ -541,7 +533,7 @@ namespace E.Tool
         /// <param name="target"></param>
         public void Use(Item target)
         {
-            if (IsCarrying(target))
+            if (IsHave(target))
             {
                 target.Use(this);
             }
@@ -581,8 +573,8 @@ namespace E.Tool
                 }
                 else
                 {
-                    //TargetUI.ShowChat();
-                    //TargetUI.SetChat("我需要靠近点才能才能把手上的东西给他");
+                    TargetUI.ShowChat();
+                    TargetUI.SetChat("我需要靠近点才能才能把手上的东西给他");
                 }
             }
             else
@@ -617,8 +609,6 @@ namespace E.Tool
             }
 
             PutItemInRightHand(Items[last], true);
-
-            onPlayerItemChange.Invoke();
         }
         /// <summary>
         /// 拿出下一个物品
@@ -629,7 +619,7 @@ namespace E.Tool
 
             if (Items.Count == 0)
             {
-                Debug.LogError("身上没有物品");
+                Debug.LogWarning("身上没有物品");
                 return;
             }
             else if (Items.Count == 1 && item)
@@ -646,8 +636,6 @@ namespace E.Tool
             }
 
             PutItemInRightHand(Items[next], true);
-
-            onPlayerItemChange.Invoke();
         }
         /// <summary>
         /// 获取右手上的物品
@@ -685,7 +673,7 @@ namespace E.Tool
         /// 切换物品位置
         /// </summary>
         /// <param name="target"></param>
-        public void SwitchItemPosition(Item target)
+        public void SwitchItemToHandOrBag(Item target)
         {
             if (IsInHandOrBag(target))
             {
@@ -695,7 +683,7 @@ namespace E.Tool
             {
                 PutItemInRightHand(target, true);
             }
-            onPlayerItemChange.Invoke();
+            //onPlayerItemChange.Invoke();
         }
 
         //角色
@@ -781,11 +769,11 @@ namespace E.Tool
                 //是否跑步
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    currentSpeed = DynamicData.Speed.Max;
+                    currentSpeed = DynamicData.speed.Max;
                 }
                 else
                 {
-                    currentSpeed = DynamicData.Speed.Now;
+                    currentSpeed = DynamicData.speed.Now;
                 }
                 Rigidbody.velocity = direction * currentSpeed;
 
@@ -961,9 +949,36 @@ namespace E.Tool
         {
             if (Input.GetKeyUp(KeyCode.Q))
             {
-                if (GetRightHandItem())
+                Item handItem = GetRightHandItem();
+                bool isGetRightHandItem = handItem;
+                bool isPointerOverItem = EventManager.EventSystem.IsPointerOverGameObject();
+                GameObject go;
+                Item targetItem = null;
+                Character targetCharacter = null;
+                if (isPointerOverItem)
                 {
-                    Discard(GetRightHandItem());
+                    go = EventManager.GetOverGameObject();
+                    targetItem = go.GetComponent<Item>();
+                    targetCharacter = go.GetComponent<Character>();
+                }
+
+                if (isGetRightHandItem)
+                {
+                    if (isPointerOverItem)
+                    {
+                        if (targetItem)
+                        {
+                            //Use(targetItem);
+                        }
+                        if (targetCharacter)
+                        {
+                            GiveTo(targetCharacter);
+                        }
+                    }
+                    else
+                    {
+                        Drop(handItem);
+                    }
                 }
             }
         }
@@ -1019,18 +1034,13 @@ namespace E.Tool
                 bool isGetRightHandItem = handItem;
                 bool isPointerOverItem = EventManager.EventSystem.IsPointerOverGameObject();
                 GameObject go;
-                Item targetItem;
-                Character targetCharacter;
+                Item targetItem = null;
+                Character targetCharacter = null;
                 if (isPointerOverItem)
                 {
                     go = EventManager.GetOverGameObject();
                     targetItem = go.GetComponent<Item>();
                     targetCharacter = go.GetComponent<Character>();
-                }
-                else
-                {
-                    targetItem = null;
-                    targetCharacter = null;
                 }
 
                 TargetUI.HideAll();
@@ -1045,7 +1055,7 @@ namespace E.Tool
                         }
                         if (targetCharacter)
                         {
-                            GiveTo(targetCharacter);
+                            ChatWith(targetCharacter);
                         }
                     }
                     else
@@ -1134,11 +1144,11 @@ namespace E.Tool
         {
             if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > runBeyondDistance)
             {
-                AIPath.maxSpeed = DynamicData.Speed.Max;
+                AIPath.maxSpeed = DynamicData.speed.Max;
             }
             else
             {
-                AIPath.maxSpeed = DynamicData.Speed.Now;
+                AIPath.maxSpeed = DynamicData.speed.Now;
             }
         }
         private void CheckWatch()

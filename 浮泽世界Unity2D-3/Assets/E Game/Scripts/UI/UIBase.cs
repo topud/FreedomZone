@@ -9,7 +9,7 @@ namespace E.Tool
     [RequireComponent(typeof(CanvasGroup))]
     public class UIBase : MonoBehaviour
     {
-        private Animator Animator
+        protected Animator Animator
         {
             get => GetComponent<Animator>();
         }
@@ -22,14 +22,13 @@ namespace E.Tool
         public bool IsShow
         {
             get => isShow;
-            private set => isShow = value;
+            protected set => isShow = value;
         }
         public bool IsEnable
         {
             get => gameObject.activeSelf;
             set => gameObject.SetActive(value);
         }
-
 
         public virtual void Show()
         {

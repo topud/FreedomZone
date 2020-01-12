@@ -65,7 +65,7 @@ public class ItemManager : SingletonClass<ItemManager>
         ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
         if (sData)
         {
-            go = Instantiate(sData.Prefab, dData.Position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+            go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
             item = go.GetComponent<Item>();
             item.SetDynamicData(dData);
             Debug.Log("物品生成成功：" + dData.Name);

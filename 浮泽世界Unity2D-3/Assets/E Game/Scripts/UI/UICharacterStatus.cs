@@ -24,9 +24,9 @@ namespace E.Tool
         {
             if (Data)
             {
-                sldHealth.value = Data.DynamicData.Health.NowPercent;
-                sldMind.value = Data.DynamicData.Mind.NowPercent;
-                sldPower.value = Data.DynamicData.Power.NowPercent;
+                sldHealth.value = Data.DynamicData.health.NowPercent;
+                sldMind.value = Data.DynamicData.mind.NowPercent;
+                sldPower.value = Data.DynamicData.power.NowPercent;
             }
         }
     }

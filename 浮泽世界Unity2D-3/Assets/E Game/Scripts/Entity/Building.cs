@@ -120,7 +120,7 @@ namespace E.Tool
             DynamicData = new BuildingDynamicData
             {
                 Name = StaticData.Name,
-                Health = StaticData.Health,
+                health = StaticData.Health,
             };
             Rigidbody.bodyType = RigidbodyType2D.Static;
         }

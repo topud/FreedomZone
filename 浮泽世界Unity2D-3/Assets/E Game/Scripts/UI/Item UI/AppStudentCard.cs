@@ -68,13 +68,13 @@ public class AppStudentCard : PhoneApp
             txtClass.text = Target.StaticData.Class.ToString();
             txtStudentID.text = Target.StaticData.StudentID.ToString();
 
-            txtHealth.text = Target.DynamicData.Health.Max.ToString();
-            txtMind.text = Target.DynamicData.Mind.Max.ToString();
-            txtPower.text = Target.DynamicData.Power.Max.ToString();
-            txtIntelligence.text = Target.DynamicData.IQ.ToString();
-            txtSpeed.text = Target.DynamicData.Speed.ToString();
-            txtStrength.text = Target.DynamicData.Strength.ToString();
-            txtDefense.text = Target.DynamicData.Defense.ToString();
+            txtHealth.text = Target.DynamicData.health.Max.ToString();
+            txtMind.text = Target.DynamicData.mind.Max.ToString();
+            txtPower.text = Target.DynamicData.power.Max.ToString();
+            txtIntelligence.text = Target.DynamicData.iq.ToString();
+            txtSpeed.text = Target.DynamicData.speed.ToString();
+            txtStrength.text = Target.DynamicData.strength.ToString();
+            txtDefense.text = Target.DynamicData.defense.ToString();
         }
     }
 }

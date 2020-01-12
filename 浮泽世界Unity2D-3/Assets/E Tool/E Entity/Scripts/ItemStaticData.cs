@@ -12,10 +12,11 @@ namespace E.Tool
         [SerializeField, Tooltip("物品类型")] private ItemType type = ItemType.Food;
         [SerializeField, Tooltip("价格")] private int rmbPrice = 10;
         [SerializeField, Tooltip("容量")] private int capacity = 0;
+        [SerializeField, Tooltip("是否正在使用")] private bool isUsing = false;
         [SerializeField, Tooltip("初始容纳物品")] private List<ItemStaticData> items = new List<ItemStaticData>();
         [SerializeField, Tooltip("组成的部件")] private List<ItemStaticData> components = new List<ItemStaticData>();
-        [SerializeField, Tooltip("使用后习得的技能")] private List<Skill> skills = new List<Skill>();
-        [SerializeField, Tooltip("使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
+        [SerializeField, Tooltip("使用时/使用后习得的技能")] private List<Skill> skills = new List<Skill>();
+        [SerializeField, Tooltip("使用时/使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
 
         /// <summary>
         /// 物品类型
@@ -30,6 +31,10 @@ namespace E.Tool
         /// </summary>
         public int Capacity { get => capacity; }
         /// <summary>
+        /// 是否正在使用
+        /// </summary>
+        public bool IsUsing { get => isUsing; }
+        /// <summary>
         /// 初始容纳物品
         /// </summary>
         public List<ItemStaticData> Items { get => items; }
@@ -38,11 +43,11 @@ namespace E.Tool
         /// </summary>
         public List<ItemStaticData> Components { get => components; }
         /// <summary>
-        /// 使用后习得的技能
+        /// 使用时/使用后习得的技能
         /// </summary>
         public List<Skill> Skills { get => skills; }
         /// <summary>
-        /// 使用后获得的增益
+        /// 使用时/使用后获得的增益
         /// </summary>
         public List<Buff> Buffs { get => buffs; }
 
@@ -62,7 +67,7 @@ namespace E.Tool
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
-                case ItemType.Clothing:
+                case ItemType.Ammo:
                     capacity = 0;
                     items = new List<ItemStaticData>();
                     break;
@@ -96,21 +101,21 @@ namespace E.Tool
         /// </summary>
         Weapon,
         /// <summary>
+        /// 弹药，耐久表示堆叠数量
+        /// </summary>
+        Ammo,
+        /// <summary>
         /// 使用时进入阅读状态
         /// </summary>
         Book,
         /// <summary>
-        /// 穿在身上时即为使用状态，health表示为洁净程度
-        /// </summary>
-        Clothing,
-        /// <summary>
-        /// 可以在里面放其他物品
-        /// </summary>
-        Bag,
-        /// <summary>
-        /// 使用后会切换使用状态，如手机、地图、手电筒、收音机，health表示为剩余能量
+        /// 打开时为使用状态，如手机、地图、手电筒、收音机，会消耗能量
         /// </summary>
         Switch,
+        /// <summary>
+        /// 可以提升物品携带上限
+        /// </summary>
+        Bag,
         /// <summary>
         /// 其他类型
         /// </summary>

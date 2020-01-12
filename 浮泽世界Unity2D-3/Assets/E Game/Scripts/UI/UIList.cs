@@ -22,11 +22,9 @@ namespace E.Tool
         protected virtual void OnEnable()
         {
             Refresh();
-            Character.onPlayerItemChange.AddListener(Refresh);
         }
         protected virtual void OnDisable()
         {
-            Character.onPlayerItemChange.RemoveListener(Refresh);
         }
 
         public virtual void Clear()
@@ -72,6 +70,13 @@ namespace E.Tool
             Clear();
             LoadData();
             SetPanel();
+        }
+
+        public override void Show()
+        {
+            Animator.SetTrigger("Show");
+            IsShow = true;
+            Refresh();
         }
     }
 }

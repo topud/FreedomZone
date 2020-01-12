@@ -25,6 +25,10 @@ namespace E.Tool
                 if (!character.NearbyItems.Contains(item))
                 {
                     character.NearbyItems.Add(item);
+                    if (character.IsPlayer)
+                    {
+                        Character.onNearbyItemChange.Invoke();
+                    }
                 }
             }
         }
@@ -35,16 +39,11 @@ namespace E.Tool
             if (item)
             {
                 character.NearbyItems.Remove(item);
+                if (character.IsPlayer)
+                {
+                    Character.onNearbyItemChange.Invoke();
+                }
             }
-
-            //隐藏名称
-            //if (character.IsPlayer)
-            //{
-            //    if (item)
-            //    {
-            //        character.TargetUI.HideAll();
-            //    }
-            //}
         }
     }
 }

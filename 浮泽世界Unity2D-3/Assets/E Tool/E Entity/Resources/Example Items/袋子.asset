@@ -28,9 +28,17 @@ MonoBehaviour:
     max: 20
     min: 0
     now: 20
-  type: 4
+  power:
+    changeable: 1
+    autoChangeable: 1
+    autoChangeRate: 1
+    max: 20
+    min: 0
+    now: 20
+  type: 5
   rmbPrice: 10
   capacity: 0
+  isUsing: 0
   items: []
   components: []
   skills: []

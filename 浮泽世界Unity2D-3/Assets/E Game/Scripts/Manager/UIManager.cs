@@ -7,22 +7,19 @@ namespace E.Tool
 {
     public class UIManager : SingletonClass<UIManager>
     {
-        [Header("视图")]
-        public UILobbyMenu UILobbyMenu;
-        public UIGameMenu UIGameMenu;
-        [Space(5)]
-        public UIInventory UIInventory;
-        public UIItemDetail UIItemDetail;
-        public UICharacterStatus UICharacterStatus;
-        public UIEquipment UIEquipment;
-        public UIHelp UIHelp;
-        [Space(5)]
-        public UIListSave UISave;
-        public UISetting UISetting;
-        public UILoading UILoading;
-        public UIPopup UIPopup;
+        public UILobbyMenu UILobbyMenu { get => GetComponentInChildren<UILobbyMenu>(true); }
+        public UIGameMenu UIGameMenu { get => GetComponentInChildren<UIGameMenu>(true); }
 
-        //[Header("数据")]
+        public UICharacterStatus UICharacterStatus { get => GetComponentInChildren<UICharacterStatus>(true); }
+        public UIInventory UIInventory { get => GetComponentInChildren<UIInventory>(true); }
+        public UIItemDetail UIItemDetail { get => GetComponentInChildren<UIItemDetail>(true); }
+        public UINearby UINearby { get => GetComponentInChildren<UINearby>(true); }
+        public UIHelp UIHelp { get => GetComponentInChildren<UIHelp>(true); }
+        public UIListSave UISave { get => GetComponentInChildren<UIListSave>(true); }
+        public UISetting UISetting { get => GetComponentInChildren<UISetting>(true); }
+        public UILoading UILoading { get => GetComponentInChildren<UILoading>(true); }
+        public UIPopup UIPopup { get => GetComponentInChildren<UIPopup>(true); }
+
         public static bool IsShowAnyUI
         {
             get
@@ -45,7 +42,7 @@ namespace E.Tool
                 return (Singleton.UIInventory.IsEnable && Singleton.UIInventory.IsShow) ||
                     (Singleton.UIItemDetail.IsEnable && Singleton.UIItemDetail.IsShow) ||
                     //(Singleton.UICharacterStatus.IsEnable && Singleton.UICharacterStatus.IsShow) ||
-                    (Singleton.UIEquipment.IsEnable && Singleton.UIEquipment.IsShow);
+                    (Singleton.UINearby.IsEnable && Singleton.UINearby.IsShow);
                     //(Singleton.UIHelp.IsEnable && Singleton.UIHelp.IsShow);
             }
         }
@@ -77,15 +74,6 @@ namespace E.Tool
             CheckKeyUp_I();
             CheckKeyUp_Esc();
         }
-        private void Reset()
-        {
-            UIEquipment = GetComponentInChildren<UIEquipment>(true);
-            UIGameMenu = GetComponentInChildren<UIGameMenu>(true);
-            UISave = GetComponentInChildren<UIListSave>(true);
-            UISetting = GetComponentInChildren<UISetting>(true);
-            UIPopup = GetComponentInChildren<UIPopup>(true);
-            UILobbyMenu = GetComponentInChildren<UILobbyMenu>(true);
-        }
 
         /// <summary>
         /// 设置光标状态
@@ -111,10 +99,10 @@ namespace E.Tool
                 if (!UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = true;
                 if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
 
+                if (UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = false;
                 if (UIInventory.IsEnable) UIInventory.IsEnable = false;
                 if (UIItemDetail.IsEnable) UIItemDetail.IsEnable = false;
-                if (UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = false;
-                if (UIEquipment.IsEnable) UIEquipment.IsEnable = false;
+                if (UINearby.IsEnable) UINearby.IsEnable = false;
 
                 //if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
             }
@@ -123,10 +111,10 @@ namespace E.Tool
                 if (UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = false;
                 if (!UIGameMenu.IsEnable) UIGameMenu.IsEnable = true;
 
+                if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
                 if (!UIInventory.IsEnable) UIInventory.IsEnable = true;
                 if (!UIItemDetail.IsEnable) UIItemDetail.IsEnable = true;
-                if (!UICharacterStatus.IsEnable) UICharacterStatus.IsEnable = true;
-                if (!UIEquipment.IsEnable) UIEquipment.IsEnable = true;
+                if (!UINearby.IsEnable) UINearby.IsEnable = true;
                 if (!UIHelp.IsEnable) UIHelp.IsEnable = true;
                 //if (!UIHelp.IsShow) UIHelp.Show();
             }
@@ -149,7 +137,7 @@ namespace E.Tool
                     {
                         UIInventory.Hide();
                         if (UIItemDetail.IsShow) UIItemDetail.Hide();
-                        if (UIEquipment.IsShow) UIEquipment.Hide();
+                        if (UINearby.IsShow) UINearby.Hide();
                         UIHelp.Show();
                     }
                     else
@@ -157,7 +145,7 @@ namespace E.Tool
                         UIInventory.Show();
                         UIItemDetail.SetData(CharacterManager.Player.GetRightHandItem());
                         if (!UIItemDetail.IsShow) UIItemDetail.Show();
-                        if (!UIEquipment.IsShow) UIEquipment.Show();
+                        if (!UINearby.IsShow) UINearby.Show();
                         UIHelp.Hide();
                     }
                 }
@@ -212,7 +200,7 @@ namespace E.Tool
         {
             if (UIInventory.IsShow) UIInventory.Hide();
             if (UIItemDetail.IsShow) UIItemDetail.Hide();
-            if (UIEquipment.IsShow) UIEquipment.Hide();
+            if (UINearby.IsShow) UINearby.Hide();
             if (UICharacterStatus.IsShow) UICharacterStatus.Hide();
             if (UIHelp.IsShow) UIHelp.Hide();
         }

@@ -29,7 +29,7 @@ public class InHandItemController : MonoBehaviour
     public void SetItem(Item item, bool isLookAtCursor)
     {
         Item = item;
-        Item.SetPosition(true);
+        Item.SetCollider(true);
         Item.gameObject.SetActive(true);
 
         copyPosition.self = Item.transform;
@@ -45,7 +45,7 @@ public class InHandItemController : MonoBehaviour
         if (Item)
         {
             Item.gameObject.SetActive(active);
-            Item.SetPosition(false);
+            Item.SetCollider(false);
 
             copyPosition.self = null;
             copyRendererOrder.self = null;

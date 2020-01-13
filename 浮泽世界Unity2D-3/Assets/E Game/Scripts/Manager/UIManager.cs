@@ -72,6 +72,7 @@ namespace E.Tool
             CheckUIType();
 
             CheckKeyUp_I();
+            CheckKeyUp_B();
             CheckKeyUp_Esc();
         }
 
@@ -127,6 +128,33 @@ namespace E.Tool
         private void CheckKeyUp_I()
         {
             if (Input.GetKeyUp(KeyCode.I))
+            {
+                if (GameManager.IsInLobby)
+                {
+                }
+                else
+                {
+                    //if (UIInventory.IsShow)
+                    //{
+                    //    UIInventory.Hide();
+                    //    if (UIItemDetail.IsShow) UIItemDetail.Hide();
+                    //    if (UINearby.IsShow) UINearby.Hide();
+                    //    UIHelp.Show();
+                    //}
+                    //else
+                    //{
+                    //    UIInventory.Show();
+                    //    UIItemDetail.SetData(CharacterManager.Player.GetRightHandItem());
+                    //    if (!UIItemDetail.IsShow) UIItemDetail.Show();
+                    //    if (!UINearby.IsShow) UINearby.Show();
+                    //    UIHelp.Hide();
+                    //}
+                }
+            }
+        }
+        private void CheckKeyUp_B()
+        {
+            if (Input.GetKeyUp(KeyCode.B))
             {
                 if (GameManager.IsInLobby)
                 {

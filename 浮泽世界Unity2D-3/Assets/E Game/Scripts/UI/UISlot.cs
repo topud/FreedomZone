@@ -5,9 +5,9 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public abstract class UISlotBase<D> : MonoBehaviour
+    public abstract class UISlot<D> : MonoBehaviour
     {
-        [Header("数据")]
+        [Header("槽 数据")]
         [SerializeField, ReadOnly] private D data;
         public D Data { get => data; protected set => data = value; }
 

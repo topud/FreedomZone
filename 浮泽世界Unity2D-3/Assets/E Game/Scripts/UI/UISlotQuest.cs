@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotQuest : UISlotBase<Quest>
+    public class UISlotQuest : UISlot<Quest>
     {
         //无Tooltip
         public Button nameButton;

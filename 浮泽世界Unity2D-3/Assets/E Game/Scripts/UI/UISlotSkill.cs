@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotSkill : UISlotBase<Skill>
+    public class UISlotSkill : UISlot<Skill>
     {
         public Image image;
         public Button button;

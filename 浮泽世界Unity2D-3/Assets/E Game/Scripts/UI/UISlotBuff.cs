@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotBuff : UISlotBase<Buff>
+    public class UISlotBuff : UISlot<Buff>
     {
         public Image image;
         public Slider slider;

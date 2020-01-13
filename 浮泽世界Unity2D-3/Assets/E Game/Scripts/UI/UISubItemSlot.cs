@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISubItemSlot : UISlotBase<Item>
+    public class UISubItemSlot : UISlot<Item>
     {
         public Image imgIcon;
         public Text txtName;

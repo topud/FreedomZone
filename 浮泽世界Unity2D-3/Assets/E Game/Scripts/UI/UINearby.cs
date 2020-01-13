@@ -19,7 +19,7 @@ public class UINearby : UIList<Item, UISlotItem>
     {
         if (CharacterManager.Player)
         {
-            Datas.AddRange(CharacterManager.Player.NearbyItems);
+            datas.AddRange(CharacterManager.Player.NearbyItems);
         }
     }
 }

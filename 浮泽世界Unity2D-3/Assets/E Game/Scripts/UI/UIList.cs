@@ -5,15 +5,16 @@ using UnityEngine.Events;
 
 namespace E.Tool
 {
-    public abstract class UIList<D, S> : UIBase where S : UISlotBase<D>
+    public abstract class UIList<D, S> : UIBase where S : UISlot<D>
     {
         [Header("组件")]
         [SerializeField] protected Transform tsfParent;
         [SerializeField] protected S pfbSlot;
 
         [Header("数据")]
-        [SerializeField] protected S selectedSlot;
-        public List<D> Datas = new List<D>();
+        public S selectedSlot;
+        public List<D> datas = new List<D>();
+        public S[] Slots { get => GetComponentsInChildren<S>(); }
 
         protected virtual void Start()
         {
@@ -29,7 +30,7 @@ namespace E.Tool
 
         public virtual void Clear()
         {
-            Datas.Clear();
+            datas.Clear();
             for (int i = 0; i < tsfParent.childCount; i++)
             {
                 tsfParent.GetChild(i).gameObject.SetActive(false);
@@ -38,8 +39,8 @@ namespace E.Tool
         public abstract void LoadData();
         public virtual void SetPanel()
         {
-            if (Datas == null) return;
-            foreach (D item in Datas)
+            if (datas == null) return;
+            foreach (D item in datas)
             {
                 S slot = GetAvailableSlot();
                 slot.SetData(item);

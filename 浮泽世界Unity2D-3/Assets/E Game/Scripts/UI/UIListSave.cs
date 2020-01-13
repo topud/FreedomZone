@@ -44,14 +44,14 @@ namespace E.Tool
         public override void LoadData()
         {
             //base.LoadData();
-            Datas = SaveManager.GetSaveFiles();
-            Debug.Log("存档数量 " + Datas.Count);
+            datas = SaveManager.GetSaveFiles();
+            Debug.Log("存档数量 " + datas.Count);
         }
         public override void SetPanel()
         {
             base.SetPanel();
-            txtTip.enabled = Datas.Count == 0 ? true : false;
-            btnClear.gameObject.SetActive(Datas.Count == 0 ? false : true);
+            txtTip.enabled = datas.Count == 0 ? true : false;
+            btnClear.gameObject.SetActive(datas.Count == 0 ? false : true);
         }
 
         public void Create()

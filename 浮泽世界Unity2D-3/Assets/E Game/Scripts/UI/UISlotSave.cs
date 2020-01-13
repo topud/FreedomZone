@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UISlotSave : UISlotBase<FileInfo>
+    public class UISlotSave : UISlot<FileInfo>
     {
         [SerializeField] private Image imgIcon;
         [SerializeField] private Text txtTitle;

@@ -9,5 +9,6 @@ namespace E.Tool
     public class ItemDynamicData : EntityDynamicData
     {
         [Tooltip("是否正在使用")] public bool isUsing = false;
+        [Tooltip("快捷键0~9")] public KeyCode hotKey = KeyCode.None;
     }
 }

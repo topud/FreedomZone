@@ -75,8 +75,7 @@ namespace E.Tool
 
         public override void Show()
         {
-            Animator.SetTrigger("Show");
-            IsShow = true;
+            base.Show();
             Refresh();
         }
     }

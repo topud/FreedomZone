@@ -17,12 +17,10 @@ namespace E.Tool
         {
             get => GetComponent<CanvasGroup>();
         }
-
-        private bool isShow = false;
+        
         public bool IsShow
         {
-            get => isShow;
-            protected set => isShow = value;
+            get => Animator.GetBool("IsShow");
         }
         public bool IsEnable
         {
@@ -32,13 +30,11 @@ namespace E.Tool
 
         public virtual void Show()
         {
-            Animator.SetTrigger("Show");
-            IsShow = true;
+            Animator.SetBool("IsShow", true);
         }
         public virtual void Hide()
         {
-            Animator.SetTrigger("Hide");
-            IsShow = false;
+            Animator.SetBool("IsShow", false);
         }
     }
 }

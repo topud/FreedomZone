@@ -5,6 +5,8 @@ using E.Tool;
 
 public class UIInventory : UIList<Item, UISlotItem>
 {
+    private UIItemDetail UIItemDetail { get => UIManager.Singleton.UIItemDetail; }
+
     protected override void OnEnable()
     {
         Refresh();
@@ -22,16 +24,6 @@ public class UIInventory : UIList<Item, UISlotItem>
         CheckKeyUp(KeyCode.Alpha7);
         CheckKeyUp(KeyCode.Alpha8);
         CheckKeyUp(KeyCode.Alpha9);
-        CheckKeyUp(KeyCode.Keypad0);
-        CheckKeyUp(KeyCode.Keypad1);
-        CheckKeyUp(KeyCode.Keypad2);
-        CheckKeyUp(KeyCode.Keypad3);
-        CheckKeyUp(KeyCode.Keypad4);
-        CheckKeyUp(KeyCode.Keypad5);
-        CheckKeyUp(KeyCode.Keypad6);
-        CheckKeyUp(KeyCode.Keypad7);
-        CheckKeyUp(KeyCode.Keypad8);
-        CheckKeyUp(KeyCode.Keypad9);
     }
     protected override void OnDisable()
     {
@@ -49,14 +41,29 @@ public class UIInventory : UIList<Item, UISlotItem>
     {
         if (Input.GetKeyUp(key))
         {
-            selectedSlot.HotKey = key;
-            foreach (UISlotItem item in Slots)
+            if (IsShow && UIItemDetail.IsShow)
             {
-                if (item != selectedSlot && item.HotKey == key)
+                selectedSlot.HotKey = key;
+                foreach (UISlotItem item in Slots)
                 {
-                    item.HotKey = KeyCode.None;
-                    break;
+                    if (item != selectedSlot && item.HotKey == key)
+                    {
+                        item.HotKey = KeyCode.None;
+                        break;
+                    }
                 }
+            }
+            else
+            {
+                foreach (UISlotItem item in Slots)
+                {
+                    if (item.HotKey == key)
+                    {
+                        CharacterManager.Player.PutItemInRightHand(item.Data, true);
+                        return;
+                    }
+                }
+                CharacterManager.Player.PutRightHandItemInBag();
             }
         }
     }

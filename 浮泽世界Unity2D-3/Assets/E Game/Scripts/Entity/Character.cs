@@ -405,7 +405,7 @@ namespace E.Tool
             return NearbyItems.Contains(target);
         }
         /// <summary>
-        /// 检测物品是否被携带携带
+        /// 检测物品是否被携带
         /// </summary>
         /// <returns></returns>
         public bool IsHave(Item target)
@@ -494,17 +494,19 @@ namespace E.Tool
                     target.gameObject.SetActive(true);
                     target.SetCollider(false);
                 }
+
                 Items.Remove(target);
                 target.transform.position = transform.position - new Vector3(0, 0.5f, 0);
                 target.transform.localScale = new Vector3(1, 1, 1);
+                target.DynamicData.hotKey = KeyCode.None;
 
                 onPlayerItemChange.Invoke();
                 onNearbyItemChange.Invoke();
-                Debug.Log(string.Format("已丢弃 {0}", target.name));
+                Debug.Log(string.Format("{0} 已丢弃 {1}", name, target.name));
             }
             else
             {
-                Debug.LogWarning(string.Format("无法丢弃 {0}，因未携带该物品", target.name));
+                Debug.LogWarning(string.Format("{0} 无法丢弃 {1}，因未携带该物品", name, target.name));
             }
         }
         /// <summary>
@@ -515,7 +517,7 @@ namespace E.Tool
         {
             if (target)
             {
-                Debug.Log("没有物品可投掷");
+                Debug.Log(string.Format("{0} 投掷物品不存在", name));
                 return;
             }
             if (IsHave(target))
@@ -524,7 +526,7 @@ namespace E.Tool
             }
             else
             {
-                Debug.LogError(string.Format("无法投掷 {0}，因未携带该物品", target.StaticData.Name));
+                Debug.LogError(string.Format("{0} 无法投掷未携带该物品 {1}", name, target.StaticData.Name));
             }
         }
         /// <summary>
@@ -563,6 +565,7 @@ namespace E.Tool
                 if (IsNearby(target))
                 {
                     Items.Remove(item);
+                    item.DynamicData.hotKey = KeyCode.None;
                     RightHandItemController.RemoveItem(true);
 
                     target.Items.Add(item);
@@ -579,7 +582,7 @@ namespace E.Tool
             }
             else
             {
-                Debug.LogWarning(string.Format("手中没有物品可移交"));
+                Debug.LogWarning(string.Format("{0} 手中没有物品可移交", name));
             }
         }
 
@@ -592,12 +595,12 @@ namespace E.Tool
 
             if (Items.Count == 0)
             {
-                Debug.LogError("身上没有物品");
+                Debug.LogWarning(string.Format("{0} 身上没有物品", name));
                 return;
             }
             else if (Items.Count == 1 && item)
             {
-                Debug.LogError("身上只有一个物品，无需切换");
+                Debug.LogWarning(string.Format("{0} 身上只有一个物品，无需切换", name));
                 return;
             }
 
@@ -619,12 +622,12 @@ namespace E.Tool
 
             if (Items.Count == 0)
             {
-                Debug.LogWarning("身上没有物品");
+                Debug.LogWarning(string.Format("{0} 身上没有物品", name));
                 return;
             }
             else if (Items.Count == 1 && item)
             {
-                Debug.LogWarning("身上只有一个物品，无需切换");
+                Debug.LogWarning(string.Format("{0} 身上只有一个物品，无需切换", name));
                 return;
             }
 
@@ -683,7 +686,6 @@ namespace E.Tool
             {
                 PutItemInRightHand(target, true);
             }
-            //onPlayerItemChange.Invoke();
         }
 
         //角色

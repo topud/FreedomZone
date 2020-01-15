@@ -16,28 +16,33 @@ namespace E.Tool
         {
             get
             {
-                bool isUsing = false;
+                SwitchableObject.SetActive(DynamicData.isUsing);
+                return DynamicData.isUsing;
+            }
+            set 
+            {
                 switch (StaticData.Type)
                 {
                     case ItemType.Food:
                         break;
                     case ItemType.Weapon:
                         break;
-                    case ItemType.Book:
-                        break;
                     case ItemType.Ammo:
                         break;
-                    case ItemType.Bag:
+                    case ItemType.Book:
                         break;
                     case ItemType.Switch:
-                        isUsing = SwitchableObject.activeSelf;
+                        SwitchableObject.SetActive(value);
+                        Debug.Log(name + " 使用状态 " + value);
+                        break;
+                    case ItemType.Bag:
                         break;
                     case ItemType.Other:
                         break;
                     default:
                         break;
                 }
-                return isUsing;
+                DynamicData.isUsing = value;
             }
         }
         public bool IsPowerEnough
@@ -107,7 +112,8 @@ namespace E.Tool
         /// </summary>
         public override void Reset()
         {
-            base.Reset();
+            ResetStaticData();
+            ResetDynamicData(false);
         }
         /// <summary>
         /// 重置静态数据
@@ -140,6 +146,10 @@ namespace E.Tool
                  power = StaticData.Power,
                  //ItemInstanceIDs
              };
+            if (SwitchableObject)
+            {
+                SwitchableObject.SetActive(DynamicData.isUsing);
+            }
         }
 
         /// <summary>
@@ -247,7 +257,7 @@ namespace E.Tool
                     if (!IsPowerEnough)
                     {
                         if (IsUsing)
-                        { SwitchOff(); }
+                        { IsUsing = false; }
                     }
                     break;
                 case ItemType.Other:
@@ -273,14 +283,14 @@ namespace E.Tool
             }
             if (IsUsing)
             {
-                SwitchOff();
+                IsUsing = false;
                 return info;
             }
             else
             {
                 if (IsPowerEnough)
                 {
-                    SwitchOn();
+                    IsUsing = true;
                 }
                 else
                 {
@@ -288,16 +298,6 @@ namespace E.Tool
                 }
                 return info;
             }
-        }
-        private void SwitchOn()
-        {
-            SwitchableObject.SetActive(true);
-            Debug.Log("打开了 " + name);
-        }
-        private void SwitchOff()
-        {
-            SwitchableObject.SetActive(false);
-            Debug.Log("关闭了 " + name);
         }
         #endregion
     }

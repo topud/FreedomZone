@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Story Assets
+  m_EditorClassIdentifier: 
+  m_GroupName: Story Assets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 376ff22955aa3fb42ad7d5a72b956f2a
+  m_SerializeEntries:
+  - m_GUID: 01fc16fb7f801074baef0ac38454e586
+    m_Address: "Assets/E Game/Storys/\u793A\u4F8B\u6545\u4E8B.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 8a0813ec128612545979cd24a82378c9
+    m_Address: "Assets/E Game/Storys/\u5267\u60C5\u7247\u6BB52.Asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 9a02209027b6c184696a865183e155eb
+    m_Address: "Assets/E Game/Storys/\u5267\u60C5\u7247\u6BB51.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 9c6e593b3822bb24abd189e819aad62a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 39e24cf01bb8fe44992ea3928b062b97, type: 2}
+    - {fileID: 11400000, guid: 31d1a115d90e74b438b7f7623f2ba8aa, type: 2}

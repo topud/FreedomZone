@@ -1,0 +1,125 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Entity Assets
+  m_EditorClassIdentifier: 
+  m_GroupName: Entity Assets
+  m_Data:
+    m_SerializedData: []
+  m_GUID: 0f67f0446f96fbe498d4ee00a4fc2309
+  m_SerializeEntries:
+  - m_GUID: 012cbccd87b21cb44866bb7c612991d5
+    m_Address: "Assets/E Game/Entities/Items/\u888B\u5B50.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 0239cd06dd19c8749bad547c9bbe871e
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u7AD6\u5411\u5DE62.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 193d0b73220767843b77e60f5ffac16c
+    m_Address: "Assets/E Game/Entities/Characters/\u7483\u4E9A.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 1c026e7704b2c5d4991675c18a6e0582
+    m_Address: "Assets/E Game/Entities/Items/\u8DEF\u969C.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 22400056843fe444ba81cb0e78e0355b
+    m_Address: "Assets/E Game/Entities/Items/\u753B\u6846.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3623b9f8e07f40f469c5caf7ff64fda6
+    m_Address: "Assets/E Game/Entities/Buildings/\u5DE8\u77F3.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 3f7567066596f704a84889f8f523c0d0
+    m_Address: "Assets/E Game/Entities/Buildings/\u5916\u5899\u67F1\u5B50.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 424acb0b6121c224887ce0e684cae630
+    m_Address: "Assets/E Game/Entities/Items/\u77F3\u5934.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 54a891221afb0b94f887fe2d24458080
+    m_Address: "Assets/E Game/Entities/Characters/\u4ECE\u4EBA.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5b961834d56c34c4da4946ccd32ebe74
+    m_Address: "Assets/E Game/Entities/Characters/\u5E93\u5A05.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 5bf1baa3e6d695e488ec6ca1150b091e
+    m_Address: "Assets/E Game/Entities/Characters/\u6CE2\u514B.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 6108c6b1c0a235d4395c17b4813c5b2e
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u6A2A\u5411\u4E0A.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 63c89a1c3d8c1c44b8bc5b954039c07e
+    m_Address: "Assets/E Game/Entities/Buildings/\u5916\u5899\u7AD6\u5411.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 75b80f85007559647a87278f9a12d779
+    m_Address: "Assets/E Game/Entities/Buildings/\u5916\u5899\u6A2A\u5411.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 90116daeb2c5e1a4e96fb4a8e480a4cd
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u67F1\u5B50\u4E0A.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ad447cc6f58d58240b3ec393fc58844c
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u7AD6\u5411\u53F3.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: b0d3c9ed8b2c8804385f973bd5170639
+    m_Address: "Assets/E Game/Entities/Buildings/\u82B1\u575B.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: bba89d35911a81444b6cdffe032b720a
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u7AD6\u5411\u5DE6.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: c3ac22c5aca471348a3ce701f663a104
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u6A2A\u5411\u4E0B2.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: d024102f2f04959419f7abd0b5221db2
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u6A2A\u5411\u4E0B.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: e7fd61b1b12f7ed4c891edf2904596a5
+    m_Address: "Assets/E Game/Entities/Characters/\u5F81\u4E5F.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: ea96037e6300fb94e86fd22ec3796fa6
+    m_Address: "Assets/E Game/Entities/Items/\u624B\u7535\u7B52.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f3cd2a4062c749c4c9f1332cc56eb2de
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u7AD6\u5411\u53F32.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: f66ca0e15849eb24fb4d25a46b7d4fe1
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u67F1\u5B50\u4E0B.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: fbd87eb71b6118848afc214628c40340
+    m_Address: "Assets/E Game/Entities/Buildings/\u7EA2\u5899\u6A2A\u5411\u4E0A2.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: 9c6e593b3822bb24abd189e819aad62a, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 1de7b3d0aa69ea34188fc3a62f47691c, type: 2}
+    - {fileID: 11400000, guid: 2ddb8915c02dc5c4eba4cc17381f3fb3, type: 2}

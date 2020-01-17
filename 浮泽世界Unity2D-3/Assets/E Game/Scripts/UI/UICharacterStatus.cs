@@ -18,7 +18,7 @@ namespace E.Tool
 
         private void Start()
         {
-            Data = CharacterManager.Player;
+            Data = GameManager.Character.Player;
         }
         private void Update()
         {

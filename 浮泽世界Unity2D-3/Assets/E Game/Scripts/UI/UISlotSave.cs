@@ -28,7 +28,7 @@ namespace E.Tool
         }
         public override void UpdateData()
         {
-            Save save = SaveManager.GetSave(Data);
+            Save save = GameManager.Save.GetSave(Data);
             if (save == null) return;
 
             imgIcon = null;

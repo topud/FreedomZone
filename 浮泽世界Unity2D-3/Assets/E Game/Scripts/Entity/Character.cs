@@ -63,8 +63,8 @@ namespace E.Tool
         /// </summary>
         public bool IsPlayer
         {
-            get => CharacterManager.Player == this;
-            set => CharacterManager.Player = value ? this : null;
+            get => GameManager.Character.Player == this;
+            set => GameManager.Character.Player = value ? this : null;
         }
         /// <summary>
         /// 是否面朝右边
@@ -169,7 +169,7 @@ namespace E.Tool
             {
                 if (IsPlayer)
                 {
-                    if (UIManager.IsShowAnyUI)
+                    if (GameManager.UI.IsShowAnyUIForInteraction)
                     {
                         RightHandItemController.SetIsLookAtCursor(false);
                     }
@@ -211,7 +211,7 @@ namespace E.Tool
             {
                 if (IsPlayer)
                 {
-                    if (!UIManager.IsShowAnyUI)
+                    if (!GameManager.UI.IsShowAnyUIForInteraction)
                     {
                         CheckMove();
                     }
@@ -330,12 +330,12 @@ namespace E.Tool
             {
                 case InteractiveMode.Survey:
                     Mode = InteractiveMode.Fight;
-                    UIManager.Singleton.UICharacterStatus.Show();
+                    GameManager.UI.UICharacterStatus.Show();
                     Debug.Log("切换至战斗模式");
                     break;
                 case InteractiveMode.Fight:
                     Mode = InteractiveMode.Survey;
-                    UIManager.Singleton.UICharacterStatus.Hide();
+                    GameManager.UI.UICharacterStatus.Hide();
                     Debug.Log("切换至调查模式");
                     break;
                 default:
@@ -419,7 +419,7 @@ namespace E.Tool
         /// <returns></returns>
         public bool IsInHandOrBag(Item target)
         {
-            Item item = CharacterManager.Player.GetRightHandItem();
+            Item item = GameManager.Character.Player.GetRightHandItem();
             return item && target && item == target;
         }
         /// <summary>
@@ -953,13 +953,13 @@ namespace E.Tool
             {
                 Item handItem = GetRightHandItem();
                 bool isGetRightHandItem = handItem;
-                bool isPointerOverItem = EventManager.EventSystem.IsPointerOverGameObject();
+                bool isPointerOverItem = GameManager.Event.EventSystem.IsPointerOverGameObject();
                 GameObject go;
                 Item targetItem = null;
                 Character targetCharacter = null;
                 if (isPointerOverItem)
                 {
-                    go = EventManager.GetOverGameObject();
+                    go = GameManager.Event.GetOverGameObject();
                     targetItem = go.GetComponent<Item>();
                     targetCharacter = go.GetComponent<Character>();
                 }
@@ -1005,9 +1005,9 @@ namespace E.Tool
                 switch (Mode)
                 {
                     case InteractiveMode.Survey:
-                        if (EventManager.EventSystem.IsPointerOverGameObject())
+                        if (GameManager.Event.EventSystem.IsPointerOverGameObject())
                         {
-                            GameObject go = EventManager.GetOverGameObject();
+                            GameObject go = GameManager.Event.GetOverGameObject();
                             Item item = go.GetComponent<Item>();
                             Character character = go.GetComponent<Character>();
                             if (item)
@@ -1034,13 +1034,13 @@ namespace E.Tool
             {
                 Item handItem = GetRightHandItem();
                 bool isGetRightHandItem = handItem;
-                bool isPointerOverItem = EventManager.EventSystem.IsPointerOverGameObject();
+                bool isPointerOverItem = GameManager.Event.EventSystem.IsPointerOverGameObject();
                 GameObject go;
                 Item targetItem = null;
                 Character targetCharacter = null;
                 if (isPointerOverItem)
                 {
-                    go = EventManager.GetOverGameObject();
+                    go = GameManager.Event.GetOverGameObject();
                     targetItem = go.GetComponent<Item>();
                     targetCharacter = go.GetComponent<Character>();
                 }
@@ -1138,7 +1138,7 @@ namespace E.Tool
             if (Input.GetKey(KeyCode.LeftAlt))
             {
                 float f = Input.GetAxis("Mouse ScrollWheel");
-                CameraManager.ChangeOrthographicSize(f);
+                GameManager.Camera.ChangeOrthographicSize(f);
             }
         }
 

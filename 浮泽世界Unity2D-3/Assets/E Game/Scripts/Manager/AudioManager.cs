@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class AudioManager : SingletonClass<AudioManager>
+public class AudioManager : MonoBehaviour
 {
     private void Start()
     {

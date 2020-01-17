@@ -24,21 +24,21 @@ namespace E.Tool
             btnContinue.onClick.AddListener(() => { GameManager.ContinueLastSave(); });
             btnSave.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UISave.Show();
-                UIManager.Singleton.UISave.OpenMode = OpenMode.Load;
+                GameManager.UI.UISave.Show();
+                GameManager.UI.UISave.OpenMode = OpenMode.Load;
             });
             btnSetting.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UISetting.Show();
+                GameManager.UI.UISetting.Show();
             });
             btnHelp.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UIHelp.Show();
+                GameManager.UI.UIHelp.Show();
             });
             btnQuit.onClick.AddListener(() => { GameManager.QuitGame(); });
 
-            btnContinue.gameObject.SetActive(SaveManager.GetLatestSaveFile() == null ? false : true);
-            btnSave.gameObject.SetActive(SaveManager.GetSaveFiles().Count == 0 ? false : true);
+            btnContinue.gameObject.SetActive(GameManager.Save.GetLatestSaveFile() == null ? false : true);
+            btnSave.gameObject.SetActive(GameManager.Save.GetSaveFiles().Count == 0 ? false : true);
         }
     }
 }

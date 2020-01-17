@@ -5,72 +5,83 @@ using UnityEngine.UI;
 
 namespace E.Tool
 {
-    public class UIManager : SingletonClass<UIManager>
+    public class UIManager : MonoBehaviour
     {
+        //ui menu
         public UILobbyMenu UILobbyMenu { get => GetComponentInChildren<UILobbyMenu>(true); }
         public UIGameMenu UIGameMenu { get => GetComponentInChildren<UIGameMenu>(true); }
-
-        public UICharacterStatus UICharacterStatus { get => GetComponentInChildren<UICharacterStatus>(true); }
+        //ui in game
         public UIInventory UIInventory { get => GetComponentInChildren<UIInventory>(true); }
         public UIItemDetail UIItemDetail { get => GetComponentInChildren<UIItemDetail>(true); }
         public UINearby UINearby { get => GetComponentInChildren<UINearby>(true); }
+        //ui in gamehud
+        public UICharacterStatus UICharacterStatus { get => GetComponentInChildren<UICharacterStatus>(true); }
         public UIHelp UIHelp { get => GetComponentInChildren<UIHelp>(true); }
+        //ui public
         public UIListSave UISave { get => GetComponentInChildren<UIListSave>(true); }
         public UISetting UISetting { get => GetComponentInChildren<UISetting>(true); }
         public UILoading UILoading { get => GetComponentInChildren<UILoading>(true); }
         public UIPopup UIPopup { get => GetComponentInChildren<UIPopup>(true); }
 
-        public static bool IsShowAnyUI
+        public bool IsShowAny
         {
             get
             {
                 return IsShowAnyUIMenu || IsShowAnyUIInGame || IsShowAnyUIPublic;
             }
         }
-        public static bool IsShowAnyUIMenu
+        public bool IsShowAnyUIForInteraction
         {
             get
             {
-                return (Singleton.UILobbyMenu.IsEnable && Singleton.UILobbyMenu.IsShow) || 
-                    (Singleton.UIGameMenu.IsEnable && Singleton.UIGameMenu.IsShow);
+                return IsShowAnyUIMenu || IsShowAnyUIInGameWithoutHUD || IsShowAnyUIPublic;
             }
         }
-        public static bool IsShowAnyUIInGame
+        public bool IsShowAnyUIMenu
         {
             get
             {
-                return (Singleton.UIInventory.IsEnable && Singleton.UIInventory.IsShow) ||
-                    (Singleton.UIItemDetail.IsEnable && Singleton.UIItemDetail.IsShow) ||
-                    //(Singleton.UICharacterStatus.IsEnable && Singleton.UICharacterStatus.IsShow) ||
-                    (Singleton.UINearby.IsEnable && Singleton.UINearby.IsShow);
-                    //(Singleton.UIHelp.IsEnable && Singleton.UIHelp.IsShow);
+                return (UILobbyMenu.IsEnable && UILobbyMenu.IsShow) || 
+                    (UIGameMenu.IsEnable && UIGameMenu.IsShow);
             }
         }
-        public static bool IsShowAnyUIPublic
+        public bool IsShowAnyUIInGame
         {
             get
             {
-                return (Singleton.UISave.IsEnable && Singleton.UISave.IsShow )||
-                    (Singleton.UISetting.IsEnable && Singleton.UISetting.IsShow) ||
-                    (Singleton.UILoading.IsEnable && Singleton.UILoading.IsShow) ||
-                    (Singleton.UIPopup.IsEnable && Singleton.UIPopup.IsShow);
+                return IsShowAnyUIInGameWithoutHUD || IsShowAnyUIInGameHUD;
             }
         }
-
-        protected override void Awake()
+        public bool IsShowAnyUIInGameWithoutHUD
         {
-            base.Awake();
+            get
+            {
+                return (UIInventory.IsEnable && UIInventory.IsShow) ||
+                    (UIItemDetail.IsEnable && UIItemDetail.IsShow) ||
+                    (UINearby.IsEnable && UINearby.IsShow);
+            }
         }
-        private void Start()
+        public bool IsShowAnyUIInGameHUD
         {
-            CheckUIType();
-
-            UIHelp.Show();
+            get
+            {
+                return (UICharacterStatus.IsEnable && UICharacterStatus.IsShow) ||
+                    (UIHelp.IsEnable && UIHelp.IsShow);
+            }
         }
+        public bool IsShowAnyUIPublic
+        {
+            get
+            {
+                return (UISave.IsEnable && UISave.IsShow )||
+                    (UISetting.IsEnable && UISetting.IsShow) ||
+                    (UILoading.IsEnable && UILoading.IsShow) ||
+                    (UIPopup.IsEnable && UIPopup.IsShow);
+            }
+        }
+        
         private void Update()
         {
-            CheckUIType();
-
             CheckKeyUp_I();
             CheckKeyUp_B();
             CheckKeyUp_Esc();
@@ -80,22 +91,15 @@ namespace E.Tool
         /// 设置光标状态
         /// </summary>
         /// <param name="isShow">是否展示</param>
-        public static void SetCursor(bool isShow)
+        public void SetCursor(bool isShow)
         {
             Cursor.visible = isShow;
-            if (isShow)
-            {
-                Cursor.lockState = CursorLockMode.None;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-            }
+            Cursor.lockState = isShow ? CursorLockMode.None : CursorLockMode.Locked;
         }
 
-        private void CheckUIType()
+        public void RefreshMode()
         {
-            if (GameManager.IsInLobby)
+            if (GameManager.Scene.IsInLobby)
             {
                 if (!UILobbyMenu.IsEnable) UILobbyMenu.IsEnable = true;
                 if (UIGameMenu.IsEnable) UIGameMenu.IsEnable = false;
@@ -129,7 +133,7 @@ namespace E.Tool
         {
             if (Input.GetKeyUp(KeyCode.I))
             {
-                if (GameManager.IsInLobby)
+                if (GameManager.Scene.IsInLobby)
                 {
                 }
                 else
@@ -156,7 +160,7 @@ namespace E.Tool
         {
             if (Input.GetKeyUp(KeyCode.B))
             {
-                if (GameManager.IsInLobby)
+                if (GameManager.Scene.IsInLobby)
                 {
                 }
                 else
@@ -171,7 +175,7 @@ namespace E.Tool
                     else
                     {
                         UIInventory.Show();
-                        UIItemDetail.SetData(CharacterManager.Player.GetRightHandItem());
+                        UIItemDetail.SetData(GameManager.Character.Player.GetRightHandItem());
                         if (!UIItemDetail.IsShow) UIItemDetail.Show();
                         if (!UINearby.IsShow) UINearby.Show();
                         UIHelp.Hide();
@@ -183,7 +187,7 @@ namespace E.Tool
         {
             if (Input.GetKeyUp(KeyCode.Escape))
             {
-                if (GameManager.IsInLobby)
+                if (GameManager.Scene.IsInLobby)
                 {
                     if (IsShowAnyUIPublic)
                     {
@@ -196,7 +200,7 @@ namespace E.Tool
                 }
                 else
                 {
-                    if (IsShowAnyUIInGame)
+                    if (IsShowAnyUIInGameWithoutHUD)
                     {
                         HideUIInGame();
                         return;
@@ -215,7 +219,7 @@ namespace E.Tool
 
         public void ShowCurrentUIMenu()
         {
-            if (GameManager.IsInLobby)
+            if (GameManager.Scene.IsInLobby)
             {
                 if (!UILobbyMenu.IsShow) UILobbyMenu.Show();
             }

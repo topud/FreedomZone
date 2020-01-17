@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class CharacterManager : SingletonClass<CharacterManager>
+public class CharacterManager : MonoBehaviour
 {
     [Header("组件")]
     public GameObject HumanPrefab;
@@ -13,48 +13,43 @@ public class CharacterManager : SingletonClass<CharacterManager>
     [SerializeField] private Character player;
     [SerializeField, ReadOnly] private List<Character> characters = new List<Character>();
 
-    public static Character Player 
+    public Character Player 
     {
         get
         {
-            if (Singleton)
-            {
-                return Singleton.player;
-            }
-            else return null;
+            return player;
         }
         set 
         {
-            if (Singleton.player)
+            if (player)
             {
-                if (Singleton.player != value)
+                if (player != value)
                 {
-                    Singleton.player.AIPath.enabled = false;
+                    player.AIPath.enabled = false;
                 }
             }
             if (value)
             {
                 value.AIPath.enabled = true;
-                CameraManager.SetFollow(value.transform);
+                GameManager.Camera.SetFollow(value.transform);
             }
-            Singleton.player = value;
+            player = value;
         }
     }
-    public static List<Character> Characters
+    public List<Character> Characters
     {
         get
         {
-            Singleton.characters.Clear();
-            Character[] chars = Singleton.transform.GetComponentsInChildren<Character>();
+            characters.Clear();
+            Character[] chars = transform.GetComponentsInChildren<Character>();
             foreach (Character item in chars)
             {
-                Singleton.characters.Add(item);
+                characters.Add(item);
             }
-            return Singleton.characters;
+            return characters;
         }
     }
-
-
+    
     private void OnEnable()
     {
         characters = Characters;
@@ -66,7 +61,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public static Character SpawnCharacter(string name, Vector2 position, bool isPlayer = false)
+    public Character SpawnCharacter(string name, Vector2 position, bool isPlayer = false)
     {
         GameObject go;
         Character character;
@@ -75,13 +70,13 @@ public class CharacterManager : SingletonClass<CharacterManager>
         {
             if (sData.Prefab)
             {
-                go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
                 character.ResetDynamicData();
             }
             else
             {
-                go = Instantiate(Singleton.HumanPrefab, position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
                 character.StaticData = sData;
                 character.ResetDynamicData();
@@ -99,7 +94,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
     /// <summary>
     /// 生成角色，从动态数据（如存档）
     /// </summary>
-    public static Character SpawnCharacter(CharacterDynamicData dData)
+    public Character SpawnCharacter(CharacterDynamicData dData)
     {
         GameObject go;
         Character character;
@@ -108,13 +103,13 @@ public class CharacterManager : SingletonClass<CharacterManager>
         {
             if (sData.Prefab)
             {
-                go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
                 character.SetDynamicData(dData);
             }
             else
             {
-                go = Instantiate(Singleton.HumanPrefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+                go = Instantiate(HumanPrefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
                 character.StaticData = sData;
                 character.SetDynamicData(dData);
@@ -133,7 +128,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
     /// </summary>
     /// <param name="name">角色名</param>
     /// <returns></returns>
-    public static Character GetCharacter(string name)
+    public Character GetCharacter(string name)
     {
         foreach (Character item in Characters)
         {
@@ -144,7 +139,7 @@ public class CharacterManager : SingletonClass<CharacterManager>
         }
         return null;
     }
-    public static Character GetCharacter(int id)
+    public Character GetCharacter(int id)
     {
         foreach (Character item in Characters)
         {

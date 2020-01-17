@@ -15,7 +15,7 @@ public class LocalizationText : MonoBehaviour
         Refresh();
 
         action = new UnityAction(Refresh);
-        LocalizationManager.OnLanguageChange.AddListener(action);
+        GameManager.Localization.OnLanguageChange.AddListener(action);
     }
     private void OnDestroy()
     {
@@ -29,7 +29,7 @@ public class LocalizationText : MonoBehaviour
     {
         if (!string.IsNullOrEmpty(id))
         {
-            GetComponent<Text>().text = LocalizationManager.GetText(id);
+            GetComponent<Text>().text = GameManager.Localization.GetText(id);
         }
         else
         {

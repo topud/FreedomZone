@@ -2,43 +2,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using E.Tool;
 
-public class GameManager : SingletonClass<GameManager>
+public class GameManager : MonoBehaviour
 {
-    [Header("状态")]
-    [SerializeField, ReadOnly] private bool isInLobby = true;
-    public bool IsAcceptInputInGame = true;
+    public static GameManager Singleton { get; protected set; }
 
-    private bool isStartGame = false;
-    private FileInfo selectSave;
-
-    private AsyncOperation sceneAsyncOperation;
-
-    public float SceneLoadProcess
-    {
-        get
-        {
-            if (sceneAsyncOperation != null)
-            {
-                //progress的值最大为0.9  
-                return sceneAsyncOperation.progress >= 0.9f ? 1.0f :sceneAsyncOperation.progress;
-            }
-            else
-            {
-                return -1;
-            }
-        }
-    }
-
-    public static bool IsInLobby
-    {
-        get => Singleton.isInLobby;
-        set => Singleton.isInLobby = value;
-    }
-
-    protected override void Awake()
+    public static AudioManager Audio{ get => FindObjectOfType<AudioManager>(); }
+    public static CameraManager Camera { get => FindObjectOfType<CameraManager>(); }
+    public static CharacterManager Character { get => FindObjectOfType<CharacterManager>(); }
+    public static DebugManager DebugManager { get => FindObjectOfType<DebugManager>(); }
+    public static EnvironmentManager Environment { get => FindObjectOfType<EnvironmentManager>(); }
+    public static EventManager Event { get => FindObjectOfType<EventManager>(); }
+    public static ItemManager Item { get => FindObjectOfType<ItemManager>(); }
+    public static LocalizationManager Localization { get => FindObjectOfType<LocalizationManager>(); }
+    public static MySceneManager Scene { get => FindObjectOfType<MySceneManager>(); }
+    public static PlayableManager Playable { get => FindObjectOfType<PlayableManager>(); }
+    public static SaveManager Save { get => FindObjectOfType<SaveManager>(); }
+    public static SettingManager Setting { get => FindObjectOfType<SettingManager>(); }
+    public static StoryManager Story { get => FindObjectOfType<StoryManager>(); }
+    public static TimeManager Time { get => FindObjectOfType<TimeManager>(); }
+    public static UIManager UI { get => FindObjectOfType<UIManager>(); }
+    
+    private void Awake()
     {
         if (Singleton == null)
         {
@@ -48,124 +34,72 @@ public class GameManager : SingletonClass<GameManager>
         else
         {
             Destroy(gameObject);
+            return;
         }
-    }
-    private void OnEnable()
-    {
-        IsInLobby = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
     }
     private void Start()
     {
-        if (SceneManager.GetActiveScene().name == "Game")
-        {
-            if (!CharacterManager.Player)
-            {
-                Character player = CharacterManager.GetCharacter("璃亚");
-                player.IsPlayer = true;
-                Debug.Log("本次运行为调试模式，已自动添加可控制角色");
-            }
-        }
-    }
-    private void Update()
-    {
-        IsInLobby = SceneManager.GetActiveScene().name == "Lobby" ? true : false;
+        UI.RefreshMode();
 
-        if (SceneLoadProcess >= 0.9f)
+        if (Scene.IsInLobby)
         {
-            //允许异步加载完毕后自动切换场景  
-            sceneAsyncOperation.allowSceneActivation = true;
-            UIManager.Singleton.UILoading.Hide();
-            //开始游戏
-            if (isStartGame && sceneAsyncOperation.isDone)
-            {
-                //未选择存档时开始新存档
-                if (selectSave == null)
-                {
-                    if (!CharacterManager.Player)
-                    {
-                        Character player = CharacterManager.SpawnCharacter("库娅", new Vector2(165, 5), true);
-                        Character npc = CharacterManager.SpawnCharacter("从人", new Vector2(170, 10));
-                        npc.FollowTarget = player.transform;
-                        Debug.Log("新存档初始化");
-                    }
-                }
-                //否则载入存档
-                else
-                {
-                    SaveManager.LoadFrom(selectSave);
-                    Debug.Log("载入存档初始化");
-                }
-                isStartGame = false;
-            }
-        }
-
-# if UNITY_EDITOR
-        if (IsInLobby)
-        {
+            //正常游戏流程
         }
         else
         {
-            //游戏内
-            if (Input.GetKeyUp(KeyCode.KeypadEnter))
+            //场景测试流程
+            if (!Character.Player)
             {
+                Character player = Character.GetCharacter("璃亚");
+                player.IsPlayer = true;
+                Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
+
+            UI.UIHelp.Show();
         }
-#endif
     }
 
     /// <summary>
-    /// 加载场景
+    /// 开始新存档
     /// </summary>
-    /// <param name="name"></param>
-    /// <param name="useLoadUI"></param>
-    public static void LoadScene(string name, bool useLoadUI = false)
-    {
-        if (SceneManager.GetSceneByName(name) == null)
-        {
-            Debug.LogError("请求加载的场景不存在");
-            return;
-        }
-        if (useLoadUI)
-        {
-            UIManager.Singleton.UILoading.Show();
-        }
-        Singleton.StartCoroutine(AsyncLoading(name));
-    }
-    private static IEnumerator AsyncLoading(string name)
-    {
-        Singleton.sceneAsyncOperation = SceneManager.LoadSceneAsync(name);
-        Singleton.sceneAsyncOperation.allowSceneActivation = false;
-
-        yield return Singleton.sceneAsyncOperation;
-    }
-
     public static void StartNewSave()
     {
-        LoadScene("Game", true);
-        Singleton.isStartGame = true;
-        Singleton.selectSave = null;
+        Scene.LoadScene("Game", true, true);
+        Save.currentSave = Save.CreateSaveFile();
     }
+    /// <summary>
+    /// 继续上一次的存档
+    /// </summary>
     public static void ContinueLastSave()
     {
-        LoadScene("Game", true);
-        Singleton.isStartGame = true;
-        Singleton.selectSave = SaveManager.GetLatestSaveFile();
+        Scene.LoadScene("Game", true, true);
+        Save.currentSave = Save.GetLatestSaveFile();
     }
+    /// <summary>
+    /// 继续选中的存档
+    /// </summary>
+    /// <param name="fileInfo"></param>
     public static void ContinueSelectSave(FileInfo fileInfo)
     {
-        if (fileInfo == null)
+        if (fileInfo.Exists)
         {
-            Debug.LogError("未指定存档文件");
+            Debug.LogError("存档文件不存在");
             return;
         }
-        LoadScene("Game", true);
-        Singleton.isStartGame = true;
-        Singleton.selectSave = fileInfo;
+        Scene.LoadScene("Game", true, true);
+        Save.currentSave = fileInfo;
     }
+    /// <summary>
+    /// 返回大厅
+    /// </summary>
     public static void BackToLobby()
     {
-        LoadScene("Lobby", false);
+        Scene.LoadScene("Lobby", false);
+        Save.currentSave = null;
     }
+    /// <summary>
+    /// 退出游戏
+    /// </summary>
     public static void QuitGame()
     {
         Application.Quit();

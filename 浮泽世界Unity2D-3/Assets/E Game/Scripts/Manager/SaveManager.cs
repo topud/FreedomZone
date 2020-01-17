@@ -8,9 +8,10 @@ using UnityEngine;
 using UnityEngine.UI;
 using E.Tool;
 
-public class SaveManager : SingletonClass<SaveManager>
+public class SaveManager : MonoBehaviour
 {
-    [SerializeField, ReadOnly, Tooltip("存档文件名列表")] List<string> SaveFileNames = new List<string>();
+    [ReadOnly, Tooltip("当前存档")] public FileInfo currentSave;
+    [SerializeField, ReadOnly, Tooltip("存档文件名列表")] List<string> saveNames = new List<string>();
 
     private void Start()
     {
@@ -22,10 +23,10 @@ public class SaveManager : SingletonClass<SaveManager>
     }
     private void RefreshNames()
     {
-        SaveFileNames.Clear();
+        saveNames.Clear();
         foreach (FileInfo item in GetSaveFiles())
         {
-            SaveFileNames.Add(item.Name);
+            saveNames.Add(item.Name);
         }
     }
 
@@ -33,11 +34,10 @@ public class SaveManager : SingletonClass<SaveManager>
     /// 获取所有存档文件
     /// </summary>
     /// <returns></returns>
-    public static List<FileInfo> GetSaveFiles()
+    public List<FileInfo> GetSaveFiles()
     {
         List<FileInfo> saveFiles = new List<FileInfo>();
-
-        //设置当前存档
+        
         string fullPath = Application.persistentDataPath;
         if (Directory.Exists(fullPath))
         {
@@ -62,7 +62,7 @@ public class SaveManager : SingletonClass<SaveManager>
     /// 获取最近更改的存档文件
     /// </summary>
     /// <returns></returns>
-    public static FileInfo GetLatestSaveFile()
+    public FileInfo GetLatestSaveFile()
     {
         List<FileInfo> saveFiles = GetSaveFiles();
         if (saveFiles.Count > 0)
@@ -85,7 +85,7 @@ public class SaveManager : SingletonClass<SaveManager>
     /// 从所有存档文件中获取内容
     /// </summary>
     /// <returns></returns>
-    public static List<Save> GetSaves()
+    public List<Save> GetSaves()
     {
         List<Save> saves = new List<Save>();
         foreach (FileInfo item in GetSaveFiles())
@@ -99,7 +99,7 @@ public class SaveManager : SingletonClass<SaveManager>
     /// </summary>
     /// <param name="fileInfo"></param>
     /// <returns></returns>
-    public static Save GetSave(FileInfo fileInfo)
+    public Save GetSave(FileInfo fileInfo)
     {
         string json = File.ReadAllText(fileInfo.FullName);
         Save save = JsonUtility.FromJson<Save>(json);
@@ -110,7 +110,7 @@ public class SaveManager : SingletonClass<SaveManager>
     /// 创建存档文件
     /// </summary>
     /// <returns></returns>
-    public static FileInfo CreateSaveFile()
+    public FileInfo CreateSaveFile()
     {
         List<FileInfo> fls = GetSaveFiles();
         int n = 0;
@@ -123,52 +123,55 @@ public class SaveManager : SingletonClass<SaveManager>
         while (new FileInfo(path).Exists);
         FileInfo fileInfo = new FileInfo(path);
         fileInfo.Create().Dispose();
+        RefreshNames();
+
         Debug.Log(string.Format("已创建存档文件 {0}", fileInfo.FullName));
-        Singleton.RefreshNames();
         return fileInfo;
     }
 
     /// <summary>
     /// 删除存档文件
     /// </summary>
-    public static void RemoveSaveFile(FileInfo fileInfo)
+    public void RemoveSaveFile(FileInfo fileInfo)
     {
         fileInfo.Delete();
-        Singleton.RefreshNames();
+        RefreshNames();
+
         Debug.Log(string.Format("已删除存档文件 {0}", fileInfo.FullName));
     }
     /// <summary>
     /// 删除所有存档文件
     /// </summary>
-    public static void RemoveAllSaveFile()
+    public void RemoveAllSaveFile()
     {
         List<FileInfo> saveFiles = new List<FileInfo>();
         foreach (FileInfo item in saveFiles)
         {
             item.Delete();
         }
-        Singleton.RefreshNames();
+        RefreshNames();
+
         Debug.Log(string.Format("已删除所有存档文件，共计 {0} 个", saveFiles.Count));
     }
 
     /// <summary>
     /// 快捷保存游戏到最近存档
     /// </summary>
-    public static void Save()
+    public void Save()
     {
         SaveTo(GetLatestSaveFile());
     }
     /// <summary>
     /// 保存游戏到指定文件
     /// </summary>
-    public static void SaveTo(FileInfo fileInfo)
+    public void SaveTo(FileInfo fileInfo)
     {
         if (!fileInfo.Exists)
         {
             Debug.LogError("存档失败，指定文件不存在 " + fileInfo.FullName);
             return;
         }
-        if (!CharacterManager.Player)
+        if (!GameManager.Character.Player)
         {
             Debug.LogError("存档失败，玩家对象没有生成");
             return;
@@ -177,13 +180,13 @@ public class SaveManager : SingletonClass<SaveManager>
         Save save;
         save = new Save
         {
-            NodeID = StoryManager.Singleton.CurrentNodeID
+            NodeID = GameManager.Story.CurrentNodeID
         };
-        foreach (Character item in CharacterManager.Characters)
+        foreach (Character item in GameManager.Character.Characters)
         {
             save.CharacterDynamicDatas.Add(item.DynamicData);
         }
-        foreach (Item item in ItemManager.Items)
+        foreach (Item item in GameManager.Item.Items)
         {
             save.InteractorDynamicDatas.Add(item.DynamicData);
         }
@@ -195,10 +198,11 @@ public class SaveManager : SingletonClass<SaveManager>
         Debug.Log("存档成功：" + fileInfo.FullName + " 时间：" + save.NodeID);
         Debug.Log("存档内容：" + json);
     }
+
     /// <summary>
     /// 载入游戏从指定文件
     /// </summary>
-    public static void LoadFrom(FileInfo fileInfo)
+    public void LoadFrom(FileInfo fileInfo)
     {
         if (!fileInfo.Exists)
         {
@@ -209,29 +213,29 @@ public class SaveManager : SingletonClass<SaveManager>
         //获取存档信息
         Save save = GetSave(fileInfo);
         //配置对应游戏对象
-        StoryManager.Singleton.CurrentNodeID = save.NodeID;
+        GameManager.Story.CurrentNodeID = save.NodeID;
         foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
         {
-            Character character = CharacterManager.GetCharacter(item.ID);
+            Character character = GameManager.Character.GetCharacter(item.ID);
             if (character)
             {
                 character.SetDynamicData(item);
             }
             else
             {
-                CharacterManager.SpawnCharacter(item);
+                GameManager.Character.SpawnCharacter(item);
             }
         }
         foreach (ItemDynamicData item in save.InteractorDynamicDatas)
         {
-            Item it = ItemManager.GetItem(item.ID);
+            Item it = GameManager.Item.GetItem(item.ID);
             if (it)
             {
                 it.SetDynamicData(item);
             }
             else
             {
-                ItemManager.SpawnItem(item);
+                GameManager.Item.SpawnItem(item);
             }
         }
 
@@ -240,7 +244,7 @@ public class SaveManager : SingletonClass<SaveManager>
     /// <summary>
     /// 快捷载入游戏从最近存档
     /// </summary>
-    public static void Load()
+    public void Load()
     {
         LoadFrom(GetLatestSaveFile());
     }

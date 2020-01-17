@@ -115,7 +115,7 @@ namespace E.Tool
                 Items.Clear();
                 foreach (int item in DynamicData.itemIDs)
                 {
-                    Item it = ItemManager.GetItem(item);
+                    Item it = GameManager.Item.GetItem(item);
                     if (it)
                     {
                         Items.Add(it);

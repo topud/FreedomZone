@@ -1,34 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using E.Tool;
 
-public class LocalizationManager : SingletonClass<LocalizationManager>
+public class LocalizationManager : MonoBehaviour
 {
     [SerializeField] private Language language = Language.CH;
-    private static UnityEvent onLanguageChange = new UnityEvent();
+    [NonSerialized] public UnityEvent OnLanguageChange = new UnityEvent();
 
-    public static List<Localizations> LocalizationsList
+    public List<Localizations> LocalizationsList
     {
         get => Localizations.GetValues();
     }
-    public static Language Language
+    public Language Language
     {
-        get => Singleton.language;
+        get => language;
         set
         {
-            if (Singleton.language != value)
+            if (language != value)
             {
-                Singleton.language = value;
+                language = value;
                 OnLanguageChange.Invoke();
             }
         }
-    }
-    public static UnityEvent OnLanguageChange
-    {
-        get => onLanguageChange;
-        set => onLanguageChange = value;
     }
 
     private void OnValidate()
@@ -36,7 +32,7 @@ public class LocalizationManager : SingletonClass<LocalizationManager>
         OnLanguageChange.Invoke();
     }
 
-    public static string GetText(string id)
+    public string GetText(string id)
     {
         foreach (Localizations items in LocalizationsList)
         {

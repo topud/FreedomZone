@@ -13,7 +13,7 @@ namespace E.Tool
 
         private void Update()
         {
-            float pro = GameManager.Singleton.SceneLoadProcess;
+            float pro = GameManager.Scene.SceneLoadProgress;
             if (pro < 0)
             {
                 txtTip.enabled = false;
@@ -21,16 +21,8 @@ namespace E.Tool
             }
             if (pro != sldProcess.value)
             {
-                //插值运算  
-                //sldProcess.value = Mathf.Lerp(sldProcess.value, pro, Time.deltaTime * 1);
-                //if (Mathf.Abs(sldProcess.value - pro) < 0.01f)
-                //{
-                //    sldProcess.value = pro;
-                //}
-                //txtProcess.text = ((int)(sldProcess.value * 100)).ToString() + "%";
-                float v = pro * (10 / 9);
-                txtProcess.text = (int)(v * 100) + "%";
-                sldProcess.value = v;
+                txtProcess.text = (int)(pro * 100) + "%";
+                sldProcess.value = pro;
             }
         }
     }

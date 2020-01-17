@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using E.Tool;
 using UnityEngine.Playables;
+using E.Tool;
 
-public class PlayableManager : SingletonClass<PlayableManager>
+public class PlayableManager : MonoBehaviour
 {
-    public PlayableDirector[] Diectors
+    public PlayableDirector[] Directors
     {
         get => GetComponentsInChildren<PlayableDirector>();
     }

@@ -5,7 +5,7 @@ using E.Tool;
 
 public class UIInventory : UIList<Item, UISlotItem>
 {
-    private UIItemDetail UIItemDetail { get => UIManager.Singleton.UIItemDetail; }
+    private UIItemDetail UIItemDetail { get => GameManager.UI.UIItemDetail; }
 
     protected override void OnEnable()
     {
@@ -32,9 +32,9 @@ public class UIInventory : UIList<Item, UISlotItem>
 
     public override void LoadData()
     {
-        if (CharacterManager.Player)
+        if (GameManager.Character.Player)
         {
-            datas.AddRange(CharacterManager.Player.Items);
+            datas.AddRange(GameManager.Character.Player.Items);
         }
     }
     private void CheckKeyUp(KeyCode key)
@@ -59,11 +59,11 @@ public class UIInventory : UIList<Item, UISlotItem>
                 {
                     if (item.HotKey == key)
                     {
-                        CharacterManager.Player.PutItemInRightHand(item.Data, true);
+                        GameManager.Character.Player.PutItemInRightHand(item.Data, true);
                         return;
                     }
                 }
-                CharacterManager.Player.PutRightHandItemInBag();
+                GameManager.Character.Player.PutRightHandItemInBag();
             }
         }
     }

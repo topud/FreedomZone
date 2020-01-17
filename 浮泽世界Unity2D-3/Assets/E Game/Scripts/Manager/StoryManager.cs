@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class StoryManager : SingletonClass<StoryManager>
+public class StoryManager : MonoBehaviour
 {
-    private static Story currentStory;
+    [SerializeField, ReadOnly]private Story currentStory;
 
     public List<NodeID> CurrentStoryPassdNodeIDs;
     public NodeID CurrentNodeID;
     public StoryNode CurrentNode;
 
-    public static Story CurrentStory 
+    public Story CurrentStory 
     {
         get 
         {
@@ -23,13 +23,12 @@ public class StoryManager : SingletonClass<StoryManager>
         }
         set => currentStory = value;
     }
-    public static List<Condition> Conditions 
+    public List<Condition> Conditions 
     {
         get=> CurrentStory.conditions;
         set => CurrentStory.conditions = value;
     }
-
-
+    
     /// <summary>
     /// 获取通过的节点
     /// </summary>

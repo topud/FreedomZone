@@ -17,16 +17,16 @@ namespace E.Tool
             btnBack.onClick.AddListener(() => { Hide(); });
             btnSave.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UISave.Show();
-                UIManager.Singleton.UISave.OpenMode = OpenMode.Both;
+                GameManager.UI.UISave.Show();
+                GameManager.UI.UISave.OpenMode = OpenMode.Both;
             });
             btnSetting.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UISetting.Show();
+                GameManager.UI.UISetting.Show();
             });
             btnHelp.onClick.AddListener(() => {
                 Hide();
-                UIManager.Singleton.UIHelp.Show();
+                GameManager.UI.UIHelp.Show();
             });
             btnQuit.onClick.AddListener(() => { GameManager.BackToLobby(); });
         }

@@ -33,8 +33,8 @@ namespace E.Tool
                 UpdateData();
             }
         }
-        private UIInventory UIInventory { get => UIManager.Singleton.UIInventory; }
-        private UIItemDetail UIItemDetail { get => UIManager.Singleton.UIItemDetail; }
+        private UIInventory UIInventory { get => GameManager.UI.UIInventory; }
+        private UIItemDetail UIItemDetail { get => GameManager.UI.UIItemDetail; }
 
         private void Update()
         {
@@ -55,7 +55,7 @@ namespace E.Tool
             imgHealth.fillAmount = Data.DynamicData.health.NowPercent;
             imgPower.fillAmount = Data.DynamicData.power.NowPercent;
 
-            imgHand.enabled = CharacterManager.Player.IsInHandOrBag(Data);
+            imgHand.enabled = GameManager.Character.Player.IsInHandOrBag(Data);
             imgHotKey.enabled = HotKey != KeyCode.None;
             txtHotKey.enabled = HotKey != KeyCode.None;
 
@@ -116,7 +116,7 @@ namespace E.Tool
                 UIItemDetail.Show();
             }
 
-            if (CharacterManager.Player.IsHave(Data))
+            if (GameManager.Character.Player.IsHave(Data))
             {
                 UIInventory.selectedSlot = this;
             }

@@ -4,24 +4,24 @@ using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
 
-public class ItemManager : SingletonClass<ItemManager>
+public class ItemManager : MonoBehaviour
 {
     [Header("组件")]
     public GameObject ItemPrefab;
 
     [Header("数据")]
     [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
-    public static List<Item> Items
+    public List<Item> Items
     {
         get
         {
-            Singleton.items.Clear();
-            Item[] interactors = Singleton.transform.GetComponentsInChildren<Item>();
+            items.Clear();
+            Item[] interactors = transform.GetComponentsInChildren<Item>();
             foreach (Item item in interactors)
             {
-                Singleton.items.Add(item);
+                items.Add(item);
             }
-            return Singleton.items;
+            return items;
         }
     }
 
@@ -36,14 +36,14 @@ public class ItemManager : SingletonClass<ItemManager>
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public static Item SpawnItem(string name, Vector2 position)
+    public Item SpawnItem(string name, Vector2 position)
     {
         GameObject go;
         Item item;
         ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(name);
         if (sData)
         {
-            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
             item.ResetDynamicData();
             Debug.Log("物品生成成功：" + name);
@@ -58,14 +58,14 @@ public class ItemManager : SingletonClass<ItemManager>
     /// <summary>
     /// 生成物品
     /// </summary>
-    public static Item SpawnItem(ItemDynamicData dData)
+    public Item SpawnItem(ItemDynamicData dData)
     {
         GameObject go;
         Item item;
         ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
         if (sData)
         {
-            go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), Singleton.transform);
+            go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
             item.SetDynamicData(dData);
             Debug.Log("物品生成成功：" + dData.Name);
@@ -82,7 +82,7 @@ public class ItemManager : SingletonClass<ItemManager>
     /// </summary>
     /// <param name="name">物品名</param>
     /// <returns></returns>
-    public static Item GetItem(string name)
+    public Item GetItem(string name)
     {
         foreach (Item item in Items)
         {
@@ -93,7 +93,7 @@ public class ItemManager : SingletonClass<ItemManager>
         }
         return null;
     }
-    public static Item GetItem(int id)
+    public Item GetItem(int id)
     {
         foreach (Item item in Items)
         {

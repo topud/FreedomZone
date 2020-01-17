@@ -6,29 +6,29 @@ using UnityEngine.EventSystems;
 using Cinemachine;
 using E.Tool;
 
-public class CameraManager : SingletonClass<CameraManager>
+public class CameraManager : MonoBehaviour
 {
-    public Camera MainCamera;
-    public Camera MinimapCamera;
-    public CinemachineVirtualCamera VirtualCamera;
+    public Camera main;
+    public Camera minimap;
+    public CinemachineVirtualCamera vc1;
 
-    public static Physics2DRaycaster Physics2DRaycaster
-    { get => Singleton.GetComponentInChildren<Physics2DRaycaster>(); }
+    public Physics2DRaycaster Physics2DRaycaster
+    { get => GetComponentInChildren<Physics2DRaycaster>(); }
 
-    public static void SetFollow(Transform target)
+    public void SetFollow(Transform target)
     {
-        Singleton.VirtualCamera.Follow = target;
+        vc1.Follow = target;
     }
-    public static void SetEdge(PolygonCollider2D target)
+    public void SetEdge(PolygonCollider2D target)
     {
-        Singleton.VirtualCamera.GetComponent<CinemachineConfiner>().m_BoundingShape2D = target;
+        vc1.GetComponent<CinemachineConfiner>().m_BoundingShape2D = target;
     }
-    public static void SetOrthographicSize(float value)
+    public void SetOrthographicSize(float value)
     {
-        Singleton.VirtualCamera.m_Lens.OrthographicSize = value;
+        vc1.m_Lens.OrthographicSize = value;
     }
-    public static void ChangeOrthographicSize(float offset)
+    public void ChangeOrthographicSize(float offset)
     {
-        Singleton.VirtualCamera.m_Lens.OrthographicSize += offset;
+        vc1.m_Lens.OrthographicSize += offset;
     }
 }

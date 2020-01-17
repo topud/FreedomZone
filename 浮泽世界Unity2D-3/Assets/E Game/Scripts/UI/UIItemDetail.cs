@@ -43,11 +43,11 @@ public class UIItemDetail : UIBase
         {
             imgIcon.enabled = true;
             btnUse.gameObject.SetActive(true);
-            if (CharacterManager.Player.IsHave(data))
+            if (GameManager.Character.Player.IsHave(data))
             {
                 btnPickupToHand.gameObject.SetActive(false);
                 btnPickupToBag.gameObject.SetActive(false);
-                if (CharacterManager.Player.IsInHandOrBag(data))
+                if (GameManager.Character.Player.IsInHandOrBag(data))
                 {
                     btnMoveToHand.gameObject.SetActive(false);
                     btnMoveToBag.gameObject.SetActive(true);
@@ -124,32 +124,32 @@ public class UIItemDetail : UIBase
 
     public void Use()
     {
-        CharacterManager.Player.Use(data); 
+        GameManager.Character.Player.Use(data); 
         Refresh();
     }
     public void PickupToHand()
     {
-        CharacterManager.Player.PickUp(data);
+        GameManager.Character.Player.PickUp(data);
         Refresh();
     }
     public void PickupToBag()
     {
-        CharacterManager.Player.PickUp(data, false);
+        GameManager.Character.Player.PickUp(data, false);
         Refresh();
     }
     public void MoveToHand()
     {
-        CharacterManager.Player.PutItemInRightHand(data, true);
+        GameManager.Character.Player.PutItemInRightHand(data, true);
         Refresh();
     }
     public void MoveToBag()
     {
-        CharacterManager.Player.PutRightHandItemInBag();
+        GameManager.Character.Player.PutRightHandItemInBag();
         Refresh();
     }
     public void Drop()
     {
-        CharacterManager.Player.Drop(data);
+        GameManager.Character.Player.Drop(data);
         Refresh();
     }
 }

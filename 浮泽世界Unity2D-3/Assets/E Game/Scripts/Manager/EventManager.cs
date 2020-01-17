@@ -4,20 +4,22 @@ using UnityEngine;
 using E.Tool;
 using UnityEngine.EventSystems;
 
-public class EventManager : SingletonClass<EventManager>
+public class EventManager : MonoBehaviour
 {
-    public static EventSystem EventSystem { get => Singleton.GetComponent<EventSystem>(); }
+    public EventSystem EventSystem { get => FindObjectOfType<EventSystem>(); }
 
     /// <summary>
     /// 获取鼠标停留处物体
     /// </summary>
     /// <param name="raycaster"></param>
     /// <returns></returns>
-    public static GameObject GetOverGameObject()
+    public GameObject GetOverGameObject()
     {
-        PointerEventData pointerEventData = new PointerEventData(EventSystem.current);
-        pointerEventData.position = Input.mousePosition;
-        PhysicsRaycaster pr = CameraManager.Physics2DRaycaster;
+        PointerEventData pointerEventData = new PointerEventData(EventSystem.current)
+        {
+            position = Input.mousePosition
+        };
+        Physics2DRaycaster pr = GameManager.Camera.Physics2DRaycaster;
         List<RaycastResult> results = new List<RaycastResult>();
         pr.Raycast(pointerEventData, results);
         if (results.Count != 0)

@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Experimental.Rendering.Universal;
 using E.Tool;
 
-public class TimeManager : SingletonClass<TimeManager>
+public class TimeManager : MonoBehaviour
 {
     public DateTime Now;
     [Range(1, 1440), Tooltip("现实中1秒游戏中？秒")] public float Ratio = 60;

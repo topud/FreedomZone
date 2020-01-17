@@ -44,7 +44,7 @@ namespace E.Tool
         public override void LoadData()
         {
             //base.LoadData();
-            datas = SaveManager.GetSaveFiles();
+            datas = GameManager.Save.GetSaveFiles();
             Debug.Log("存档数量 " + datas.Count);
         }
         public override void SetPanel()
@@ -56,34 +56,34 @@ namespace E.Tool
 
         public void Create()
         {
-            SaveManager.SaveTo(SaveManager.CreateSaveFile());
+            GameManager.Save.SaveTo(GameManager.Save.CreateSaveFile());
             Refresh();
         }
         public void Load(UISlotSave slot)
         {
-            if (GameManager.IsInLobby)
+            if (GameManager.Scene.IsInLobby)
             {
                 GameManager.ContinueSelectSave(slot.Data);
             }
             else
             {
-                SaveManager.LoadFrom(slot.Data);
+                GameManager.Save.LoadFrom(slot.Data);
             }
             Hide();
         }
         public void Save(UISlotSave slot)
         {
-            SaveManager.SaveTo(slot.Data);
+            GameManager.Save.SaveTo(slot.Data);
             Refresh();
         }
         public void Delete(UISlotSave slot)
         {
-            SaveManager.RemoveSaveFile(slot.Data);
+            GameManager.Save.RemoveSaveFile(slot.Data);
             Refresh();
         }
         public void DeleteAll()
         {
-            SaveManager.RemoveAllSaveFile();
+            GameManager.Save.RemoveAllSaveFile();
             Refresh();
         }
     }

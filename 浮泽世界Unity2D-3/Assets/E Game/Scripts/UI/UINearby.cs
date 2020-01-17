@@ -17,9 +17,9 @@ public class UINearby : UIList<Item, UISlotItem>
 
     public override void LoadData()
     {
-        if (CharacterManager.Player)
+        if (GameManager.Character.Player)
         {
-            datas.AddRange(CharacterManager.Player.NearbyItems);
+            datas.AddRange(GameManager.Character.Player.NearbyItems);
         }
     }
 }

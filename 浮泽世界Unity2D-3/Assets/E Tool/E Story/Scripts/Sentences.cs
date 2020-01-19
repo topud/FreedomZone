@@ -6,7 +6,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Story Sentences", order = 1)]
-    public class Sentences : StaticDataDictionary<Sentences>
+    public class Sentences : ScriptableObject
     {
         [Tooltip("对话")] public Sentence[] sentences;
     }

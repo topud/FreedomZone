@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using Pathfinding;
+using UnityEditor;
 
 namespace E.Tool
 {
@@ -64,7 +65,23 @@ namespace E.Tool
         public bool IsPlayer
         {
             get => GameManager.Character.Player == this;
-            set => GameManager.Character.Player = value ? this : null;
+            set 
+            {
+                if (IsPlayer)
+                {
+                    if (!value)
+                    {
+                        GameManager.Character.Player = null;
+                    }
+                }
+                else
+                {
+                    if (value)
+                    {
+                        GameManager.Character.Player = this;
+                    }
+                }
+            }
         }
         /// <summary>
         /// 是否面朝右边
@@ -215,10 +232,6 @@ namespace E.Tool
                     {
                         CheckMove();
                     }
-                    else
-                    {
-                        Debug.Log("IsShowSomeUIPanel");
-                    }
                 }
             }
         }
@@ -234,6 +247,11 @@ namespace E.Tool
         {
             base.OnDestroy();
         }
+        protected override void Reset()
+        {
+            base.Reset();
+        }
+
         public override void OnPointerEnter()
         {
             //Debug.Log("光标进入 " + name);
@@ -245,65 +263,27 @@ namespace E.Tool
             SpriteSorter.SetAlpha(1f);
         }
 
-        //数据
-        /// <summary>
-        /// 设置数据，默认用于从存档读取数据
-        /// </summary>
-        /// <param name="data"></param>
-        public override void SetDynamicData(CharacterDynamicData data)
-        {
-            base.SetDynamicData(data);
-        }
-        [ContextMenu("刷新数据")]
-        /// <summary>
-        /// 刷新数据
-        /// </summary>
-        public override void Refresh()
-        {
-            ResetStaticData();
-            ResetDynamicData();
-        }
-        [ContextMenu("初始化数据")]
-        /// <summary>
-        /// 初始化数据
-        /// </summary>
-        public override void Reset()
-        {
-            base.Reset();
-        }
-        /// <summary>
-        /// 重置静态数据
-        /// </summary>
-        public override void ResetStaticData()
-        {
-            base.ResetStaticData();
-        }
+        [ContextMenu("重置动态数据")]
         /// <summary>
         /// 重置动态数据
         /// </summary>
-        public override void ResetDynamicData(bool isAddID = true)
+        public override void ResetDynamicData()
         {
-            base.ResetDynamicData(isAddID);
-
-            gameObject.layer = LayerMask.NameToLayer("Character");
-            gameObject.tag = IsPlayer ? "Player" : "NPC";
-            AIPath.enabled = false;
-            AIDestinationSetter.enabled = false;
-
-            if (!StaticData) return;
-
-            TargetUI.SetName(StaticData.Name);
-            TargetUI.HideAll();
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
 
             DynamicData = new CharacterDynamicData
             {
-                Name = StaticData.Name,
-                ID = gameObject.GetInstanceID(),
-                //Position
-
+                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : GameManager.Character.AvailableID),
+                position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
                 health = StaticData.Health,
-                mind = StaticData.Mind,
                 power = StaticData.Power,
+                //DynamicData.items = StaticData.Items;              **
+
+                mind = StaticData.Mind,
                 speed = StaticData.Speed,
                 iq = StaticData.IQ,
                 strength = StaticData.Strength,
@@ -318,6 +298,53 @@ namespace E.Tool
                 publishedQuests = StaticData.PublishedQuests,
                 relationships = StaticData.Relationships
             };
+
+            Refresh();
+
+            Undo.RecordObject(gameObject, "Refresh " + DynamicData.nameID.NameID);
+        }
+        [ContextMenu("刷新对象")]
+        /// <summary>
+        /// 刷新对象
+        /// </summary>
+        public override void Refresh()
+        {
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
+            if (DynamicData == null)
+            {
+                Debug.Log("动态数据初始化 " + StaticData.Name);
+                ResetDynamicData();
+            }
+
+            gameObject.layer = LayerMask.NameToLayer("Character");
+            gameObject.tag = IsPlayer ? "Player" : "NPC";
+            AIPath.enabled = false;
+            AIDestinationSetter.enabled = false;
+
+            TargetUI.SetName(DynamicData.nameID.name);
+            TargetUI.HideAll();
+
+            name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
+            transform.position = DynamicData.position;
+            Rigidbody.mass = StaticData.Weight;
+
+            Items.Clear();
+            foreach (NameAndID item in DynamicData.items)
+            {
+                Item it = GameManager.Item.GetItem(item);
+                if (it)
+                {
+                    Items.Add(it);
+                }
+                else
+                {
+                    Debug.LogError("找不到物品 " + item.NameID);
+                }
+            }
         }
 
         //行为
@@ -775,7 +802,7 @@ namespace E.Tool
                 }
                 else
                 {
-                    currentSpeed = DynamicData.speed.Now;
+                    currentSpeed = DynamicData.speed.Min;
                 }
                 Rigidbody.velocity = direction * currentSpeed;
 

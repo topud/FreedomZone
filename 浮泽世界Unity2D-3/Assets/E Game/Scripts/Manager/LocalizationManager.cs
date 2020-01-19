@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using E.Tool;
+using UnityEngine.AddressableAssets;
 
 public class LocalizationManager : MonoBehaviour
 {
@@ -12,7 +13,12 @@ public class LocalizationManager : MonoBehaviour
 
     public List<Localizations> LocalizationsList
     {
-        get => Localizations.GetValues();
+        get
+        {
+            List<Localizations> list = new List<Localizations>();
+            list.AddRange(Addressables.LoadAssets<Localizations>("Localizations", null).Result);
+            return list;
+        }
     }
     public Language Language
     {

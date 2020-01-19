@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
+using UnityEngine.AddressableAssets;
 
 public class ItemManager : MonoBehaviour
 {
@@ -11,19 +12,47 @@ public class ItemManager : MonoBehaviour
 
     [Header("数据")]
     [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
+
     public List<Item> Items
     {
         get
         {
             items.Clear();
-            Item[] interactors = transform.GetComponentsInChildren<Item>();
-            foreach (Item item in interactors)
-            {
-                items.Add(item);
-            }
+            Item[] its = transform.GetComponentsInChildren<Item>();
+            items.AddRange(its);
             return items;
         }
     }
+    public int AvailableID 
+    {
+        get
+        {
+            int max = short.MaxValue;
+            int i = 0;
+            do
+            {
+                bool isExsit = false;
+                foreach (Item item in Items)
+                {
+                    if (i == item.DynamicData.nameID.id)
+                    {
+                        isExsit = true;
+                        break;
+                    }
+                }
+                if (isExsit)
+                {
+                    i++;
+                }
+                else
+                {
+                    break;
+                }
+            } while (i < max);
+            return i;
+        }
+    }
+
 
     private void OnEnable()
     {
@@ -40,12 +69,12 @@ public class ItemManager : MonoBehaviour
     {
         GameObject go;
         Item item;
-        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(name);
+        ItemStaticData sData = Addressables.LoadAsset<ItemStaticData>(name).Result;
         if (sData)
         {
             go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
-            item.ResetDynamicData();
+            item.Refresh();
             Debug.Log("物品生成成功：" + name);
             return item;
         }
@@ -62,18 +91,18 @@ public class ItemManager : MonoBehaviour
     {
         GameObject go;
         Item item;
-        ItemStaticData sData = (ItemStaticData)ItemStaticData.GetValue(dData.Name);
+        ItemStaticData sData = Addressables.LoadAsset<ItemStaticData>(dData.nameID).Result;
         if (sData)
         {
             go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
             item.SetDynamicData(dData);
-            Debug.Log("物品生成成功：" + dData.Name);
+            Debug.Log("物品生成成功：" + dData.nameID.NameID);
             return item;
         }
         else
         {
-            Debug.LogError("静态数据不存在：" + dData.Name);
+            Debug.LogError("静态数据不存在：" + dData.nameID.name);
             return null;
         }
     }
@@ -82,22 +111,11 @@ public class ItemManager : MonoBehaviour
     /// </summary>
     /// <param name="name">物品名</param>
     /// <returns></returns>
-    public Item GetItem(string name)
+    public Item GetItem(NameAndID nameID)
     {
         foreach (Item item in Items)
         {
-            if (item.StaticData.Name == name)
-            {
-                return item;
-            }
-        }
-        return null;
-    }
-    public Item GetItem(int id)
-    {
-        foreach (Item item in Items)
-        {
-            if (item.gameObject.GetInstanceID() == id)
+            if (item.DynamicData.nameID.Equals(nameID))
             {
                 return item;
             }

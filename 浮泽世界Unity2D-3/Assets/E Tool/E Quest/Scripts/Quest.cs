@@ -4,7 +4,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Quest")]
-    public class Quest : StaticDataDictionary<Quest>
+    public class Quest : ScriptableObject
     {
         [Header("任务信息")]
         [SerializeField, Tooltip("任务标题")] private string title;

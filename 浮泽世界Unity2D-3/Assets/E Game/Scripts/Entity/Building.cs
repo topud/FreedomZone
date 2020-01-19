@@ -39,6 +39,10 @@ namespace E.Tool
         {
             base.OnDestroy();
         }
+        protected override void Reset()
+        {
+            base.Reset();
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
@@ -69,60 +73,56 @@ namespace E.Tool
             }
         }
 
-
+        [ContextMenu("重置动态数据")]
         /// <summary>
-        /// 设置数据，默认用于从存档读取数据
+        /// 重置动态数据
         /// </summary>
-        /// <param name="data"></param>
-        public override void SetDynamicData(BuildingDynamicData data)
+        public override void ResetDynamicData()
         {
-            base.SetDynamicData(data);
-        }
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
 
+            DynamicData = new BuildingDynamicData
+            {
+                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : 0),
+                position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
+                health = StaticData.Health,
+                power = StaticData.Power,
+                //DynamicData.items = StaticData.Items;              **
+
+            };
+
+            Refresh();
+        }
         [ContextMenu("刷新数据")]
         /// <summary>
         /// 刷新数据
         /// </summary>
         public override void Refresh()
         {
-            ResetStaticData();
-            ResetDynamicData();
-        }
-        [ContextMenu("初始化数据")]
-        /// <summary>
-        /// 初始化数据
-        /// </summary>
-        public override void Reset()
-        {
-            base.Reset();
-        }
-        /// <summary>
-        /// 重置静态数据
-        /// </summary>
-        public override void ResetStaticData()
-        {
-            base.ResetStaticData();
-
-            SpriteSorter.SetSprite(StaticData.Icon);
-        }
-        /// <summary>
-        /// 重置动态数据
-        /// </summary>
-        public override void ResetDynamicData(bool isAddID = true)
-        {
-            base.ResetDynamicData(isAddID);
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
+            if (DynamicData == null)
+            {
+                Debug.Log("动态数据初始化 " + StaticData.Name);
+                ResetDynamicData();
+            }
 
             gameObject.layer = LayerMask.NameToLayer("Building");
             gameObject.tag = "Building";
 
-            if (!StaticData) return;
-
-            DynamicData = new BuildingDynamicData
-            {
-                Name = StaticData.Name,
-                health = StaticData.Health,
-            };
+            name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
+            transform.position = DynamicData.position;
+            Rigidbody.mass = StaticData.Weight;
             Rigidbody.bodyType = RigidbodyType2D.Static;
+
+            Items.Clear();
         }
     }
 }

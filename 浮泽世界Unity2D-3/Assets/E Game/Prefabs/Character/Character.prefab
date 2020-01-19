@@ -377,73 +377,73 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StaticData: {fileID: 0}
   DynamicData:
-    Name: 
-    ID: 0
-    Position: {x: 0, y: 0}
-    Health:
+    nameID:
+      name: NoName
+      id: -1
+    position: {x: 0, y: 0}
+    health:
       changeable: 1
       autoChangeable: 1
       autoChangeRate: 1
       max: 20
       min: 0
       now: 20
-    Power:
+    power:
       changeable: 1
       autoChangeable: 1
       autoChangeRate: 1
       max: 20
       min: 0
       now: 20
-    ItemIDs: 
-    Mind:
+    items: []
+    mind:
       changeable: 1
       autoChangeable: 1
       autoChangeRate: 1
       max: 20
       min: 0
       now: 20
-    Speed:
+    speed:
       changeable: 0
       autoChangeable: 0
       autoChangeRate: 0
       max: 5
-      min: 0
-      now: 1
-    IQ:
+      min: 2
+      now: 0
+    iq:
       changeable: 0
       autoChangeable: 0
       autoChangeRate: 0
       max: 100
       min: 0
       now: 5
-    Strength:
+    strength:
       changeable: 0
       autoChangeable: 0
       autoChangeRate: 0
       max: 100
       min: 0
       now: 5
-    Defense:
+    defense:
       changeable: 0
       autoChangeable: 0
       autoChangeRate: 0
       max: 100
       min: 0
       now: 1
-    RMB: 100
-    FZB: 0
-    Clothings: 
-    Skills: []
-    Buffs: []
-    AcceptedQuests: []
-    PublishedQuests: []
-    Relationships: []
+    rmb: 100
+    fzb: 0
+    skills: []
+    buffs: []
+    acceptedQuests: []
+    publishedQuests: []
+    relationships: []
   items: []
   state: 0
+  mode: 0
   currentSpeed: 0
   runBeyondDistance: 5
   lastPutInBagItem: {fileID: 0}
-  clothings: []
   nearistItem: {fileID: 0}
   nearistCharacter: {fileID: 0}
   nearistEntity: {fileID: 0}

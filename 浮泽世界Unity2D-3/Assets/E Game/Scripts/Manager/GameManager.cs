@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
             //场景测试流程
             if (!Character.Player)
             {
-                Character player = Character.GetCharacter("璃亚");
+                Character player = Character.GetCharacter(new NameAndID("璃亚", 0));
                 player.IsPlayer = true;
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }
@@ -64,16 +64,16 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public static void StartNewSave()
     {
-        Scene.LoadScene("Game", true, true);
         Save.currentSave = Save.CreateSaveFile();
+        Scene.LoadScene("Game", true, true);
     }
     /// <summary>
     /// 继续上一次的存档
     /// </summary>
     public static void ContinueLastSave()
     {
-        Scene.LoadScene("Game", true, true);
         Save.currentSave = Save.GetLatestSaveFile();
+        Scene.LoadScene("Game", true, true);
     }
     /// <summary>
     /// 继续选中的存档
@@ -86,16 +86,16 @@ public class GameManager : MonoBehaviour
             Debug.LogError("存档文件不存在");
             return;
         }
-        Scene.LoadScene("Game", true, true);
         Save.currentSave = fileInfo;
+        Scene.LoadScene("Game", true, true);
     }
     /// <summary>
     /// 返回大厅
     /// </summary>
     public static void BackToLobby()
     {
-        Scene.LoadScene("Lobby", false);
         Save.currentSave = null;
+        Scene.LoadScene("Lobby");
     }
     /// <summary>
     /// 退出游戏

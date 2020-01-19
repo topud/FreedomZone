@@ -18,7 +18,11 @@ MonoBehaviour:
   m_GUID: 2878857d542a83341b00bcd60d2607d3
   m_SerializeEntries:
   - m_GUID: 364411b2c39ae6b4888ac50a43c3dfdc
-    m_Address: "Assets/E Game/Quests/\u6536\u96C6\u77F3\u5934.asset"
+    m_Address: "\u6536\u96C6\u77F3\u5934"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+  - m_GUID: 77ded0ec720d8da45a91d0e290ac9230
+    m_Address: Localizations
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

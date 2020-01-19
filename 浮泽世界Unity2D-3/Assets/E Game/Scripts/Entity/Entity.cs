@@ -6,6 +6,8 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Pathfinding;
+using UnityEngine.AddressableAssets;
+using UnityEditor;
 
 namespace E.Tool
 {
@@ -25,16 +27,25 @@ namespace E.Tool
         public S StaticData;
         public D DynamicData;
         [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
+        
+        public bool IsAsset
+        {
+            get
+            {
+                string assetPath = AssetDatabase.GetAssetPath(gameObject);
+                return !string.IsNullOrEmpty(assetPath);
+            }
+        }
         public List<Item> Items
         {
             get => items;
             set
             {
                 items = value;
-                DynamicData.itemIDs.Clear();
+                DynamicData.items.Clear();
                 foreach (Item item in Items)
                 {
-                    DynamicData.itemIDs.Add(item.gameObject.GetInstanceID());
+                    DynamicData.items.Add(item.DynamicData.nameID);
                 }
             }
         }
@@ -44,6 +55,7 @@ namespace E.Tool
         }
         protected virtual void OnEnable()
         {
+            Refresh();
         }
         protected virtual void Start()
         {
@@ -68,6 +80,9 @@ namespace E.Tool
         {
 
         }
+        protected virtual void Reset()
+        {
+        }
 
         public virtual void OnPointerEnter()
         {
@@ -83,12 +98,13 @@ namespace E.Tool
         /// <summary>
         /// 设置静态数据
         /// </summary>
-        public virtual void SetStaticData(string name)
+        public void SetStaticData(string name)
         {
-            S sData = (S)EntityStaticData.GetValue(name);
+            S sData = Addressables.LoadAsset<S>(name).Result;
             if (sData)
             {
                 StaticData = sData;
+                ResetDynamicData();
             }
             else
             {
@@ -103,86 +119,26 @@ namespace E.Tool
         {
             if (!StaticData)
             {
-                Debug.LogError("静态数据不存在，无法设置数据");
+                Debug.LogError("静态数据不存在，动态数据无法设置");
+                return;
+            }
+            if (data.nameID.name != StaticData.Name)
+            {
+                Debug.LogError(string.Format("对象名称不匹配，无法设置数据。当前指定对象是 {0}，目标数据指定对象是 {1}",
+                    StaticData.Name, data.nameID));
                 return;
             }
 
-            if (data.Name == StaticData.Name)
-            {
-                DynamicData = data;
-                transform.position = data.position;
-
-                Items.Clear();
-                foreach (int item in DynamicData.itemIDs)
-                {
-                    Item it = GameManager.Item.GetItem(item);
-                    if (it)
-                    {
-                        Items.Add(it);
-                    }
-                    else
-                    {
-                        Debug.LogError("找不到物品ID " + it);
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogError(string.Format("对象名称不匹配，无法设置数据。当前指定对象是 {0}，目标数据指定对象是 {1}",
-                    StaticData.Name, data.Name));
-            }
-        }
-
-        [ContextMenu("刷新数据")]
-        /// <summary>
-        /// 刷新数据
-        /// </summary>
-        public virtual void Refresh()
-        {
-            ResetStaticData();
-            ResetDynamicData();
-        }
-        [ContextMenu("初始化数据")]
-        /// <summary>
-        /// 初始化数据
-        /// </summary>
-        public virtual void Reset()
-        {
-            ResetStaticData();
-            ResetDynamicData(false);
-        }
-        /// <summary>
-        /// 重置静态数据
-        /// </summary>
-        public virtual void ResetStaticData()
-        {
-            string[] sts = gameObject.name.Split('-');
-            S sData = (S)EntityStaticData.GetValue(sts[0]);
-            if (sData)
-            {
-                StaticData = sData;
-            }
+            DynamicData = data;
+            Refresh();
         }
         /// <summary>
         /// 重置动态数据
         /// </summary>
-        public virtual void ResetDynamicData(bool isAddID = true)
-        {
-            if (!StaticData)
-            {
-                Debug.LogError("静态数据未设置，动态数据无法设置");
-                return;
-            }
-
-            if (isAddID)
-            {
-                name = StaticData.Name + gameObject.GetInstanceID();
-            }
-            else
-            {
-                name = StaticData.Name;
-            }
-            Rigidbody.mass = StaticData.Weight;
-        }
+        public abstract void ResetDynamicData();
+        /// <summary>
+        /// 刷新对象
+        /// </summary>
+        public abstract void Refresh();
     }
 }

@@ -18,15 +18,15 @@ MonoBehaviour:
   m_GUID: 376ff22955aa3fb42ad7d5a72b956f2a
   m_SerializeEntries:
   - m_GUID: 01fc16fb7f801074baef0ac38454e586
-    m_Address: "Assets/E Game/Storys/\u793A\u4F8B\u6545\u4E8B.asset"
+    m_Address: "\u793A\u4F8B\u6545\u4E8B"
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 8a0813ec128612545979cd24a82378c9
-    m_Address: "Assets/E Game/Storys/\u5267\u60C5\u7247\u6BB52.Asset"
+    m_Address: "\u5267\u60C5\u7247\u6BB52"
     m_ReadOnly: 0
     m_SerializedLabels: []
   - m_GUID: 9a02209027b6c184696a865183e155eb
-    m_Address: "Assets/E Game/Storys/\u5267\u60C5\u7247\u6BB51.asset"
+    m_Address: "\u5267\u60C5\u7247\u6BB51"
     m_ReadOnly: 0
     m_SerializedLabels: []
   m_ReadOnly: 0

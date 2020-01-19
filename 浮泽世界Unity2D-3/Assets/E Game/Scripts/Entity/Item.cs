@@ -87,68 +87,93 @@ namespace E.Tool
         {
             base.OnDestroy();
         }
-
-        /// <summary>
-        /// 设置数据，默认用于从存档读取数据
-        /// </summary>
-        /// <param name="data"></param>
-        public override void SetDynamicData(ItemDynamicData data)
+        protected override void Reset()
         {
-            base.SetDynamicData(data);
+            base.Reset();
         }
 
-        [ContextMenu("刷新数据")]
+        [ContextMenu("重置动态数据")]
         /// <summary>
-        /// 刷新数据
+        /// 重置动态数据
+        /// </summary>
+        public override void ResetDynamicData()
+        {
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
+
+            DynamicData = new ItemDynamicData
+            {
+                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : GameManager.Item.AvailableID),
+                position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
+                health = StaticData.Health,
+                power = StaticData.Power,
+                //DynamicData.items = StaticData.Items;              **
+            };
+
+            Refresh();
+        }
+        [ContextMenu("刷新对象")]
+        /// <summary>
+        /// 刷新对象
         /// </summary>
         public override void Refresh()
         {
-            ResetStaticData();
-            ResetDynamicData();
-        }
-        [ContextMenu("初始化数据")]
-        /// <summary>
-        /// 初始化数据
-        /// </summary>
-        public override void Reset()
-        {
-            ResetStaticData();
-            ResetDynamicData(false);
-        }
-        /// <summary>
-        /// 重置静态数据
-        /// </summary>
-        public override void ResetStaticData()
-        {
-            base.ResetStaticData();
-
-            SpriteSorter.SetSprite(StaticData.Icon);
-        }
-        /// <summary>
-        /// 重置数据，默认用于对象初次生成的数据初始化
-        /// </summary>
-        public override void ResetDynamicData(bool isAddID = true)
-        {
-            base.ResetDynamicData(isAddID);
+            if (!StaticData)
+            {
+                Debug.LogError("静态数据未设置，动态数据无法设置");
+                return;
+            }
+            if (DynamicData == null)
+            {
+                Debug.Log("动态数据初始化 " + StaticData.Name);
+                ResetDynamicData();
+            }
 
             gameObject.layer = LayerMask.NameToLayer("Item");
             gameObject.tag = "Item";
 
-            if (!StaticData) return;
+            name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
+            transform.position = DynamicData.position;
+            Rigidbody.mass = StaticData.Weight;
 
-             DynamicData = new ItemDynamicData()
-             {
-                Name = StaticData.name,
-                ID = gameObject.GetInstanceID(),
-                //Position
-
-                 health = StaticData.Health,
-                 power = StaticData.Power,
-                 //ItemInstanceIDs
-             };
-            if (SwitchableObject)
+            Items.Clear();
+            switch (StaticData.Type)
             {
-                SwitchableObject.SetActive(DynamicData.isUsing);
+                case ItemType.Food:
+                    break;
+                case ItemType.Weapon:
+                    break;
+                case ItemType.Ammo:
+                    break;
+                case ItemType.Book:
+                    break;
+                case ItemType.Switch:
+                    if (SwitchableObject)
+                    {
+                        SwitchableObject.SetActive(DynamicData.isUsing);
+                    }
+                    break;
+                case ItemType.Bag:
+                    foreach (NameAndID item in DynamicData.items)
+                    {
+                        Item it = GameManager.Item.GetItem(item);
+                        if (it)
+                        {
+                            Items.Add(it);
+                        }
+                        else
+                        {
+                            Debug.LogError("找不到物品 " + item.NameID);
+                        }
+                    }
+                    break;
+                case ItemType.Other:
+                    break;
+                default:
+                    break;
             }
         }
 

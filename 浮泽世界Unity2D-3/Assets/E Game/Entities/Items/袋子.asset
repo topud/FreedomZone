@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: "\u888B\u5B50"
   m_EditorClassIdentifier: 
   name: "\u888B\u5B50"
-  describe: "\u8FD9\u662F\u4E00\u4E2A\u888B\u5B50"
+  description: 
   icon: {fileID: 21300000, guid: 8dc6edc5e31a45c4c995289a3da5fcaa, type: 3}
-  prefab: {fileID: 2443446638038779542, guid: d52d6b4ddbba0a347bd7007ea4060a88, type: 3}
+  prefab: {fileID: 1902451128136963281, guid: 7429ff1ee0c82a3499e31b08b1eeda9b, type: 3}
   weight: 50
   volume: 10
-  birthdayYear: 2000
-  birthdayMonth: 1
-  birthdayDay: 1
+  birthday: {x: 2000, y: 1, z: 1}
   health:
     changeable: 1
     autoChangeable: 1

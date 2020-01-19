@@ -13,14 +13,12 @@ MonoBehaviour:
   m_Name: "\u7483\u4E9A"
   m_EditorClassIdentifier: 
   name: "\u7483\u4E9A"
-  describe: "\u662F\u7483\u4E9A"
+  description: 
   icon: {fileID: 21300000, guid: eb1769b820c087845a09bc77f72c8cba, type: 3}
   prefab: {fileID: 8244191336539374010, guid: 72060761a695fc84b85aaae6b45b0384, type: 3}
   weight: 70
   volume: 1
-  birthdayYear: 2000
-  birthdayMonth: 1
-  birthdayDay: 1
+  birthday: {x: 2000, y: 1, z: 1}
   health:
     changeable: 1
     autoChangeable: 1
@@ -57,8 +55,8 @@ MonoBehaviour:
     autoChangeable: 0
     autoChangeRate: 0
     max: 5
-    min: 0
-    now: 1
+    min: 1
+    now: 0
   iq:
     changeable: 0
     autoChangeable: 0

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using UnityEditorInternal;
+using UnityEngine.AddressableAssets;
 
 namespace E.Tool
 {
@@ -51,9 +52,9 @@ namespace E.Tool
         /// <summary>
         /// 故事集合
         /// </summary>
-        public static List<Story> Storys
+        public static IList<Story> Storys
         {
-            get => Story.GetValues();
+            get => Addressables.LoadAssets<Story>("Story", null).Result;
         }
         /// <summary>
         /// 当前节点

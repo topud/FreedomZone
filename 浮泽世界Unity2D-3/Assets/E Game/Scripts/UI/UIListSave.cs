@@ -56,7 +56,7 @@ namespace E.Tool
 
         public void Create()
         {
-            GameManager.Save.SaveTo(GameManager.Save.CreateSaveFile());
+            GameManager.Save.CreateSaveFileAndSave();
             Refresh();
         }
         public void Load(UISlotSave slot)

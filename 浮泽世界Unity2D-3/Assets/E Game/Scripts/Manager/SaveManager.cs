@@ -46,7 +46,7 @@ public class SaveManager : MonoBehaviour
             FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
-                if (files[i].Name.EndsWith(".save"))
+                if (files[i].Name.EndsWith(".json"))
                 {
                     saveFiles.Add(files[i]);
                 }
@@ -101,6 +101,11 @@ public class SaveManager : MonoBehaviour
     /// <returns></returns>
     public Save GetSave(FileInfo fileInfo)
     {
+        if (!fileInfo.Exists)
+        {
+            Debug.LogError("存档文件不存在 " + fileInfo.FullName);
+            return null;
+        }
         string json = File.ReadAllText(fileInfo.FullName);
         Save save = JsonUtility.FromJson<Save>(json);
         return save;
@@ -112,21 +117,29 @@ public class SaveManager : MonoBehaviour
     /// <returns></returns>
     public FileInfo CreateSaveFile()
     {
-        List<FileInfo> fls = GetSaveFiles();
         int n = 0;
         string path;
         do
         {
-            path = Application.persistentDataPath + "/" + n + ".save";
+            path = Application.persistentDataPath + "/" + n + ".json";
             n++;
         }
         while (new FileInfo(path).Exists);
+
         FileInfo fileInfo = new FileInfo(path);
         fileInfo.Create().Dispose();
         RefreshNames();
 
         Debug.Log(string.Format("已创建存档文件 {0}", fileInfo.FullName));
         return fileInfo;
+    }
+    /// <summary>
+    /// 创建并保存
+    /// </summary>
+    public void CreateSaveFileAndSave()
+    {
+        currentSave = GameManager.Save.CreateSaveFile();
+        SaveTo(currentSave);
     }
 
     /// <summary>
@@ -166,6 +179,11 @@ public class SaveManager : MonoBehaviour
     /// </summary>
     public void SaveTo(FileInfo fileInfo)
     {
+        if (fileInfo == null)
+        {
+            Debug.LogError("存档失败，未指定FileInfo");
+            return;
+        }
         if (!fileInfo.Exists)
         {
             Debug.LogError("存档失败，指定文件不存在 " + fileInfo.FullName);
@@ -191,7 +209,7 @@ public class SaveManager : MonoBehaviour
             save.InteractorDynamicDatas.Add(item.DynamicData);
         }
         
-        string json = JsonUtility.ToJson(save);
+        string json = JsonUtility.ToJson(save, true);
         File.WriteAllText(fileInfo.FullName, json);
 
         AssetDatabase.Refresh();
@@ -216,7 +234,7 @@ public class SaveManager : MonoBehaviour
         GameManager.Story.CurrentNodeID = save.NodeID;
         foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
         {
-            Character character = GameManager.Character.GetCharacter(item.ID);
+            Character character = GameManager.Character.GetCharacter(item.nameID);
             if (character)
             {
                 character.SetDynamicData(item);
@@ -228,7 +246,7 @@ public class SaveManager : MonoBehaviour
         }
         foreach (ItemDynamicData item in save.InteractorDynamicDatas)
         {
-            Item it = GameManager.Item.GetItem(item.ID);
+            Item it = GameManager.Item.GetItem(item.nameID);
             if (it)
             {
                 it.SetDynamicData(item);

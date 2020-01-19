@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    public class Localizations : StaticDataDictionary<Localizations>
+    public class Localizations : ScriptableObject
     {
         public Localization[] strings;
     }

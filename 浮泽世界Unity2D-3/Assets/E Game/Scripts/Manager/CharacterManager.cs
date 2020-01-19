@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
+using UnityEngine.AddressableAssets;
 
 public class CharacterManager : MonoBehaviour
 {
@@ -19,7 +20,7 @@ public class CharacterManager : MonoBehaviour
         {
             return player;
         }
-        set 
+        set
         {
             if (player)
             {
@@ -42,14 +43,40 @@ public class CharacterManager : MonoBehaviour
         {
             characters.Clear();
             Character[] chars = transform.GetComponentsInChildren<Character>();
-            foreach (Character item in chars)
-            {
-                characters.Add(item);
-            }
+            characters.AddRange(chars);
             return characters;
         }
     }
-    
+    public int AvailableID
+    {
+        get
+        {
+            int max = short.MaxValue;
+            int i = 0;
+            do
+            {
+                bool isExsit = false;
+                foreach (Character item in Characters)
+                {
+                    if (i == item.DynamicData.nameID.id)
+                    {
+                        isExsit = true;
+                        break;
+                    }
+                }
+                if (isExsit)
+                {
+                    i++;
+                }
+                else
+                {
+                    break;
+                }
+            } while (i < max);
+            return i;
+        }
+    }
+
     private void OnEnable()
     {
         characters = Characters;
@@ -65,21 +92,20 @@ public class CharacterManager : MonoBehaviour
     {
         GameObject go;
         Character character;
-        CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(name);
+        CharacterStaticData sData = Addressables.LoadAsset<CharacterStaticData>(name).Result;
         if (sData)
         {
             if (sData.Prefab)
             {
                 go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
-                character.ResetDynamicData();
+                character.Refresh();
             }
             else
             {
                 go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), transform);
                 character = go.GetComponent<Character>();
-                character.StaticData = sData;
-                character.ResetDynamicData();
+                character.SetStaticData(name);
             }
             character.IsPlayer = isPlayer;
             Debug.Log("角色生成成功：" + name);
@@ -98,7 +124,7 @@ public class CharacterManager : MonoBehaviour
     {
         GameObject go;
         Character character;
-        CharacterStaticData sData = (CharacterStaticData)CharacterStaticData.GetValue(dData.Name);
+        CharacterStaticData sData = Addressables.LoadAsset<CharacterStaticData>(dData.nameID).Result;
         if (sData)
         {
             if (sData.Prefab)
@@ -114,12 +140,12 @@ public class CharacterManager : MonoBehaviour
                 character.StaticData = sData;
                 character.SetDynamicData(dData);
             }
-            Debug.Log("角色生成成功：" + dData.Name);
+            Debug.Log("角色生成成功：" + dData.nameID.NameID);
             return character;
         }
         else
         {
-            Debug.LogError("静态数据不存在：" + dData.Name);
+            Debug.LogError("静态数据不存在：" + dData.nameID.name);
             return null;
         }
     }
@@ -128,22 +154,11 @@ public class CharacterManager : MonoBehaviour
     /// </summary>
     /// <param name="name">角色名</param>
     /// <returns></returns>
-    public Character GetCharacter(string name)
+    public Character GetCharacter(NameAndID nameID)
     {
         foreach (Character item in Characters)
         {
-            if (item.StaticData.Name == name)
-            {
-                return item;
-            }
-        }
-        return null;
-    }
-    public Character GetCharacter(int id)
-    {
-        foreach (Character item in Characters)
-        {
-            if (item.gameObject.GetInstanceID() == id)
+            if (item.DynamicData.nameID.Equals(nameID))
             {
                 return item;
             }

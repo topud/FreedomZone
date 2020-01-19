@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using E.Tool;
+using UnityEngine.AddressableAssets;
 
 public class StoryManager : MonoBehaviour
 {
-    [SerializeField, ReadOnly]private Story currentStory;
+    [SerializeField, ReadOnly] private Story currentStory;
 
     public List<NodeID> CurrentStoryPassdNodeIDs;
     public NodeID CurrentNodeID;
@@ -15,10 +16,6 @@ public class StoryManager : MonoBehaviour
     {
         get 
         {
-            if (!currentStory)
-            {
-                currentStory = Instantiate(Story.GetValue("示例故事"));
-            };
             return currentStory; 
         }
         set => currentStory = value;

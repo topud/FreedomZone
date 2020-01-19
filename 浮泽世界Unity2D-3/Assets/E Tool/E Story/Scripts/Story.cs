@@ -7,7 +7,7 @@ using UnityEditor;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Story", order = 0)]
-    public class Story : StaticDataDictionary<Story>
+    public class Story : ScriptableObject
     {
         [Tooltip("故事描述"), TextArea(1, 10)] public string description;
         public List<StoryNode> nodes = new List<StoryNode>();

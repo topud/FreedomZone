@@ -338,24 +338,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   StaticData: {fileID: 0}
   DynamicData:
-    Name: 
-    ID: 0
-    Position: {x: 0, y: 0}
-    Health:
+    nameID:
+      name: NoName
+      id: -1
+    position: {x: 0, y: 0}
+    health:
       changeable: 1
       autoChangeable: 1
       autoChangeRate: 1
       max: 20
       min: 0
       now: 20
-    Power:
+    power:
       changeable: 1
       autoChangeable: 1
       autoChangeRate: 1
       max: 20
       min: 0
       now: 20
-    ItemIDs: 
+    items: []
   items: []
 --- !u!1001 &8882425513242118739
 PrefabInstance:
@@ -364,6 +365,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 2443446638038779539}
     m_Modifications:
+    - target: {fileID: 1303951379178420979, guid: edfd85a11bf696d4abb8132dac810955,
+        type: 3}
+      propertyPath: m_Name
+      value: "\u9634\u5F71 \u5706"
+      objectReference: {fileID: 0}
     - target: {fileID: 2719815450370199998, guid: edfd85a11bf696d4abb8132dac810955,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -418,11 +424,6 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1303951379178420979, guid: edfd85a11bf696d4abb8132dac810955,
-        type: 3}
-      propertyPath: m_Name
-      value: "\u9634\u5F71 \u5706"
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: edfd85a11bf696d4abb8132dac810955, type: 3}

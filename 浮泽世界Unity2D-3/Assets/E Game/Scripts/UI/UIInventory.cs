@@ -32,6 +32,8 @@ public class UIInventory : UIList<Item, UISlotItem>
 
     public override void LoadData()
     {
+        if (!GameManager.Character) return;
+
         if (GameManager.Character.Player)
         {
             datas.AddRange(GameManager.Character.Player.Items);

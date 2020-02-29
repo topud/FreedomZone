@@ -34,7 +34,7 @@ namespace E.Tool
 
                 //绘制name
                 nameProperty.stringValue = EditorGUI.TextField(nameRect, "名称", nameProperty.stringValue);
-                valueProperty.intValue = EditorGUI.IntSlider(valueRect, "默认值", valueProperty.intValue, -100, 100);
+                valueProperty.intValue = EditorGUI.IntSlider(valueRect, "初始值", valueProperty.intValue, -100, 100);
             }
         }
     }

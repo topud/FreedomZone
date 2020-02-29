@@ -1,0 +1,162 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddaeb3ceb9edaa42a207ef610f9456d, type: 3}
+  m_Name: "\u65B0\u6545\u4E8B"
+  m_EditorClassIdentifier: 
+  description: 
+  plotNodes:
+  - layout:
+      x: 33
+      y: 46
+      width: 307
+      height: 108
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 2
+    id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 1
+    type: 1
+    isMainPlot: 1
+    plot: {fileID: 11400000, guid: 519e5acc5ab83f34e987dbae5a22951b, type: 2}
+    nextOptionNodes: 000000000100000002000000
+  - layout:
+      x: 435
+      y: 471
+      width: 307
+      height: 108
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 2
+    id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 2
+    type: 0
+    isMainPlot: 1
+    plot: {fileID: 0}
+    nextOptionNodes: 
+  - layout:
+      x: 906
+      y: 45
+      width: 307
+      height: 108
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 1
+    type: 2
+    isMainPlot: 0
+    plot: {fileID: 0}
+    nextOptionNodes: 
+  - layout:
+      x: 912
+      y: 215
+      width: 307
+      height: 108
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 2
+    type: 2
+    isMainPlot: 1
+    plot: {fileID: 0}
+    nextOptionNodes: 
+  optionNodes:
+  - layout:
+      x: 449
+      y: 31
+      width: 307
+      height: 142
+    description: "\u9009\u9879\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 1
+    id: 0
+    comparisons:
+    - keyIndex: 0
+      comparison: 0
+      value: 0
+    - keyIndex: 1
+      comparison: 0
+      value: 0
+    changes:
+    - keyIndex: 0
+      change: 0
+      value: 0
+    - keyIndex: 1
+      change: 0
+      value: 0
+  - layout:
+      x: 455
+      y: 312
+      width: 307
+      height: 102
+    description: "\u9009\u9879\u7B80\u4ECB2"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 2
+    id: 1
+    comparisons:
+    - keyIndex: 0
+      comparison: 0
+      value: 0
+    changes:
+    - keyIndex: 0
+      change: 0
+      value: 0
+  - layout:
+      x: 450
+      y: 188
+      width: 307
+      height: 62
+    description: "\u9009\u9879\u7B80\u4ECB3"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id: 2
+    comparisons: []
+    changes: []
+  conditions:
+  - key: "\u672A\u547D\u540D"
+    value: 0
+  - key: "\u672A\u547D\u540D2"
+    value: 0

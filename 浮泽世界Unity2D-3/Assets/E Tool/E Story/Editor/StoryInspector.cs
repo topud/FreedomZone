@@ -13,7 +13,8 @@ namespace E.Tool
     {
         private Story Target;
         private ReorderableList conditionList;
-        private ReorderableList nodeList;
+        private ReorderableList plotNodeList;
+        private ReorderableList optionNodeList;
 
         private void OnEnable()
         {
@@ -87,7 +88,7 @@ namespace E.Tool
                     Debug.Log(list.index);
                 }
             };
-            nodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("nodes"), true, true, false, false)
+            plotNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("plotNodes"), true, true, false, false)
             {
                 //设置单个元素的高度
                 elementHeight = slh * 3 + svs * 4,
@@ -95,7 +96,7 @@ namespace E.Tool
                 //绘制
                 drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
                 {
-                    SerializedProperty itemData = nodeList.serializedProperty.GetArrayElementAtIndex(index);
+                    SerializedProperty itemData = plotNodeList.serializedProperty.GetArrayElementAtIndex(index);
                     EditorGUI.PropertyField(rect, itemData, GUIContent.none);
                 },
 
@@ -108,27 +109,94 @@ namespace E.Tool
                 //标题
                 drawHeaderCallback = (Rect rect) =>
                 {
-                    GUI.Label(rect, "节点列表");
+                    GUI.Label(rect, "剧情节点列表");
                 },
 
                 //创建
                 onAddCallback = (ReorderableList list) =>
                 {
-                    if (list.serializedProperty != null)
-                    {
-                        list.serializedProperty.arraySize++;
-                        list.index = list.serializedProperty.arraySize - 1;
+                    //if (list.serializedProperty != null)
+                    //{
+                    //    list.serializedProperty.arraySize++;
+                    //    list.index = list.serializedProperty.arraySize - 1;
 
-                        SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
-                        SerializedProperty sp1 = itemData.FindPropertyRelative("description");
-                        SerializedProperty sp2 = itemData.FindPropertyRelative("layout");
-                        sp1.stringValue = "（请输入节点简介）";
-                        sp2.rectIntValue = new RectInt(100,100, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y);
-                    }
-                    else
+                    //    SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                    //    SerializedProperty sp1 = itemData.FindPropertyRelative("description");
+                    //    SerializedProperty sp2 = itemData.FindPropertyRelative("layout");
+                    //    sp1.stringValue = "（请输入节点简介）";
+                    //    sp2.rectIntValue = new RectInt(100,100, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y);
+                    //}
+                    //else
+                    //{
+                    //    ReorderableList.defaultBehaviours.DoAddButton(list);
+                    //}
+                },
+
+                //删除
+                onRemoveCallback = (ReorderableList list) =>
+                {
+                    if (EditorUtility.DisplayDialog("警告", "是否要删除这个节点？", "是", "否"))
                     {
-                        ReorderableList.defaultBehaviours.DoAddButton(list);
+                        ReorderableList.defaultBehaviours.DoRemoveButton(list);
                     }
+                },
+
+
+                //鼠标抬起回调
+                onMouseUpCallback = (ReorderableList list) =>
+                {
+                    //Debug.Log("MouseUP");
+                },
+
+                //当选择元素回调
+                onSelectCallback = (ReorderableList list) =>
+                {
+                    //打印选中元素的索引
+                    //Debug.Log(list.index);
+                }
+            };
+            optionNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("optionNodes"), true, true, false, false)
+            {
+                //设置单个元素的高度
+                elementHeight = slh * 2 + svs * 3,
+
+                //绘制
+                drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
+                {
+                    SerializedProperty itemData = optionNodeList.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.PropertyField(rect, itemData, GUIContent.none);
+                },
+
+                //背景色
+                //reorderableList.drawElementBackgroundCallback = (rect, index, isActive, isFocused) => {
+                //    GUI.backgroundColor = Color.yellow;
+                //};
+                showDefaultBackground = true,
+
+                //标题
+                drawHeaderCallback = (Rect rect) =>
+                {
+                    GUI.Label(rect, "选项节点列表");
+                },
+
+                //创建
+                onAddCallback = (ReorderableList list) =>
+                {
+                    //if (list.serializedProperty != null)
+                    //{
+                    //    list.serializedProperty.arraySize++;
+                    //    list.index = list.serializedProperty.arraySize - 1;
+
+                    //    SerializedProperty itemData = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                    //    SerializedProperty sp1 = itemData.FindPropertyRelative("description");
+                    //    SerializedProperty sp2 = itemData.FindPropertyRelative("layout");
+                    //    sp1.stringValue = "（请输入节点简介）";
+                    //    sp2.rectIntValue = new RectInt(100, 100, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y);
+                    //}
+                    //else
+                    //{
+                    //    ReorderableList.defaultBehaviours.DoAddButton(list);
+                    //}
                 },
 
                 //删除
@@ -143,14 +211,14 @@ namespace E.Tool
                 //鼠标抬起回调
                 onMouseUpCallback = (ReorderableList list) =>
                 {
-                    Debug.Log("MouseUP");
+                    //Debug.Log("MouseUP");
                 },
 
                 //当选择元素回调
                 onSelectCallback = (ReorderableList list) =>
                 {
                     //打印选中元素的索引
-                    Debug.Log(list.index);
+                    //Debug.Log(list.index);
                 }
             };
 
@@ -161,6 +229,7 @@ namespace E.Tool
             if (GUILayout.Button("打开E Story编辑器"))
             {
                 StoryWindow.Open();
+                StoryWindow.OpenStory(Target);
             }
 
             EditorGUILayout.LabelField("故事描述");
@@ -170,7 +239,8 @@ namespace E.Tool
 
             serializedObject.Update();
             conditionList.DoLayoutList();
-            nodeList.DoLayoutList();
+            plotNodeList.DoLayoutList();
+            optionNodeList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
     }

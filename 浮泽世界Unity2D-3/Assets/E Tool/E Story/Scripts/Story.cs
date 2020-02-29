@@ -10,7 +10,8 @@ namespace E.Tool
     public class Story : ScriptableObject
     {
         [Tooltip("故事描述"), TextArea(1, 10)] public string description;
-        public List<StoryNode> nodes = new List<StoryNode>();
+        public List<PlotNode> plotNodes = new List<PlotNode>();
+        public List<OptionNode> optionNodes = new List<OptionNode>();
         public List<Condition> conditions = new List<Condition>();
 
         public string[] ConditionKeys
@@ -36,24 +37,45 @@ namespace E.Tool
         }
 
         /// <summary>
-        /// 创建节点
+        /// 创建剧情节点
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        public StoryNode CreateNode(RectInt rect)
+        public PlotNode CreatePlotNode(RectInt rect)
         {
-            if (nodes == null)
+            if (plotNodes == null)
             {
-                nodes = new List<StoryNode>();
+                plotNodes = new List<PlotNode>();
             }
 
-            NodeID id = new NodeID(1,1,1,1);
+            PlotID id = new PlotID(1,1,1,1);
             while (ContainsID(id))
             {
                 id.branch++;
             }
-            StoryNode node = new StoryNode(id, rect);
-            nodes.Add(node);
+            PlotNode node = new PlotNode(rect, id);
+            plotNodes.Add(node);
+            return node;
+        }
+        /// <summary>
+        /// 创建选项节点
+        /// </summary>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        public OptionNode CreateOptionNode(RectInt rect)
+        {
+            if (optionNodes == null)
+            {
+                optionNodes = new List<OptionNode>();
+            }
+
+            int id = 0;
+            while (ContainsID(id))
+            {
+                id++;
+            }
+            OptionNode node = new OptionNode(rect, id);
+            optionNodes.Add(node);
             return node;
         }
         /// <summary>
@@ -61,9 +83,25 @@ namespace E.Tool
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ContainsID(NodeID id)
+        public bool ContainsID(PlotID id)
         {
-            foreach (StoryNode item in nodes)
+            foreach (PlotNode item in plotNodes)
+            {
+                if (item.id.Equals(id))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        /// <summary>
+        /// 检查节点是否存在
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public bool ContainsID(int id)
+        {
+            foreach (OptionNode item in optionNodes)
             {
                 if (item.id.Equals(id))
                 {
@@ -79,9 +117,9 @@ namespace E.Tool
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public StoryNode GetNode(NodeID id)
+        public PlotNode GetNode(PlotID id)
         {
-            foreach (StoryNode item in nodes)
+            foreach (PlotNode item in plotNodes)
             {
                 if (item.id.Equals(id))
                 {
@@ -93,11 +131,27 @@ namespace E.Tool
         /// <summary>
         /// 获取节点
         /// </summary>
-        public StoryNode GetStartNode()
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public OptionNode GetNode(int id)
         {
-            foreach (StoryNode item in nodes)
+            foreach (OptionNode item in optionNodes)
             {
-                if (item.Type == NodeType.起始节点)
+                if (item.id.Equals(id))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 获取节点
+        /// </summary>
+        public PlotNode GetStartNode()
+        {
+            foreach (PlotNode item in plotNodes)
+            {
+                if (item.type == PlotType.起始剧情)
                 {
                     return item;
                 }
@@ -107,12 +161,12 @@ namespace E.Tool
         /// <summary>
         /// 获取结局节点
         /// </summary>
-        public List<StoryNode> GetEndingNodes()
+        public List<PlotNode> GetEndingNodes()
         {
-            List<StoryNode> nodes = new List<StoryNode>();
-            foreach (StoryNode item in this.nodes)
+            List<PlotNode> nodes = new List<PlotNode>();
+            foreach (PlotNode item in plotNodes)
             {
-                if (item.Type == NodeType.结局节点)
+                if (item.type == PlotType.结局剧情)
                 {
                     nodes.Add(item);
                 }
@@ -124,60 +178,61 @@ namespace E.Tool
         /// <summary>
         /// 设置节点编号
         /// </summary>
-        /// <param name="id"></param>
-        public void SetNodeID(StoryNode node, NodeID id)
+        /// <param name="newID"></param>
+        public void SetPlotID(PlotNode node, PlotID newID)
         {
-            if (!ContainsID(id))
+            if (!ContainsID(newID))
             {
                 //同步上行节点连接
-                foreach (StoryNode item in nodes)
+                foreach (PlotNode item in plotNodes)
                 {
-                    if (item.nodeOptions != null)
+                    if (item.nextPlotNode.Equals(node.id))
                     {
-                        for (int i = 0; i < item.nodeOptions.Count; i++)
-                        {
-                            if (item.nodeOptions[i].id.Equals(node.id))
-                            {
-                                item.nodeOptions[i].id = id;
-                            }
-                        }
+                        item.nextPlotNode = newID;
                     }
                 }
-                node.id = id;
+                foreach (OptionNode item in optionNodes)
+                {
+                    if (item.nextPlotNode.Equals(node.id))
+                    {
+                        item.nextPlotNode = newID;
+                    }
+                }
+                node.id = newID;
             }
             else
             {
-                Debug.LogError("此编号的节点已存在 {" + id.chapter + "-" + id.scene + "-" + id.part + "-" + id.branch + "}");
+                Debug.LogError("此编号的节点已存在 {" + newID.chapter + "-" + newID.scene + "-" + newID.part + "-" + newID.branch + "}");
             }
         }
         /// <summary>
         /// 设置节点类型
         /// </summary>
-        public void SetNodeType(StoryNode node, NodeType nodeType)
+        public void SetNodeType(PlotNode node, PlotType nodeType)
         {
             if (ContainsID(node.id))
             {
                 switch (nodeType)
                 {
-                    case NodeType.中间节点:
+                    case PlotType.过渡剧情:
                         break;
-                    case NodeType.起始节点:
-                        foreach (StoryNode item in nodes)
+                    case PlotType.起始剧情:
+                        foreach (PlotNode item in plotNodes)
                         {
-                            if (item.Type == NodeType.起始节点)
+                            if (item.type == PlotType.起始剧情)
                             {
-                                item.Type = NodeType.中间节点;
+                                item.type = PlotType.过渡剧情;
                             }
                         }
                         ClearNodeUpChoices(node);
                         break;
-                    case NodeType.结局节点:
+                    case PlotType.结局剧情:
                         ClearNodeDownChoices(node);
                         break;
                     default:
                         break;
                 }
-                node.Type = nodeType;
+                node.type = nodeType;
             }
         }
 
@@ -185,14 +240,18 @@ namespace E.Tool
         /// <summary>
         /// 移除节点
         /// </summary>
-        public void RemoveNode(StoryNode node)
+        public void RemoveNode(Node node)
         {
-            if (nodes.Contains(node))
+            string str = "确认要删除此节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
             {
-                string str = "确认要删除此节点吗？";
-                if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+                if (plotNodes.Contains(node as PlotNode))
                 {
-                    nodes.Remove(node);
+                    plotNodes.Remove(node as PlotNode);
+                }
+                if (optionNodes.Contains(node as OptionNode))
+                {
+                    optionNodes.Remove(node as OptionNode);
                 }
             }
         }
@@ -202,30 +261,52 @@ namespace E.Tool
         /// 清除节点下行连接
         /// </summary>
         /// <param name="node"></param>
-        public void ClearNodeDownChoices(StoryNode node)
+        public void ClearNodeDownChoices(Node node)
         {
-            if (node.nodeOptions != null)
+            if (node.GetType() == typeof(PlotNode))
             {
-                node.nodeOptions.Clear();
+                PlotNode pn = node as PlotNode;
+                pn.nextOptionNodes.Clear();
+                pn.nextPlotNode = new PlotID();
+            }
+            else
+            {
+                OptionNode on = node as OptionNode;
+                on.nextPlotNode = new PlotID();
             }
         }
         /// <summary>
         /// 清除节点上行连接
         /// </summary>
         /// <param name="node"></param>
-        public void ClearNodeUpChoices(StoryNode node)
+        public void ClearNodeUpChoices(Node node)
         {
-            foreach (StoryNode item in nodes)
+            if (node.GetType() == typeof(PlotNode))
             {
-                if (item.nodeOptions != null)
+                PlotNode pn = node as PlotNode;
+                foreach (PlotNode item in plotNodes)
                 {
-                    for (int i = 0; i < item.nodeOptions.Count; i++)
+                    if (item.nextPlotNode.Equals(pn.id))
                     {
-                        if (item.nodeOptions[i].id.Equals(node.id))
-                        {
-                            item.nodeOptions.RemoveAt(i);
-                            i--;
-                        }
+                        item.nextPlotNode = new PlotID();
+                    }
+                }
+                foreach (OptionNode item in optionNodes)
+                {
+                    if (item.nextPlotNode.Equals(pn.id))
+                    {
+                        item.nextPlotNode = new PlotID();
+                    }
+                }
+            }
+            else
+            {
+                OptionNode on = node as OptionNode;
+                foreach (PlotNode item in plotNodes)
+                {
+                    if (item.nextOptionNodes != null)
+                    {
+                        item.nextOptionNodes.RemoveAll(x => x == on.id);
                     }
                 }
             }
@@ -233,12 +314,44 @@ namespace E.Tool
         /// <summary>
         /// 清空节点
         /// </summary>
-        public void ClearNodes()
+        public void ClearPlotNodes()
         {
-            string str = "确认要清空所有节点吗？";
+            string str = "确认要清空所有剧情节点吗？";
             if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
             {
-                nodes.Clear();
+                plotNodes.Clear();
+            }
+        }
+        /// <summary>
+        /// 清空节点
+        /// </summary>
+        public void ClearOptionNodes()
+        {
+            string str = "确认要清空所有选项节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+            {
+                optionNodes.Clear();
+            }
+        }
+
+        //检查
+        public void CheckNull()
+        {
+            if (plotNodes == null)
+            {
+                plotNodes = new List<PlotNode>();
+            }
+            else
+            {
+                plotNodes.RemoveAll(x => x == null);
+            }
+            if (optionNodes == null)
+            {
+                optionNodes = new List<OptionNode>();
+            }
+            else
+            {
+                optionNodes.RemoveAll(x => x == null);
             }
         }
     }

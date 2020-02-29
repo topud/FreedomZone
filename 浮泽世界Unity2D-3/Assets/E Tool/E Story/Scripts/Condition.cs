@@ -17,7 +17,7 @@ namespace E.Tool
     {
         [Tooltip("条件索引")] public int keyIndex;
         [Tooltip("对比方式")] public Comparison comparison;
-        [Tooltip("目标值"), Range(-100, 100)] public int value;
+        [Tooltip("对比值")] public int value;
     }
 
     [Serializable]
@@ -25,7 +25,7 @@ namespace E.Tool
     {
         [Tooltip("条件索引")] public int keyIndex;
         [Tooltip("变动方式")] public Change change;
-        [Tooltip("变动值"), Range(-100, 100)] public int value;
+        [Tooltip("变动值")] public int value;
     }
 
     public enum Comparison

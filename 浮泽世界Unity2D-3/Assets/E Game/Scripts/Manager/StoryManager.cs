@@ -8,9 +8,9 @@ public class StoryManager : MonoBehaviour
 {
     [SerializeField, ReadOnly] private Story currentStory;
 
-    public List<NodeID> CurrentStoryPassdNodeIDs;
-    public NodeID CurrentNodeID;
-    public StoryNode CurrentNode;
+    public List<PlotID> CurrentStoryPassdNodeIDs;
+    public PlotID CurrentNodeID;
+    public PlotNode CurrentNode;
 
     public Story CurrentStory 
     {
@@ -29,12 +29,12 @@ public class StoryManager : MonoBehaviour
     /// <summary>
     /// 获取通过的节点
     /// </summary>
-    public List<StoryNode> GetPassedNodes()
+    public List<PlotNode> GetPassedNodes()
     {
-        List<StoryNode> nodes = new List<StoryNode>();
-        foreach (StoryNode item in CurrentStory.nodes)
+        List<PlotNode> nodes = new List<PlotNode>();
+        foreach (PlotNode item in CurrentStory.plotNodes)
         {
-            foreach (NodeID id in CurrentStoryPassdNodeIDs)
+            foreach (PlotID id in CurrentStoryPassdNodeIDs)
             {
                 if (id.Equals(item.id))
                 {
@@ -47,15 +47,15 @@ public class StoryManager : MonoBehaviour
     /// <summary>
     /// 获取通过的结局节点
     /// </summary>
-    public List<StoryNode> GetPassedEndingNodes()
+    public List<PlotNode> GetPassedEndingNodes()
     {
-        List<StoryNode> nodes = CurrentStory.GetEndingNodes();
-        List<StoryNode> nodesP = new List<StoryNode>();
+        List<PlotNode> nodes = CurrentStory.GetEndingNodes();
+        List<PlotNode> nodesP = new List<PlotNode>();
         if (nodes.Count > 0)
         {
-            foreach (StoryNode item in nodes)
+            foreach (PlotNode item in nodes)
             {
-                foreach (NodeID id in CurrentStoryPassdNodeIDs)
+                foreach (PlotID id in CurrentStoryPassdNodeIDs)
                 {
                     if (id.Equals(item.id))
                     {
@@ -71,7 +71,7 @@ public class StoryManager : MonoBehaviour
     /// </summary>
     public string GetAllNodesPassFraction()
     {
-        return GetPassedNodes().Count + "/" + CurrentStory.nodes.Count;
+        return GetPassedNodes().Count + "/" + CurrentStory.plotNodes.Count;
     }
     /// <summary>
     /// 获取全结局解锁百分比（分数格式）
@@ -89,7 +89,7 @@ public class StoryManager : MonoBehaviour
         {
             return 0;
         }
-        return (float)GetPassedNodes().Count / CurrentStory.nodes.Count;
+        return (float)GetPassedNodes().Count / CurrentStory.plotNodes.Count;
     }
     /// <summary>
     /// 获取全结局解锁百分比（小数格式）

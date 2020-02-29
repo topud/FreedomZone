@@ -284,7 +284,7 @@ public class SaveManager : MonoBehaviour
 [Serializable]
 public class Save
 {
-    public NodeID NodeID = new NodeID(0,0,0,0);
+    public PlotID NodeID = new PlotID(0,0,0,0);
     public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
     public List<ItemDynamicData> InteractorDynamicDatas = new List<ItemDynamicData>();
 }

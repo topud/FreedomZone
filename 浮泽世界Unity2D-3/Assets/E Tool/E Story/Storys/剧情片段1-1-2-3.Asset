@@ -10,12 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 645bac61ec80820469c177f86816fcf6, type: 3}
-  m_Name: "\u65B0\u5267\u60C5\u7247\u6BB5"
+  m_Name: "\u5267\u60C5\u7247\u6BB51-1-2-3"
   m_EditorClassIdentifier: 
   sentences:
-  - character: 1234
-    avatar: {fileID: 21300000, guid: 76dee4ba2a924ce469742b4d4b561d4e, type: 3}
+  - role: "\u89D2\u8272\u540D\u79F0"
     words: "\u53D1\u8A00\u5185\u5BB9"
-  - character: 123
-    avatar: {fileID: 21300000, guid: 26b87ba1a218e354181e355b99597d6e, type: 3}
-    words: "\u53D1\u8A00\u5185\u5BB92"
+    avatar: {fileID: 0}

@@ -7,7 +7,6 @@ using System.Linq;
 using System.Reflection;
 using System.Collections;
 using UnityEditorInternal;
-using UnityEngine.AddressableAssets;
 
 namespace E.Tool
 {
@@ -108,50 +107,21 @@ namespace E.Tool
         /// </summary>
         private static Rect Top
         {
-            get => new Rect(0, 0, Instance.position.width, OneHeightTwoSpacing);
+            get => new Rect(0, 0, Instance.position.width, Utility.GetHeightLong(1));
         }
         /// <summary>
         /// 中部面板
         /// </summary>
         private static Rect Center
         {
-            get => new Rect(0, OneHeightTwoSpacing, Instance.position.width, Instance.position.height - OneHeightTwoSpacing * 2);
+            get => new Rect(0, Utility.GetHeightLong(1), Instance.position.width, Instance.position.height - Utility.GetHeightLong(1));
         }
         /// <summary>
         /// 底部面板
         /// </summary>
         private static Rect Buttom
         {
-            get => new Rect(0, Instance.position.height - OneHeightTwoSpacing, Instance.position.width, OneHeightTwoSpacing);
-        }
-
-        /// <summary>
-        /// 单行高度
-        /// </summary>
-        private static float LineHeight
-        { 
-            get => EditorGUIUtility.singleLineHeight;
-        }
-        /// <summary>
-        /// 行间隔
-        /// </summary>
-        private static float LineSpacing
-        { 
-            get => EditorGUIUtility.standardVerticalSpacing; 
-        }
-        /// <summary>
-        /// 单行高度 + 行间隔
-        /// </summary>
-        private static float OneHeightOneSpacing
-        {
-            get => LineHeight + LineSpacing; 
-        }
-        /// <summary>
-        /// 单行高度 + 2行间隔
-        /// </summary>
-        private static float OneHeightTwoSpacing
-        { 
-            get => LineHeight + LineSpacing * 2; 
+            get => new Rect(0, Instance.position.height - Utility.GetHeightLong(1), Instance.position.width, Utility.GetHeightLong(1));
         }
 
         //mono
@@ -252,7 +222,7 @@ namespace E.Tool
         /// </summary>
         private static void RefreshMousePosition()
         {
-            mousePos = new Vector2Int((int)((Event.current.mousePosition.x) + scrollPos.x), (int)((Event.current.mousePosition.y) + scrollPos.y - OneHeightTwoSpacing));
+            mousePos = new Vector2Int((int)((Event.current.mousePosition.x) + scrollPos.x), (int)((Event.current.mousePosition.y) + scrollPos.y - Utility.GetHeightLong(1)));
         }
 
         //创建
@@ -261,7 +231,7 @@ namespace E.Tool
         /// </summary>
         private static void CreateStory()
         {
-            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", StoryWindowPreference.StoryResourcesFolder);
+            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", Application.dataPath);
             if (path == "") return;
             Story story = CreateInstance<Story>();
             AssetDatabase.CreateAsset(story, path);
@@ -310,7 +280,7 @@ namespace E.Tool
         {
             if (CurrentNode != null)
             {
-                string path = EditorUtility.SaveFilePanelInProject("创建剧情片段", "新剧情片段", "Asset", "保存剧情片段", StoryWindowPreference.StoryResourcesFolder);
+                string path = EditorUtility.SaveFilePanelInProject("创建剧情片段", "新剧情片段", "Asset", "保存剧情片段", Application.dataPath);
                 if (path == "") return;
                 Plot plot = CreateInstance<Plot>();
                 AssetDatabase.CreateAsset(plot, path);
@@ -385,14 +355,16 @@ namespace E.Tool
                     break;
                 case 5:
                     CurrentStory.ClearNodeUpChoices(CurrentNode);
-                    CurrentStory.ClearNodeDownChoices(CurrentNode);
                     break;
                 case 6:
+                    CurrentStory.ClearNodeDownChoices(CurrentNode);
                     break;
                 case 7:
-                    CurrentStory.RemoveNode(CurrentNode);
+                    CurrentStory.ClearNodeUpChoices(CurrentNode);
+                    CurrentStory.ClearNodeDownChoices(CurrentNode);
                     break;
                 case 8:
+                    CurrentStory.RemoveNode(CurrentNode);
                     break;
                 case 9:
                     CurrentStory.SetNodeType(CurrentNode as PlotNode, PlotType.起始剧情);
@@ -408,6 +380,9 @@ namespace E.Tool
                     break;
                 case 13:
                     CurrentStory.ClearOptionNodes();
+                    break;
+                case 14:
+                    CurrentStory.ClearAllNodes();
                     break;
 
                 default:
@@ -523,7 +498,7 @@ namespace E.Tool
                     {
                         DrawContextMenu();
                         //设置该事件被使用
-                        Event.current.Use();
+                        //Event.current.Use();
                     }
                     else
                     {
@@ -658,14 +633,14 @@ namespace E.Tool
         private static void DrawHead()
         {
             int btnWidth = 40;
-            Rect r1 = new Rect(Top.width - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r2 = new Rect(r1.x - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r3 = new Rect(r2.x - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r4 = new Rect(r3.x - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r5 = new Rect(r4.x - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r6 = new Rect(r5.x - btnWidth - LineSpacing, LineSpacing, btnWidth, LineHeight);
-            Rect r7 = new Rect(LineSpacing * 2 + 60, LineSpacing, r6.x - LineSpacing * 3 - 60, LineHeight);
-            Rect r8 = new Rect(LineSpacing, LineSpacing, 60, LineHeight);
+            Rect r1 = new Rect(Top.width - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r2 = new Rect(r1.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r3 = new Rect(r2.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r4 = new Rect(r3.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r5 = new Rect(r4.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r6 = new Rect(r5.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
+            Rect r7 = new Rect(Utility.OneSpacing * 2 + 60, Utility.OneSpacing, r6.x - Utility.OneSpacing * 3 - 60, Utility.OneHeight);
+            Rect r8 = new Rect(Utility.OneSpacing, Utility.OneSpacing, 60, Utility.OneHeight);
 
             //顶部背景
             EditorGUI.DrawRect(Top, StoryWindowPreference.NormalNode);
@@ -705,10 +680,9 @@ namespace E.Tool
         /// </summary>
         private static void DrawFoot()
         {
-            EditorGUI.DrawRect(Buttom, StoryWindowPreference.NormalNode);
-
+            //EditorGUI.DrawRect(Buttom, StoryWindowPreference.NormalNode);
             string mousePos = "X: " + StoryWindow.mousePos.x + "  Y: " + StoryWindow.mousePos.y;
-            Rect r1 = new Rect(LineSpacing, Buttom.y + LineSpacing, 110, LineHeight);
+            Rect r1 = new Rect(Utility.OneSpacing, Center.y + Center.height - Utility.GetHeightMiddle(2) + 10, 120, Utility.OneHeight);
             EditorGUI.LabelField(r1, mousePos);
         }
         /// <summary>
@@ -724,26 +698,31 @@ namespace E.Tool
 
                 if (CurrentNode != null)
                 {
-                    menu.AddItem(new GUIContent("创建剧情片段"), false, DoMethod, 1);
-
-                    menu.AddItem(new GUIContent("删除选中节点"), false, DoMethod, 7);
-                    menu.AddItem(new GUIContent("删除所有剧情节点"), false, DoMethod, 12);
-                    menu.AddItem(new GUIContent("删除所有选项节点"), false, DoMethod, 13);
-
-                    menu.AddItem(new GUIContent("清除节点连接"), false, DoMethod, 5);
-
                     if (CurrentNode.GetType() == typeof(PlotNode))
                     {
+                        menu.AddItem(new GUIContent("创建剧情片段"), false, DoMethod, 1);
+
+                        menu.AddSeparator("");
                         menu.AddItem(new GUIContent("设为起始节点"), false, DoMethod, 9);
                         menu.AddItem(new GUIContent("设为中间节点"), false, DoMethod, 10);
                         menu.AddItem(new GUIContent("设为结局节点"), false, DoMethod, 11);
                     }
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("清除上行连接"), false, DoMethod, 5);
+                    menu.AddItem(new GUIContent("清除下行连接"), false, DoMethod, 6);
+                    menu.AddItem(new GUIContent("清除所有连接"), false, DoMethod, 7);
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("删除选中节点"), false, DoMethod, 8);
                 }
                 else
                 {
-                    menu.AddItem(new GUIContent("删除所有剧情节点"), false, DoMethod, 12);
-                    menu.AddItem(new GUIContent("删除所有选项节点"), false, DoMethod, 13);
+                    menu.AddSeparator("");
                 }
+                menu.AddItem(new GUIContent("删除所有剧情节点"), false, DoMethod, 12);
+                menu.AddItem(new GUIContent("删除所有选项节点"), false, DoMethod, 13);
+                menu.AddItem(new GUIContent("删除所有节点"), false, DoMethod, 14);
             }
             menu.ShowAsContext();
         }
@@ -782,21 +761,21 @@ namespace E.Tool
                 node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y);
                 Rect r0 = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
 
-                Rect r1 = new Rect(r0.x + LineSpacing, r0.y + LineSpacing, r0.width - LineSpacing * 2, LineHeight);
-                Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, LineHeight);
-                Rect r1_1 = new Rect(r1_0.x + labelWidth + LineSpacing, r1.y, inputWidth, LineHeight);
-                Rect r1_2 = new Rect(r1_1.x + inputWidth + LineSpacing, r1.y, inputWidth, LineHeight);
-                Rect r1_3 = new Rect(r1_2.x + inputWidth + LineSpacing, r1.y, inputWidth, LineHeight);
-                Rect r1_4 = new Rect(r1_3.x + inputWidth + LineSpacing, r1.y, inputWidth, LineHeight);
-                Rect r1_5 = new Rect(r1_4.x + inputWidth + LineSpacing, r1.y, labelWidth, LineHeight);
+                Rect r1 = new Rect(r0.x + Utility.OneSpacing, r0.y + Utility.OneSpacing, r0.width - Utility.OneSpacing * 2, Utility.OneHeight);
+                Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, Utility.OneHeight);
+                Rect r1_1 = new Rect(r1_0.x + labelWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
+                Rect r1_2 = new Rect(r1_1.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
+                Rect r1_3 = new Rect(r1_2.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
+                Rect r1_4 = new Rect(r1_3.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
+                Rect r1_5 = new Rect(r1_4.x + inputWidth + Utility.OneSpacing, r1.y, labelWidth, Utility.OneHeight);
 
-                Rect r2 = new Rect(r1.x, r1.y + OneHeightOneSpacing, r1.width, StoryWindowPreference.NodeSize.y - OneHeightTwoSpacing * 2);
-                Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, LineHeight);
-                Rect r2_1 = new Rect(r2.x + labelWidth + LineSpacing, r2.y, r2.width - labelWidth - LineSpacing, r2.height);
+                Rect r2 = new Rect(r1.x, r1.y + Utility.GetHeightMiddle(1), r1.width, StoryWindowPreference.NodeSize.y - Utility.GetHeightLong(1) * 2);
+                Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, Utility.OneHeight);
+                Rect r2_1 = new Rect(r2.x + labelWidth + Utility.OneSpacing, r2.y, r2.width - labelWidth - Utility.OneSpacing, r2.height);
 
-                Rect r3 = new Rect(r2.x, r0.y + r0.height - OneHeightOneSpacing, r2.width, LineHeight);
-                Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, LineHeight);
-                Rect r3_1 = new Rect(r3.x + labelWidth + LineSpacing, r3.y, r3.width - labelWidth - LineSpacing, LineHeight);
+                Rect r3 = new Rect(r2.x, r0.y + r0.height - Utility.GetHeightMiddle(1), r2.width, Utility.OneHeight);
+                Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, Utility.OneHeight);
+                Rect r3_1 = new Rect(r3.x + labelWidth + Utility.OneSpacing, r3.y, r3.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
 
                 //节点背景
                 if (CurrentNode != null)
@@ -858,8 +837,8 @@ namespace E.Tool
                     {
                         OptionNode on = CurrentStory.GetNode(item);
                         if (on == null) continue;
-                        Vector2 start = new Vector2(r0.x + r0.width + LineHeight, r0.y + r0.height / 2);
-                        Vector2 end = new Vector2(on.layout.x - LineHeight, on.layout.y + on.layout.height / 2);
+                        Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
+                        Vector2 end = new Vector2(on.layout.x - Utility.OneHeight, on.layout.y + on.layout.height / 2);
 
                         PlotNode pn = CurrentStory.GetNode(on.nextPlotNode);
                         bool isMainPlot = false;
@@ -874,8 +853,8 @@ namespace E.Tool
                 {
                     PlotNode pn = CurrentStory.GetNode(node.nextPlotNode);
                     if (pn == null) return;
-                    Vector2 start = new Vector2(r0.x + r0.width + LineHeight, r0.y + r0.height / 2);
-                    Vector2 end = new Vector2(pn.layout.x - LineHeight, pn.layout.y + pn.layout.height / 2);
+                    Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
+                    Vector2 end = new Vector2(pn.layout.x - Utility.OneHeight, pn.layout.y + pn.layout.height / 2);
 
                     bool isMainPlot = node.isMainPlot && pn.isMainPlot;
                     DrawCurve(start, end, isMainPlot, Vector3.right, Vector3.left);
@@ -891,22 +870,22 @@ namespace E.Tool
             int cp = node.comparisons.Count;
             int ch = node.changes.Count;
             int lines = cp + ch;
-            node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, (int)(OneHeightOneSpacing * (lines + 3) + LineSpacing));
+            node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, (int)(Utility.GetHeightMiddle(1) * (lines + 3) + Utility.OneSpacing));
             Rect r0 = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
 
-            Rect r1 = new Rect(r0.x + LineSpacing, r0.y + LineSpacing, r0.width - LineSpacing * 2, LineHeight);
-            Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, LineHeight);
-            Rect r1_1 = new Rect(r1.x + labelWidth + LineSpacing, r1.y, r1.width - labelWidth - LineSpacing, LineHeight);
+            Rect r1 = new Rect(r0.x + Utility.OneSpacing, r0.y + Utility.OneSpacing, r0.width - Utility.OneSpacing * 2, Utility.OneHeight);
+            Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, Utility.OneHeight);
+            Rect r1_1 = new Rect(r1.x + labelWidth + Utility.OneSpacing, r1.y, r1.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
 
-            Rect r2 = new Rect(r1.x, r1.y + OneHeightOneSpacing, r1.width, OneHeightOneSpacing * (cp + 1) - LineSpacing);
-            Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, LineHeight);
-            Rect r2_1 = new Rect(r2.x + labelWidth + LineSpacing, r2.y, r2.width - labelWidth - LineSpacing, LineHeight);
-            Rect r2_2 = new Rect(r2_1.x, r2_1.y + OneHeightOneSpacing, r2_1.width, r2.height - OneHeightOneSpacing);
+            Rect r2 = new Rect(r1.x, r1.y + Utility.GetHeightMiddle(1), r1.width, Utility.GetHeightMiddle(1) * (cp + 1) - Utility.OneSpacing);
+            Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, Utility.OneHeight);
+            Rect r2_1 = new Rect(r2.x + labelWidth + Utility.OneSpacing, r2.y, r2.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
+            Rect r2_2 = new Rect(r2_1.x, r2_1.y + Utility.GetHeightMiddle(1), r2_1.width, r2.height - Utility.GetHeightMiddle(1));
 
-            Rect r3 = new Rect(r2.x, r2.y + r2.height + LineSpacing, r2.width, OneHeightOneSpacing * (ch + 1) - LineSpacing);
-            Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, LineHeight);
-            Rect r3_1 = new Rect(r3.x + labelWidth + LineSpacing, r3.y, r3.width - labelWidth - LineSpacing, LineHeight);
-            Rect r3_2 = new Rect(r3_1.x, r3_1.y + OneHeightOneSpacing, r3_1.width, r3.height - OneHeightOneSpacing);
+            Rect r3 = new Rect(r2.x, r2.y + r2.height + Utility.OneSpacing, r2.width, Utility.GetHeightMiddle(1) * (ch + 1) - Utility.OneSpacing);
+            Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, Utility.OneHeight);
+            Rect r3_1 = new Rect(r3.x + labelWidth + Utility.OneSpacing, r3.y, r3.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
+            Rect r3_2 = new Rect(r3_1.x, r3_1.y + Utility.GetHeightMiddle(1), r3_1.width, r3.height - Utility.GetHeightMiddle(1));
 
             //节点背景
             if (CurrentNode != null)
@@ -936,11 +915,11 @@ namespace E.Tool
             for (int j = 0; j < node.comparisons.Count; j++)
             {
                 int width = 80;
-                Rect re0 = new Rect(r2_2.x, r2_2.y + OneHeightOneSpacing * j, r2_2.width, LineHeight);
-                Rect re1 = new Rect(re0.x, re0.y, width, LineHeight);
-                Rect re2 = new Rect(re1.x + width + LineSpacing, re1.y, width, LineHeight);
-                Rect re3 = new Rect(re2.x + width + LineSpacing, re2.y, re0.width - 160 - LineSpacing * 3 - LineHeight, LineHeight);
-                Rect re4 = new Rect(re3.x + re3.width + LineSpacing, re3.y, LineHeight, LineHeight);
+                Rect re0 = new Rect(r2_2.x, r2_2.y + Utility.GetHeightMiddle(1) * j, r2_2.width, Utility.OneHeight);
+                Rect re1 = new Rect(re0.x, re0.y, width, Utility.OneHeight);
+                Rect re2 = new Rect(re1.x + width + Utility.OneSpacing, re1.y, width, Utility.OneHeight);
+                Rect re3 = new Rect(re2.x + width + Utility.OneSpacing, re2.y, re0.width - 160 - Utility.OneSpacing * 3 - Utility.OneHeight, Utility.OneHeight);
+                Rect re4 = new Rect(re3.x + re3.width + Utility.OneSpacing, re3.y, Utility.OneHeight, Utility.OneHeight);
 
                 node.comparisons[j].keyIndex = EditorGUI.Popup(re1, node.comparisons[j].keyIndex, CurrentStory.ConditionKeys);
                 node.comparisons[j].comparison = (Comparison)EditorGUI.EnumPopup(re2, GUIContent.none, node.comparisons[j].comparison);
@@ -963,11 +942,11 @@ namespace E.Tool
             for (int j = 0; j < node.changes.Count; j++)
             {
                 int width = 80;
-                Rect re0 = new Rect(r3_2.x, r3_2.y + OneHeightOneSpacing * j, r3_2.width, LineHeight);
-                Rect re1 = new Rect(re0.x, re0.y, width, LineHeight);
-                Rect re2 = new Rect(re1.x + width + LineSpacing, re1.y, width, LineHeight);
-                Rect re3 = new Rect(re2.x + width + LineSpacing, re2.y, re0.width - 160 - LineSpacing * 3 - LineHeight, LineHeight);
-                Rect re4 = new Rect(re3.x + re3.width + LineSpacing, re3.y, LineHeight, LineHeight);
+                Rect re0 = new Rect(r3_2.x, r3_2.y + Utility.GetHeightMiddle(1) * j, r3_2.width, Utility.OneHeight);
+                Rect re1 = new Rect(re0.x, re0.y, width, Utility.OneHeight);
+                Rect re2 = new Rect(re1.x + width + Utility.OneSpacing, re1.y, width, Utility.OneHeight);
+                Rect re3 = new Rect(re2.x + width + Utility.OneSpacing, re2.y, re0.width - 160 - Utility.OneSpacing * 3 - Utility.OneHeight, Utility.OneHeight);
+                Rect re4 = new Rect(re3.x + re3.width + Utility.OneSpacing, re3.y, Utility.OneHeight, Utility.OneHeight);
 
                 node.changes[j].keyIndex = EditorGUI.Popup(re1, node.changes[j].keyIndex, CurrentStory.ConditionKeys);
                 node.changes[j].change = (Change)EditorGUI.EnumPopup(re2, GUIContent.none, node.changes[j].change);
@@ -985,15 +964,19 @@ namespace E.Tool
             {
                 PlotNode pn = CurrentStory.GetNode(node.nextPlotNode);
                 if (pn == null) return;
-                Vector2 start = new Vector2(r0.x + r0.width + LineHeight, r0.y + r0.height / 2);
-                Vector2 end = new Vector2(pn.layout.x - LineHeight, pn.layout.y + pn.layout.height / 2);
+                Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
+                Vector2 end = new Vector2(pn.layout.x - Utility.OneHeight, pn.layout.y + pn.layout.height / 2);
 
                 bool isLastMainPlot = false;
                 foreach (PlotNode item in CurrentStory.plotNodes)
                 {
                     if (item.nextOptionNodes.Contains(node.id))
                     {
-                        isLastMainPlot = item.isMainPlot;
+                        if (item.isMainPlot)
+                        {
+                            isLastMainPlot = true;
+                            break;
+                        }
                     }
                 }
                 bool isMainPlot = pn.isMainPlot && isLastMainPlot;
@@ -1006,7 +989,7 @@ namespace E.Tool
         /// <param name="node"></param>
         private static void DrawUpButton(Node node)
         {
-            Rect rect = new Rect(node.layout.x - LineHeight, node.layout.y, LineHeight, node.layout.height);
+            Rect rect = new Rect(node.layout.x - Utility.OneHeight, node.layout.y, Utility.OneHeight, node.layout.height);
             if (GUI.Button(rect, "←"))
             {
                 downNode = node;
@@ -1019,7 +1002,7 @@ namespace E.Tool
         /// <param name="node"></param>
         private static void DrawDownButton(Node node)
         {
-            Rect rect = new Rect(node.layout.x + node.layout.width, node.layout.y, LineHeight, node.layout.height);
+            Rect rect = new Rect(node.layout.x + node.layout.width, node.layout.y, Utility.OneHeight, node.layout.height);
             if (GUI.Button(rect, "→"))
             {
                 upNode = node;
@@ -1033,14 +1016,14 @@ namespace E.Tool
         {
             if (upNode != null)
             {
-                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + LineHeight, upNode.layout.y + upNode.layout.height / 2);
+                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + Utility.OneHeight, upNode.layout.y + upNode.layout.height / 2);
                 Vector2 end = mousePos;
                 DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
             if (downNode != null)
             {
                 Vector2 start = mousePos;
-                Vector2 end = new Vector2(downNode.layout.x - LineHeight, downNode.layout.y + downNode.layout.height / 2);
+                Vector2 end = new Vector2(downNode.layout.x - Utility.OneHeight, downNode.layout.y + downNode.layout.height / 2);
                 DrawCurve(start, end, true, Vector3.right, Vector3.left);
             }
         }

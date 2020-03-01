@@ -49,7 +49,7 @@ namespace E.Tool
             }
 
             PlotID id = new PlotID(1,1,1,1);
-            while (ContainsID(id))
+            while (IsContainID(id))
             {
                 id.branch++;
             }
@@ -83,7 +83,7 @@ namespace E.Tool
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public bool ContainsID(PlotID id)
+        public bool IsContainID(PlotID id)
         {
             foreach (PlotNode item in plotNodes)
             {
@@ -176,41 +176,46 @@ namespace E.Tool
 
         //设置
         /// <summary>
-        /// 设置节点编号
+        /// 设置剧情节点编号
         /// </summary>
         /// <param name="newID"></param>
         public void SetPlotID(PlotNode node, PlotID newID)
         {
-            if (!ContainsID(newID))
+            if (!newID.IsRightFormat)
             {
-                //同步上行节点连接
-                foreach (PlotNode item in plotNodes)
-                {
-                    if (item.nextPlotNode.Equals(node.id))
-                    {
-                        item.nextPlotNode = newID;
-                    }
-                }
-                foreach (OptionNode item in optionNodes)
-                {
-                    if (item.nextPlotNode.Equals(node.id))
-                    {
-                        item.nextPlotNode = newID;
-                    }
-                }
-                node.id = newID;
+                Debug.LogError("剧情节点编号不能是0或负数");
+                return;
             }
-            else
+
+            if (IsContainID(newID))
             {
                 Debug.LogError("此编号的节点已存在 {" + newID.chapter + "-" + newID.scene + "-" + newID.part + "-" + newID.branch + "}");
+                return;
             }
+
+            //同步上行节点连接
+            foreach (PlotNode item in plotNodes)
+            {
+                if (item.nextPlotNode.Equals(node.id))
+                {
+                    item.nextPlotNode = newID;
+                }
+            }
+            foreach (OptionNode item in optionNodes)
+            {
+                if (item.nextPlotNode.Equals(node.id))
+                {
+                    item.nextPlotNode = newID;
+                }
+            }
+            node.id = newID;
         }
         /// <summary>
-        /// 设置节点类型
+        /// 设置剧情节点类型
         /// </summary>
         public void SetNodeType(PlotNode node, PlotType nodeType)
         {
-            if (ContainsID(node.id))
+            if (IsContainID(node.id))
             {
                 switch (nodeType)
                 {
@@ -312,7 +317,7 @@ namespace E.Tool
             }
         }
         /// <summary>
-        /// 清空节点
+        /// 清空剧情节点
         /// </summary>
         public void ClearPlotNodes()
         {
@@ -323,13 +328,25 @@ namespace E.Tool
             }
         }
         /// <summary>
-        /// 清空节点
+        /// 清空选项节点
         /// </summary>
         public void ClearOptionNodes()
         {
             string str = "确认要清空所有选项节点吗？";
             if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
             {
+                optionNodes.Clear();
+            }
+        }
+        /// <summary>
+        /// 清空所有节点
+        /// </summary>
+        public void ClearAllNodes()
+        {
+            string str = "确认要清空所有节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+            {
+                plotNodes.Clear();
                 optionNodes.Clear();
             }
         }

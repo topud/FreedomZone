@@ -14,6 +14,56 @@ namespace E.Tool
     public static class Utility
     {
         /// <summary>
+        /// 单行高度
+        /// </summary>
+        public static int OneHeight
+        {
+            get => (int)EditorGUIUtility.singleLineHeight;
+        }
+        /// <summary>
+        /// 行间隔
+        /// </summary>
+        public static int OneSpacing
+        {
+            get => (int)EditorGUIUtility.standardVerticalSpacing;
+        }
+        /// <summary>
+        /// 标签宽度
+        /// </summary>
+        public static int LabelWidth
+        {
+            get => 50;
+        }
+
+        /// <summary>
+        /// 获取框架高度，包括上下间隔
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static int GetHeightLong(int lines)
+        {
+            return (OneHeight + OneSpacing) * lines + OneSpacing;
+        }
+        /// <summary>
+        /// 获取框架高度，包括上间隔
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static int GetHeightMiddle(int lines)
+        {
+            return (OneHeight + OneSpacing) * lines;
+        }
+        /// <summary>
+        /// 获取框架高度，不包括上下间隔
+        /// </summary>
+        /// <param name="lines"></param>
+        /// <returns></returns>
+        public static int GetHeightShort(int lines)
+        {
+            return (OneHeight + OneSpacing) * lines - OneSpacing;
+        }
+
+        /// <summary>
         /// 限定整型数字范围，仅包含最小值
         /// </summary>
         /// <param name="value"></param>

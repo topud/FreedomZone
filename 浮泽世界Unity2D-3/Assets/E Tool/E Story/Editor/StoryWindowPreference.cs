@@ -13,21 +13,6 @@ namespace E.Tool
     public class StoryWindowPreference : EditorWindow
     {
         /// <summary>
-        /// 故事资产文件夹路径
-        /// </summary>
-        public static string StoryResourcesFolder
-        {
-            get
-            {
-                if (!EditorPrefs.HasKey("StoryResourcesFolder")) EditorPrefs.SetString("StoryResourcesFolder", "Assets/E Tool/E Story/Resources/Example Storys");
-                return EditorPrefs.GetString("StoryResourcesFolder");
-            }
-            set
-            {
-                EditorPrefs.SetString("StoryResourcesFolder", value);
-            }
-        }
-        /// <summary>
         /// 视图尺寸
         /// </summary>
         public static Vector2Int ViewSize
@@ -150,9 +135,6 @@ namespace E.Tool
         [PreferenceItem("E Story")]
         private static void OnPreference()
         {
-            EditorGUILayout.LabelField("路径", EditorStyles.boldLabel);
-            StoryResourcesFolder = EditorGUILayout.TextField("资产文件默认存放路径", StoryResourcesFolder);
-
             EditorGUILayout.LabelField("布局", EditorStyles.boldLabel);
             ViewSize = EditorGUILayout.Vector2IntField("画布尺寸", ViewSize);
             NodeSize = EditorGUILayout.Vector2IntField("节点尺寸", NodeSize);
@@ -172,8 +154,6 @@ namespace E.Tool
         
         private static void Reset()
         {
-            EditorPrefs.SetString("ViewWidth", "Assets/E Tool/E Story/Resources/Example Storys");
-
             EditorPrefs.SetInt("ViewWidth", 3000);
             EditorPrefs.SetInt("ViewHeight", 3000);
             EditorPrefs.SetInt("NodeWidth", 300);

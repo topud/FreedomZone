@@ -12,40 +12,44 @@ namespace E.Tool
     public class PlotInspector : Editor
     {
         private Plot Target;
-        private static ReorderableList sens;
+        private static ReorderableList plotItemList;
 
         private void OnEnable()
         {
             Target = (Plot)target;
             
-            float svs = EditorGUIUtility.standardVerticalSpacing;
-            float slh = EditorGUIUtility.singleLineHeight;
-            sens = new ReorderableList(serializedObject, serializedObject.FindProperty("sentences"), true, true, true, true)
+            plotItemList = new ReorderableList(serializedObject, serializedObject.FindProperty("sentences"), true, true, true, true)
             {
-                //设置单个元素的高度
-                elementHeight = slh * 3 + svs * 4,
+                //元素高度
+                elementHeight = Utility.GetHeightLong(3),
 
                 //绘制
                 drawElementCallback = (Rect rect, int index, bool selected, bool focused) =>
                 {
-                    SerializedProperty itemData = sens.serializedProperty.GetArrayElementAtIndex(index);
-                    EditorGUI.PropertyField(rect, itemData, GUIContent.none);
+                    SerializedProperty sp0 = plotItemList.serializedProperty.GetArrayElementAtIndex(index);
+                    EditorGUI.PropertyField(rect, sp0, GUIContent.none);
                 },
 
                 //标题
                 drawHeaderCallback = (Rect rect) =>
                 {
-                    string id = string.Format("剧情片段");
-                    GUI.Label(rect, id);
+                    string title = string.Format("对话列表 ({0})", plotItemList.count);
+                    GUI.Label(rect, title);
                 },
 
                 //创建
                 onAddCallback = (ReorderableList list) =>
                 {
-                    if (list.list != null)
+                    if (list.serializedProperty != null)
                     {
-                        list.list.Add(new Sentence("角色名称", "发言内容"));
-                        list.index = list.list.Count - 1;
+                        list.serializedProperty.arraySize++;
+                        list.index = list.serializedProperty.arraySize - 1;
+
+                        SerializedProperty sp0 = list.serializedProperty.GetArrayElementAtIndex(list.index);
+                        SerializedProperty sp1 = sp0.FindPropertyRelative("role");
+                        SerializedProperty sp2 = sp0.FindPropertyRelative("words");
+                        sp1.stringValue = "角色名称";
+                        sp2.stringValue = "发言内容";
                     }
                     else
                     {
@@ -68,7 +72,7 @@ namespace E.Tool
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
-            sens.DoLayoutList();
+            plotItemList.DoLayoutList();
             serializedObject.ApplyModifiedProperties();
         }
     }

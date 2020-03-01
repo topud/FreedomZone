@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fddaeb3ceb9edaa42a207ef610f9456d, type: 3}
-  m_Name: "\u65B0\u6545\u4E8B"
+  m_Name: "\u793A\u4F8B\u6545\u4E8B"
   m_EditorClassIdentifier: 
-  description: 
+  description: "\u8FD9\u662F\u4E00\u4E2A\u793A\u4F8B\u6545\u4E8B"
   plotNodes:
   - layout:
-      x: 33
-      y: 46
-      width: 307
-      height: 108
+      x: 7
+      y: 7
+      width: 300
+      height: 80
     description: "\u5267\u60C5\u7B80\u4ECB"
     nextPlotNode:
       chapter: 1
       scene: 1
-      part: 1
-      branch: 2
+      part: 2
+      branch: 1
     id:
       chapter: 1
       scene: 1
@@ -33,32 +33,12 @@ MonoBehaviour:
     type: 1
     isMainPlot: 1
     plot: {fileID: 11400000, guid: 519e5acc5ab83f34e987dbae5a22951b, type: 2}
-    nextOptionNodes: 000000000100000002000000
+    nextOptionNodes: 010000000200000000000000
   - layout:
-      x: 435
-      y: 471
-      width: 307
-      height: 108
-    description: "\u5267\u60C5\u7B80\u4ECB"
-    nextPlotNode:
-      chapter: 1
-      scene: 1
-      part: 2
-      branch: 2
-    id:
-      chapter: 1
-      scene: 1
-      part: 1
-      branch: 2
-    type: 0
-    isMainPlot: 1
-    plot: {fileID: 0}
-    nextOptionNodes: 
-  - layout:
-      x: 906
-      y: 45
-      width: 307
-      height: 108
+      x: 752
+      y: 18
+      width: 300
+      height: 80
     description: "\u5267\u60C5\u7B80\u4ECB"
     nextPlotNode:
       chapter: 0
@@ -72,13 +52,13 @@ MonoBehaviour:
       branch: 1
     type: 2
     isMainPlot: 0
-    plot: {fileID: 0}
+    plot: {fileID: 11400000, guid: e3492fe22c7fdc1458a93495dca4ae63, type: 2}
     nextOptionNodes: 
   - layout:
-      x: 912
-      y: 215
-      width: 307
-      height: 108
+      x: 769
+      y: 154
+      width: 300
+      height: 80
     description: "\u5267\u60C5\u7B80\u4ECB"
     nextPlotNode:
       chapter: 0
@@ -91,72 +71,98 @@ MonoBehaviour:
       part: 2
       branch: 2
     type: 2
-    isMainPlot: 1
-    plot: {fileID: 0}
+    isMainPlot: 0
+    plot: {fileID: 11400000, guid: f91429cb1f80088418f33276a1984507, type: 2}
     nextOptionNodes: 
+  - layout:
+      x: 775
+      y: 344
+      width: 300
+      height: 80
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 3
+    type: 2
+    isMainPlot: 1
+    plot: {fileID: 11400000, guid: 30ff57de2ac03a64eb40a07edf1bf6d1, type: 2}
+    nextOptionNodes: 
+  - layout:
+      x: 63
+      y: 476
+      width: 300
+      height: 80
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 2
+    type: 0
+    isMainPlot: 0
+    plot: {fileID: 0}
+    nextOptionNodes: 01000000
   optionNodes:
   - layout:
-      x: 449
-      y: 31
-      width: 307
+      x: 395
+      y: 100
+      width: 300
       height: 142
-    description: "\u9009\u9879\u7B80\u4ECB"
+    description: "\u9009\u9879\u63CF\u8FF0"
     nextPlotNode:
       chapter: 1
       scene: 1
       part: 2
-      branch: 1
+      branch: 2
     id: 0
     comparisons:
     - keyIndex: 0
       comparison: 0
       value: 0
     - keyIndex: 1
-      comparison: 0
-      value: 0
+      comparison: 2
+      value: 10
     changes:
     - keyIndex: 0
       change: 0
-      value: 0
+      value: 1
     - keyIndex: 1
-      change: 0
-      value: 0
+      change: 1
+      value: 2
   - layout:
-      x: 455
-      y: 312
-      width: 307
+      x: 389
+      y: 307
+      width: 300
       height: 102
-    description: "\u9009\u9879\u7B80\u4ECB2"
+    description: "\u9009\u9879\u63CF\u8FF0"
     nextPlotNode:
       chapter: 1
       scene: 1
       part: 2
-      branch: 2
+      branch: 3
     id: 1
     comparisons:
     - keyIndex: 0
       comparison: 0
       value: 0
     changes:
-    - keyIndex: 0
+    - keyIndex: 1
       change: 0
-      value: 0
-  - layout:
-      x: 450
-      y: 188
-      width: 307
-      height: 62
-    description: "\u9009\u9879\u7B80\u4ECB3"
-    nextPlotNode:
-      chapter: 0
-      scene: 0
-      part: 0
-      branch: 0
-    id: 2
-    comparisons: []
-    changes: []
+      value: 1
   conditions:
-  - key: "\u672A\u547D\u540D"
+  - key: "\u6761\u4EF6\u4E00"
     value: 0
-  - key: "\u672A\u547D\u540D2"
-    value: 0
+  - key: "\u6761\u4EF6\u4E8C"
+    value: 100

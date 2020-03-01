@@ -5,24 +5,24 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    [CreateAssetMenu(menuName = "E Story Sentences", order = 1)]
+    [CreateAssetMenu(menuName = "E Story PlotItem", order = 1)]
     public class Plot : ScriptableObject
     {
-        [Tooltip("对话")] public List<Sentence> sentences;
+        [Tooltip("对话")] public List<PlotItem> sentences;
     }
 
     [Serializable]
-    public class Sentence
+    public class PlotItem
     {
-        [Tooltip("角色名称")] public string character;
+        [Tooltip("角色名称")] public string role;
+        [Tooltip("对话内容")] public string words;
         [Tooltip("角色表情")] public Sprite avatar;
-        [Tooltip("对话内容"), TextArea(1, 10)] public string words;
 
-        public Sentence(string speaker, string words)
+        public PlotItem(string role, string words)
         {
-            character = speaker;
-            avatar = null;
+            this.role = role;
             this.words = words;
+            avatar = null;
         }
     }
 }

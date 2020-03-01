@@ -62,6 +62,30 @@ namespace E.Tool
         [Tooltip("片段号")] public int part;
         [Tooltip("分支号")] public int branch;
 
+        public bool IsRightFormat
+        {
+            get
+            {
+                if (chapter <= 0)
+                {
+                    return false;
+                }
+                if (scene <= 0)
+                {
+                    return false;
+                }
+                if (part <= 0)
+                {
+                    return false;
+                }
+                if (branch <= 0)
+                {
+                    return false;
+                }
+                return true;
+            }
+        }
+
         public PlotID(int c, int s, int p, int b)
         {
             chapter = c;
@@ -81,10 +105,6 @@ namespace E.Tool
             {
                 return false;
             }
-        }
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
         }
     }
 

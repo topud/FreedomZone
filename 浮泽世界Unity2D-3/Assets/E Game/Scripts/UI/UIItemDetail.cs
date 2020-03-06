@@ -69,7 +69,7 @@ public class UIItemDetail : UIBase
             }
 
             txtName.text = data.StaticData.Name;
-            txtDes.text = data.StaticData.Describe;
+            txtDes.text = data.StaticData.Description;
             imgIcon.sprite = data.StaticData.Icon;
             RefreshFloatData();
             RefreshBtnUse();

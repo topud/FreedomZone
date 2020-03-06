@@ -53,7 +53,7 @@ public class AppStudentCard : PhoneApp
         if (Target)
         {
             txtName.text = Target.StaticData.Name;
-            txtDescription.text = Target.StaticData.Describe;
+            txtDescription.text = Target.StaticData.Description;
 
             txtBirthday.text = Target.StaticData.Birthday.ToString("yyyy 年 M 月 d 日");
             txtGender.text = Target.StaticData.Gender.ToString();

@@ -232,7 +232,7 @@ public class SaveManager : MonoBehaviour
         Save save = GetSave(fileInfo);
         //配置对应游戏对象
         GameManager.Story.CurrentNodeID = save.NodeID;
-        foreach (CharacterDynamicData item in save.CharacterDynamicDatas)
+        foreach (RoleDynamicData item in save.CharacterDynamicDatas)
         {
             Character character = GameManager.Character.GetCharacter(item.nameID);
             if (character)
@@ -285,6 +285,6 @@ public class SaveManager : MonoBehaviour
 public class Save
 {
     public PlotID NodeID = new PlotID(0,0,0,0);
-    public List<CharacterDynamicData> CharacterDynamicDatas = new List<CharacterDynamicData>();
+    public List<RoleDynamicData> CharacterDynamicDatas = new List<RoleDynamicData>();
     public List<ItemDynamicData> InteractorDynamicDatas = new List<ItemDynamicData>();
 }

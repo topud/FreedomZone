@@ -27,7 +27,7 @@ namespace E.Tool
         /// <summary>
         /// 描述
         /// </summary>
-        public string Describe { get => description; }
+        public string Description { get => description; }
         /// <summary>
         /// 图标
         /// </summary>

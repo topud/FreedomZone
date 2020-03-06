@@ -15,12 +15,16 @@ namespace E.Tool
         private ReorderableList conditionList;
         private ReorderableList plotNodeList;
         private ReorderableList optionNodeList;
+        private bool isShowBaseInfo = true;
+        private bool isShowConditionList = true;
+        private bool isShowPlotNodeList = true;
+        private bool isShowOptionNodeList = true;
 
         private void OnEnable()
         {
             Target = (Story)target;
 
-            conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("conditions"), true, true, true, true)
+            conditionList = new ReorderableList(serializedObject, serializedObject.FindProperty("conditions"), true, false, true, true)
             {
                 //元素高度
                 elementHeight = Utility.GetHeightLong(2),
@@ -39,11 +43,11 @@ namespace E.Tool
                 showDefaultBackground = true,
 
                 //标题
-                drawHeaderCallback = (Rect rect) =>
-                {
-                    string title = string.Format("条件列表 ({0})", conditionList.count);
-                    GUI.Label(rect, title);
-                },
+                //drawHeaderCallback = (Rect rect) =>
+                //{
+                    //string title = string.Format("条件列表 ({0})", conditionList.count);
+                    //GUI.Label(rect, title);
+                //},
 
                 //创建
                 onAddCallback = (ReorderableList list) =>
@@ -56,7 +60,7 @@ namespace E.Tool
                         SerializedProperty sp0 = list.serializedProperty.GetArrayElementAtIndex(list.index);
                         SerializedProperty sp1 = sp0.FindPropertyRelative("key");
                         SerializedProperty sp2 = sp0.FindPropertyRelative("value");
-                        sp1.stringValue = "未命名";
+                        sp1.stringValue = "新条件";
                         sp2.intValue = 0;
                     }
                     else
@@ -86,7 +90,7 @@ namespace E.Tool
                    // Debug.Log(list.index);
                 }
             };
-            plotNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("plotNodes"), true, true, false, true)
+            plotNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("plotNodes"), true, false, false, true)
             {
                 //元素高度
                 elementHeight = Utility.GetHeightLong(3),
@@ -105,11 +109,11 @@ namespace E.Tool
                 showDefaultBackground = true,
 
                 //标题
-                drawHeaderCallback = (Rect rect) =>
-                {
-                    string title = string.Format("剧情节点列表 ({0})", plotNodeList.count);
-                    GUI.Label(rect, title);
-                },
+                //drawHeaderCallback = (Rect rect) =>
+                //{
+                //    string title = string.Format("剧情节点列表 ({0})", plotNodeList.count);
+                //    GUI.Label(rect, title);
+                //},
 
                 //创建
                 onAddCallback = (ReorderableList list) =>
@@ -135,7 +139,7 @@ namespace E.Tool
                 {
                 }
             };
-            optionNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("optionNodes"), true, true, false, true)
+            optionNodeList = new ReorderableList(serializedObject, serializedObject.FindProperty("optionNodes"), true, false, false, true)
             {
                 //元素高度
                 elementHeight = Utility.GetHeightLong(2),
@@ -154,11 +158,11 @@ namespace E.Tool
                 showDefaultBackground = true,
 
                 //标题
-                drawHeaderCallback = (Rect rect) =>
-                {
-                    string title = string.Format("选项节点列表 ({0})", optionNodeList.count);
-                    GUI.Label(rect, title);
-                },
+                //drawHeaderCallback = (Rect rect) =>
+                //{
+                //    string title = string.Format("选项节点列表 ({0})", optionNodeList.count);
+                //    GUI.Label(rect, title);
+                //},
 
                 //创建
                 onAddCallback = (ReorderableList list) =>
@@ -188,21 +192,43 @@ namespace E.Tool
         }
         public override void OnInspectorGUI()
         {
-            if (GUILayout.Button("打开 E Story 编辑窗口"))
+            //EditorGUI.indentLevel = 0;
+
+            if (GUILayout.Button("打开 E Story 故事树编辑器"))
             {
-                StoryWindow.Open();
-                StoryWindow.OpenStory(Target);
+                //StoryWindow.Open();
+                StoryWindow.Instance.OpenStory(Target);
             }
-
-            EditorGUILayout.LabelField("故事描述");
-            Target.description = EditorGUILayout.TextArea(Target.description);
-
-            EditorGUILayout.Space(5);
+            isShowBaseInfo = EditorGUILayout.BeginFoldoutHeaderGroup(isShowBaseInfo, string.Format("基础信息"));
+            if (isShowBaseInfo)
+            {
+                EditorGUIUtility.labelWidth = 55;
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.PrefixLabel("故事描述");
+                Target.description = EditorGUILayout.TextArea(Target.description);
+                EditorGUILayout.EndHorizontal();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
 
             serializedObject.Update();
-            conditionList.DoLayoutList();
-            plotNodeList.DoLayoutList();
-            optionNodeList.DoLayoutList();
+            isShowConditionList = EditorGUILayout.BeginFoldoutHeaderGroup(isShowConditionList, string.Format("数值条件 ({0})", conditionList.count));
+            if (isShowConditionList)
+            {
+                conditionList.DoLayoutList();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            isShowPlotNodeList = EditorGUILayout.BeginFoldoutHeaderGroup(isShowPlotNodeList, string.Format("剧情节点 ({0})", plotNodeList.count));
+            if (isShowPlotNodeList)
+            {
+                plotNodeList.DoLayoutList();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
+            isShowOptionNodeList = EditorGUILayout.BeginFoldoutHeaderGroup(isShowOptionNodeList, string.Format("选项节点 ({0})", optionNodeList.count));
+            if (isShowOptionNodeList)
+            {
+                optionNodeList.DoLayoutList();
+            }
+            EditorGUILayout.EndFoldoutHeaderGroup();
             serializedObject.ApplyModifiedProperties();
         }
     }

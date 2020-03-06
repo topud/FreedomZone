@@ -6,7 +6,7 @@ using UnityEngine;
 namespace E.Tool
 {
     [CreateAssetMenu(menuName = "E Character")]
-    public class CharacterStaticData : EntityStaticData
+    public class RoleStaticData : EntityStaticData
     {
         [Header("角色实体静态数据")]
         [SerializeField, Tooltip("种族")] private Race race = Race.人类;
@@ -146,13 +146,13 @@ namespace E.Tool
     [Serializable]
     public struct Relationship
     {
-        [SerializeField, Tooltip("对象")] private CharacterStaticData character;
+        [SerializeField, Tooltip("对象")] private RoleStaticData character;
         [SerializeField, Tooltip("好感度")] private int favorability;
 
         /// <summary>
         /// 对象
         /// </summary>
-        public CharacterStaticData Character { get => character; }
+        public RoleStaticData Character { get => character; }
         /// <summary>
         /// 好感度
         /// </summary>
@@ -168,7 +168,7 @@ namespace E.Tool
             }
         }
 
-        public Relationship(CharacterStaticData character, int favorability = 0)
+        public Relationship(RoleStaticData character, int favorability = 0)
         {
             if (character)
             {

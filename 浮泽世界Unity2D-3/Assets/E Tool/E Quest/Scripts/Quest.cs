@@ -12,7 +12,7 @@ namespace E.Tool
         [SerializeField, Tooltip("任务类型")] private QuestType questType;
 
         [Header("任务目标（根据任务类型三选一）")]
-        [SerializeField, Tooltip("目标角色")] private CharacterStaticData tartgetCharacter;
+        [SerializeField, Tooltip("目标角色")] private RoleStaticData tartgetCharacter;
         [SerializeField, Tooltip("目标物品")] private ItemStaticData tartgetInteractor;
         [SerializeField, Tooltip("目标技能")] private Skill tartgetSkill;
 
@@ -46,7 +46,7 @@ namespace E.Tool
         /// <summary>
         /// 目标角色
         /// </summary>
-        public CharacterStaticData TartgetCharacter { get => tartgetCharacter; set => tartgetCharacter = value; }
+        public RoleStaticData TartgetCharacter { get => tartgetCharacter; set => tartgetCharacter = value; }
         /// <summary>
         /// 目标物品
         /// </summary>

@@ -11,7 +11,7 @@ namespace E.Tool
 {
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
-    public class Character : Entity<CharacterStaticData, CharacterDynamicData>
+    public class Character : Entity<RoleStaticData, RoleDynamicData>
     {
         public static UnityEvent onPlayerItemChange = new UnityEvent();
         public static UnityEvent onPlayerInfoChange = new UnityEvent();
@@ -275,7 +275,7 @@ namespace E.Tool
                 return;
             }
 
-            DynamicData = new CharacterDynamicData
+            DynamicData = new RoleDynamicData
             {
                 nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : GameManager.Character.AvailableID),
                 position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
@@ -495,7 +495,7 @@ namespace E.Tool
             if (IsInView(target))
             {
                 TargetUI.ShowChat();
-                TargetUI.SetChat(target.StaticData.Describe);
+                TargetUI.SetChat(target.StaticData.Description);
             }
             else
             {
@@ -774,7 +774,7 @@ namespace E.Tool
             {
                 //target.TargetUI.HideAll();
                 TargetUI.ShowChat();
-                TargetUI.SetChat(target.StaticData.Describe);
+                TargetUI.SetChat(target.StaticData.Description);
             }
             else
             {

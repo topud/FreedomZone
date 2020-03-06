@@ -32,40 +32,39 @@ namespace E.Tool
         /// <summary>
         /// 节点尺寸
         /// </summary>
-        public static Vector2Int NodeSize
+        public static int NodeWidth
         {
             get
             {
                 if (!EditorPrefs.HasKey("NodeWidth")) EditorPrefs.SetInt("NodeWidth", 300);
                 if (!EditorPrefs.HasKey("NodeHeight")) EditorPrefs.SetInt("NodeHeight", 80);
-                return new Vector2Int(EditorPrefs.GetInt("NodeWidth"), EditorPrefs.GetInt("NodeHeight"));
+                return EditorPrefs.GetInt("NodeWidth");
             }
             set
             {
-                EditorPrefs.SetInt("NodeWidth", value.x);
-                EditorPrefs.SetInt("NodeHeight", value.y);
+                EditorPrefs.SetInt("NodeWidth", value);
             }
         }
         /// <summary>
-        /// 默认节点颜色
+        /// 背景颜色
         /// </summary>
-        public static Color NormalNode
+        public static Color Background
         {
             get
             {
-                if (!EditorPrefs.HasKey("NormalNodeR")) EditorPrefs.SetFloat("NormalNodeR", 0.9f);
-                if (!EditorPrefs.HasKey("NormalNodeG")) EditorPrefs.SetFloat("NormalNodeG", 0.9f);
-                if (!EditorPrefs.HasKey("NormalNodeB")) EditorPrefs.SetFloat("NormalNodeB", 0.9f);
-                if (!EditorPrefs.HasKey("NormalNodeA")) EditorPrefs.SetFloat("NormalNodeA", 1);
-                return new Color(EditorPrefs.GetFloat("NormalNodeR"), EditorPrefs.GetFloat("NormalNodeG"), EditorPrefs.GetFloat("NormalNodeB"), EditorPrefs.GetFloat("NormalNodeA"));
+                if (!EditorPrefs.HasKey("BackgroundR")) EditorPrefs.SetFloat("BackgroundR", 0.9f);
+                if (!EditorPrefs.HasKey("BackgroundG")) EditorPrefs.SetFloat("BackgroundG", 0.9f);
+                if (!EditorPrefs.HasKey("BackgroundB")) EditorPrefs.SetFloat("BackgroundB", 0.9f);
+                if (!EditorPrefs.HasKey("BackgroundA")) EditorPrefs.SetFloat("BackgroundA", 1);
+                return new Color(EditorPrefs.GetFloat("BackgroundR"), EditorPrefs.GetFloat("BackgroundG"), EditorPrefs.GetFloat("BackgroundB"), EditorPrefs.GetFloat("BackgroundA"));
 
             }
             set
             {
-                EditorPrefs.SetFloat("NormalNodeR", value.r);
-                EditorPrefs.SetFloat("NormalNodeG", value.g);
-                EditorPrefs.SetFloat("NormalNodeB", value.b);
-                EditorPrefs.SetFloat("NormalNodeA", value.a);
+                EditorPrefs.SetFloat("BackgroundR", value.r);
+                EditorPrefs.SetFloat("BackgroundG", value.g);
+                EditorPrefs.SetFloat("BackgroundB", value.b);
+                EditorPrefs.SetFloat("BackgroundA", value.a);
             }
         }
         /// <summary>
@@ -98,7 +97,7 @@ namespace E.Tool
             {
                 if (!EditorPrefs.HasKey("MainLineR")) EditorPrefs.SetFloat("MainLineR", 0);
                 if (!EditorPrefs.HasKey("MainLineG")) EditorPrefs.SetFloat("MainLineG", 0.7f);
-                if (!EditorPrefs.HasKey("MainLineB")) EditorPrefs.SetFloat("MainLineB", 0);
+                if (!EditorPrefs.HasKey("MainLineB")) EditorPrefs.SetFloat("MainLineB", 0.4f);
                 if (!EditorPrefs.HasKey("MainLineA")) EditorPrefs.SetFloat("MainLineA", 1);
                 return new Color(EditorPrefs.GetFloat("MainLineR"), EditorPrefs.GetFloat("MainLineG"), EditorPrefs.GetFloat("MainLineB"), EditorPrefs.GetFloat("MainLineA"));
             }
@@ -118,7 +117,7 @@ namespace E.Tool
             get
             {
                 if (!EditorPrefs.HasKey("BranchLineR")) EditorPrefs.SetFloat("BranchLineR", 0.7f);
-                if (!EditorPrefs.HasKey("BranchLineG")) EditorPrefs.SetFloat("BranchLineG", 0);
+                if (!EditorPrefs.HasKey("BranchLineG")) EditorPrefs.SetFloat("BranchLineG", 0.6f);
                 if (!EditorPrefs.HasKey("BranchLineB")) EditorPrefs.SetFloat("BranchLineB", 0);
                 if (!EditorPrefs.HasKey("BranchLineA")) EditorPrefs.SetFloat("BranchLineA", 1);
                 return new Color(EditorPrefs.GetFloat("BranchLineR"), EditorPrefs.GetFloat("BranchLineG"), EditorPrefs.GetFloat("BranchLineB"), EditorPrefs.GetFloat("BranchLineA"));
@@ -131,16 +130,51 @@ namespace E.Tool
                 EditorPrefs.SetFloat("BranchLineA", value.a);
             }
         }
+        /// <summary>
+        /// 上次打开的故事
+        /// </summary>
+        public static Story LastOpendStory
+        {
+            get
+            {
+                if (EditorPrefs.HasKey("LastOpendStory"))
+                { 
+                    string path = EditorPrefs.GetString("LastOpendStory");
+                    Story story = AssetDatabase.LoadAssetAtPath<Story>(path);
+                    return story;
+                }
+                return null;
+            }
+            set
+            {
+                string path = AssetDatabase.GetAssetPath(value);
+                EditorPrefs.SetString("LastOpendStory", path);
+            }
+        }
         
         [PreferenceItem("E Story")]
         private static void OnPreference()
         {
             EditorGUILayout.LabelField("布局", EditorStyles.boldLabel);
-            ViewSize = EditorGUILayout.Vector2IntField("画布尺寸", ViewSize);
-            NodeSize = EditorGUILayout.Vector2IntField("节点尺寸", NodeSize);
+            Vector2Int v2 = EditorGUILayout.Vector2IntField("画布尺寸", ViewSize);
+            if (v2.x < 1000)
+            {
+                v2.x = 1000;
+            }
+            if (v2.y < 1000)
+            {
+                v2.y = 1000;
+            }
+            ViewSize = v2;
+            int nw = EditorGUILayout.DelayedIntField("节点宽度", NodeWidth);
+            if (nw < 280)
+            {
+                nw = 280;
+            }
+            NodeWidth = nw;
 
             EditorGUILayout.LabelField("颜色", EditorStyles.boldLabel);
-            NormalNode = EditorGUILayout.ColorField("默认节点", NormalNode);
+            Background = EditorGUILayout.ColorField("背景颜色", Background);
             SelectNode = EditorGUILayout.ColorField("选中节点", SelectNode);
             MainLine = EditorGUILayout.ColorField("主线结点连接线", MainLine);
             BranchLine = EditorGUILayout.ColorField("支线结点连接线", BranchLine);
@@ -157,22 +191,21 @@ namespace E.Tool
             EditorPrefs.SetInt("ViewWidth", 3000);
             EditorPrefs.SetInt("ViewHeight", 3000);
             EditorPrefs.SetInt("NodeWidth", 300);
-            EditorPrefs.SetInt("NodeHeight", 80);
 
-            EditorPrefs.SetFloat("NormalNodeR", 0.9f);
-            EditorPrefs.SetFloat("NormalNodeG", 0.9f);
-            EditorPrefs.SetFloat("NormalNodeB", 0.9f);
-            EditorPrefs.SetFloat("NormalNodeA", 1);
+            EditorPrefs.SetFloat("BackgroundR", 0.9f);
+            EditorPrefs.SetFloat("BackgroundG", 0.9f);
+            EditorPrefs.SetFloat("BackgroundB", 0.9f);
+            EditorPrefs.SetFloat("BackgroundA", 1);
             EditorPrefs.SetFloat("SelectNodeR", 0.9f);
             EditorPrefs.SetFloat("SelectNodeG", 0.85f);
             EditorPrefs.SetFloat("SelectNodeB", 0.5f);
             EditorPrefs.SetFloat("SelectNodeA", 1);
             EditorPrefs.SetFloat("MainLineR", 0);
             EditorPrefs.SetFloat("MainLineG", 0.7f);
-            EditorPrefs.SetFloat("MainLineB", 0);
+            EditorPrefs.SetFloat("MainLineB", 0.4f);
             EditorPrefs.SetFloat("MainLineA", 1);
             EditorPrefs.SetFloat("BranchLineR", 0.7f);
-            EditorPrefs.SetFloat("BranchLineG", 0);
+            EditorPrefs.SetFloat("BranchLineG", 0.6f);
             EditorPrefs.SetFloat("BranchLineB", 0);
             EditorPrefs.SetFloat("BranchLineA", 1);
 

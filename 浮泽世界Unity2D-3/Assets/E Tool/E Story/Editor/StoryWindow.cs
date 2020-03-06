@@ -10,468 +10,128 @@ using UnityEditorInternal;
 
 namespace E.Tool
 {
-    public class StoryWindow : EditorWindow
+    public class StoryWindow : MyEditorWindow<StoryWindow>
     {
-        //运行数据
         /// <summary>
-        /// 故事编辑器窗口
+        /// 缩放模式
         /// </summary>
-        private static StoryWindow instance;
-        /// <summary>
-        /// 当前节点
-        /// </summary>
-        private static Node currentNode;
-        /// <summary>
-        /// 上节点
-        /// </summary>
-        private static Node upNode;
-        /// <summary>
-        /// 下节点
-        /// </summary>
-        private static Node downNode;
-
-        /// <summary>
-        /// 窗口实例
-        /// </summary>
-        public static StoryWindow Instance
+        public bool IsZoomOut
         {
             get
             {
-                if (instance == null)
+                if (Story)
                 {
-                    instance = GetWindow<StoryWindow>();
+                    return Story.isZoomOut;
                 }
-                return instance;
+                else
+                {
+                    return false;
+                }
+            }
+            set
+            {
+                if (Story)
+                {
+                    Story.isZoomOut = value;
+                    foreach (PlotNode item in Story.plotNodes)
+                    {
+                        //缩小
+                        if (value)
+                        {
+                            item.layout.x *= Zoom;
+                            item.layout.y *= Zoom;
+                            item.layout.width = StoryWindowPreference.NodeWidth * Zoom;
+                        }
+                        //默认
+                        else
+                        {
+                            item.layout.x /= Zoom;
+                            item.layout.y /= Zoom;
+                            item.layout.width = StoryWindowPreference.NodeWidth;
+                        }
+                    }
+                    foreach (OptionNode item in Story.optionNodes)
+                    {
+                        //缩小
+                        if (value)
+                        {
+                            item.layout.x *= Zoom;
+                            item.layout.y *= Zoom;
+                            item.layout.width = StoryWindowPreference.NodeWidth * Zoom;
+                        }
+                        //默认
+                        else
+                        {
+                            item.layout.x /= Zoom;
+                            item.layout.y /= Zoom;
+                            item.layout.width = StoryWindowPreference.NodeWidth;
+                        }
+                    }
+                }
             }
         }
         /// <summary>
         /// 当前故事
         /// </summary>
-        public static Story CurrentStory;
+        public Story Story { get; set; }
         /// <summary>
-        /// 当前故事的路径
+        /// 当前故事节点
         /// </summary>
-        /// <returns></returns>
-        public static string CurrentStoryPath
-        {
-            get
-            {
-                if (CurrentStory != null)
-                {
-                    return AssetDatabase.GetAssetPath(CurrentStory);
-                }
-                else return null;
-            }
-        }
+        public Node Node { get; set; }
         /// <summary>
-        /// 当前节点
+        /// 当前选中的上行节点
         /// </summary>
-        public static Node CurrentNode
-        {
-            get => currentNode;
-            set
-            {
-                if (currentNode == value) return;
-                currentNode = value;
-
-            }
-        }
-        
-        //窗口样式
+        public Node UpNode { get; set; }
+        /// <summary>
+        /// 当前选中的下行节点
+        /// </summary>
+        public Node DownNode { get; set; }
+        /// <summary>
+        /// 滚动位置
+        /// </summary>
+        private Vector2 ScrollPos { get; set; }
         /// <summary>
         /// 光标位置
         /// </summary>
-        private static Vector2Int mousePos;
-        /// <summary>
-        /// 滚动条位置
-        /// </summary>
-        private static Vector2Int scrollPos;
-        /// <summary>
-        /// X拖拽偏移
-        /// </summary>
-        private static int xOffset;
-        /// <summary>
-        /// Y拖拽偏移
-        /// </summary>
-        private static int yOffset;
-
+        private Vector2Int MousePos { get; set; }
         /// <summary>
         /// 窗口尺寸
         /// </summary>
-        private static Rect View
-        {
-            get => new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y);
-        }
+        private Rect View { get => new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y); }
         /// <summary>
-        /// 顶部面板
+        /// 背景网格间隔
         /// </summary>
-        private static Rect Top
-        {
-            get => new Rect(0, 0, Instance.position.width, Utility.GetHeightLong(1));
-        }
+        private int GridInterval { get => 100; }
         /// <summary>
-        /// 中部面板
+        /// 曲线节点弯曲系数
         /// </summary>
-        private static Rect Center
-        {
-            get => new Rect(0, Utility.GetHeightLong(1), Instance.position.width, Instance.position.height - Utility.GetHeightLong(1));
-        }
+        private float BendingFactor { get => IsZoomOut ? 50 * Zoom : 50; }
         /// <summary>
-        /// 底部面板
+        /// 缩放系数
         /// </summary>
-        private static Rect Buttom
-        {
-            get => new Rect(0, Instance.position.height - Utility.GetHeightLong(1), Instance.position.width, Utility.GetHeightLong(1));
-        }
+        private float Zoom { get => 0.5f; }
 
-        //mono
         private void Update()
         {
             Repaint();
         }
         private void OnGUI()
         {
-            CheckMouseEvent();
-
-            Vector2 v = GUI.BeginScrollView(Center, scrollPos, View);
-            scrollPos = new Vector2Int((int)v.x, (int)v.y);
-            DrawBG();
-            DrawTempCurve();
-            DrawStory();
-            GUI.EndScrollView();
-
-            DrawHead();
-            DrawFoot();
-        }
-        private void OnFocus()
-        {
-            Instance.wantsMouseMove = true;
-        }
-
-        //打开
-        /// <summary>
-        /// 打开窗口
-        /// </summary>
-        [MenuItem("Window/E Tool/E Story %#w")]
-        public static void Open()
-        {
-            Initialize();
-            Refresh();
-            Debug.Log("已打开 E Story");
-        }
-        /// <summary>
-        /// 打开故事
-        /// </summary>
-        /// <param name="story"></param>
-        public static void OpenStory(Story story)
-        {
-            if (story != null)
-            {
-                story.CheckNull();
-                CurrentStory = story;
-                Selection.activeObject = CurrentStory;
-                Instance.ShowNotification(new GUIContent("已打开 " + CurrentStory.name));
-            }
-            else
-            {
-                Debug.LogError("未打开故事：对象为空");
-            }
-        }
-
-        //关闭
-        /// <summary>
-        /// 关闭故事
-        /// </summary>
-        private static void CloseCurrentStory()
-        {
-            if (CurrentStory == null)
-            {
-                Instance.ShowNotification(new GUIContent("当前未打开故事"));
-            }
-            else
-            {
-                Instance.ShowNotification(new GUIContent("已关闭 " + CurrentStory.name));
-                CurrentStory = null;
-            }
-        }
-
-        //初始化
-        /// <summary>
-        /// 重置窗口
-        /// </summary>
-        private static void Initialize()
-        {
-            Instance.titleContent = new GUIContent("E Story");
-            Instance.minSize = new Vector2(450, 400);
-
-            scrollPos = Vector2Int.zero;
-            xOffset = 0;
-            yOffset = 0;
-        }
-
-        //刷新
-        /// <summary>
-        /// 刷新窗口
-        /// </summary>
-        private static void Refresh()
-        {
-            ClearTempConnect();
-        }
-        /// <summary>
-        /// 刷新鼠标坐标
-        /// </summary>
-        private static void RefreshMousePosition()
-        {
-            mousePos = new Vector2Int((int)((Event.current.mousePosition.x) + scrollPos.x), (int)((Event.current.mousePosition.y) + scrollPos.y - Utility.GetHeightLong(1)));
-        }
-
-        //创建
-        /// <summary>
-        /// 创建故事
-        /// </summary>
-        private static void CreateStory()
-        {
-            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", Application.dataPath);
-            if (path == "") return;
-            Story story = CreateInstance<Story>();
-            AssetDatabase.CreateAsset(story, path);
-            CurrentStory = story;
-            OpenStory(story);
-            //AssetDatabase.Refresh();
-        }
-        /// <summary>
-        /// 创建故事节点
-        /// </summary>
-        private static void CreatePlotNode()
-        {
-            if (CurrentStory != null)
-            {
-                CurrentStory.CreatePlotNode(new RectInt(mousePos.x, mousePos.y, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y));
-            }
-            else
-            {
-                Instance.ShowNotification(new GUIContent("未指定故事"));
-                if (EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点", "好的", "关闭"))
-                {
-                }
-            }
-        }
-        /// <summary>
-        /// 创建剧情节点
-        /// </summary>
-        private static void CreateOptionNode()
-        {
-            if (CurrentStory != null)
-            {
-                CurrentStory.CreateOptionNode(new RectInt(mousePos.x, mousePos.y, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y));
-            }
-            else
-            {
-                Instance.ShowNotification(new GUIContent("未指定故事"));
-                if (EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点", "好的", "关闭"))
-                {
-                }
-            }
-        }
-        /// <summary>
-        /// 创建内容
-        /// </summary>
-        private static void CreatePlot()
-        {
-            if (CurrentNode != null)
-            {
-                string path = EditorUtility.SaveFilePanelInProject("创建剧情片段", "新剧情片段", "Asset", "保存剧情片段", Application.dataPath);
-                if (path == "") return;
-                Plot plot = CreateInstance<Plot>();
-                AssetDatabase.CreateAsset(plot, path);
-                (CurrentNode as PlotNode).plot = plot;
-                //AssetDatabase.Refresh();
-            }
-        }
-
-        //删除
-        /// <summary>
-        /// 删除故事
-        /// </summary>
-        private static void DeleteCurrentStory()
-        {
-            if (CurrentStory != null)
-            {
-                string str = "确认要删除故事 {" + CurrentStory.name + "} 以及其所有节点吗？本地文件也将一并删除，这将无法恢复。";
-                if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
-                {
-                    string path = CurrentStoryPath;
-                    AssetDatabase.DeleteAsset(path);
-                    AssetDatabase.Refresh();
-                    Debug.Log("已删除故事 {" + path + "}");
-                    CurrentStory = null;
-                }
-            }
-            else
-            {
-                Instance.ShowNotification(new GUIContent("当前未打开故事"));
-            }
-        }
-
-        //保存
-        /// <summary>
-        /// 删除故事
-        /// </summary>
-        private static void SaveCurrentStory()
-        {
-            if (CurrentStory != null)
-            {
-                EditorUtility.SetDirty(CurrentStory);
-                AssetDatabase.SaveAssets();
-                Instance.ShowNotification(new GUIContent("已保存 " + CurrentStory.name));
-            }
-            else
-            {
-                Instance.ShowNotification(new GUIContent("当前未打开故事"));
-            }
-        }
-
-        ///获取
-
-        //执行
-        /// <summary>
-        /// 执行方法
-        /// </summary>
-        /// <param name="obj"></param>
-        private static void DoMethod(object obj)
-        {
-            switch (obj)
-            {
-                case 1:
-                    CreatePlot();
-                    break;
-                case 2:
-                    CreatePlotNode();
-                    break;
-                case 3:
-                    CreateOptionNode();
-                    break;
-                case 4:
-                    break;
-                case 5:
-                    CurrentStory.ClearNodeUpChoices(CurrentNode);
-                    break;
-                case 6:
-                    CurrentStory.ClearNodeDownChoices(CurrentNode);
-                    break;
-                case 7:
-                    CurrentStory.ClearNodeUpChoices(CurrentNode);
-                    CurrentStory.ClearNodeDownChoices(CurrentNode);
-                    break;
-                case 8:
-                    CurrentStory.RemoveNode(CurrentNode);
-                    break;
-                case 9:
-                    CurrentStory.SetNodeType(CurrentNode as PlotNode, PlotType.起始剧情);
-                    break;
-                case 10:
-                    CurrentStory.SetNodeType(CurrentNode as PlotNode, PlotType.过渡剧情);
-                    break;
-                case 11:
-                    CurrentStory.SetNodeType(CurrentNode as PlotNode, PlotType.结局剧情);
-                    break;
-                case 12:
-                    CurrentStory.ClearPlotNodes();
-                    break;
-                case 13:
-                    CurrentStory.ClearOptionNodes();
-                    break;
-                case 14:
-                    CurrentStory.ClearAllNodes();
-                    break;
-
-                default:
-                    Debug.LogError("此右键菜单无实现方法");
-                    break;
-            }
-        }
-
-        //检查
-        /// <summary>
-        /// 检测鼠标事件
-        /// </summary>
-        private static void CheckMouseEvent()
-        {
             switch (Event.current.type)
             {
                 case EventType.MouseDown:
-                    if (CurrentStory != null && CurrentStory.plotNodes != null)
-                    {
-                        //获取当前选中节点
-                        bool isInNode = false;
-                        foreach (PlotNode item in CurrentStory.plotNodes)
-                        {
-                            if (item.layout.Contains(mousePos))
-                            {
-                                xOffset = mousePos.x - item.layout.x;
-                                yOffset = mousePos.y - item.layout.y;
-                                isInNode = true;
-
-                                //选中此节点
-                                CurrentNode = item;
-                                break;
-                            }
-                        }
-                        foreach (OptionNode item in CurrentStory.optionNodes)
-                        {
-                            if (item.layout.Contains(mousePos))
-                            {
-                                xOffset = mousePos.x - item.layout.x;
-                                yOffset = mousePos.y - item.layout.y;
-                                isInNode = true;
-
-                                //选中此节点
-                                CurrentNode = item;
-                                break;
-                            }
-                        }
-
-                        if (isInNode)
-                        {
-                        }
-                        else
-                        {
-                            CurrentNode = null;
-                        }
-                    }
+                    CheckNode();
                     break;
                 case EventType.MouseUp:
                     break;
                 case EventType.MouseMove:
-                    RefreshMousePosition();
+                    CheckMouseMove();
                     break;
                 case EventType.MouseDrag:
-                    RefreshMousePosition();
-                    if (CurrentStory)
-                    {
-                        if (CurrentStory.plotNodes.Contains(CurrentNode))
-                        {
-                            if (CurrentNode.layout.Contains(mousePos))
-                            {
-                                CurrentNode.layout = new RectInt(mousePos.x - xOffset, mousePos.y - yOffset, CurrentNode.layout.width, CurrentNode.layout.height);
-                            }
-                        }
-                        if (CurrentStory.optionNodes.Contains(CurrentNode))
-                        {
-                            if (CurrentNode.layout.Contains(mousePos))
-                            {
-                                CurrentNode.layout = new RectInt(mousePos.x - xOffset, mousePos.y - yOffset, CurrentNode.layout.width, CurrentNode.layout.height);
-                            }
-                        }
-                    }
                     break;
                 case EventType.KeyDown:
                     break;
                 case EventType.KeyUp:
-                    if (Event.current.keyCode == KeyCode.Delete && CurrentNode != null)
-                    {
-                        CurrentStory.RemoveNode(CurrentNode);
-                    }
                     break;
                 case EventType.ScrollWheel:
                     break;
@@ -494,16 +154,7 @@ namespace E.Tool
                 case EventType.ExecuteCommand:
                     break;
                 case EventType.ContextClick:
-                    if (upNode == null && downNode == null)
-                    {
-                        DrawContextMenu();
-                        //设置该事件被使用
-                        //Event.current.Use();
-                    }
-                    else
-                    {
-                        ClearTempConnect();
-                    }
+                    DrawMenu();
                     break;
                 case EventType.MouseEnterWindow:
                     break;
@@ -512,25 +163,298 @@ namespace E.Tool
                 default:
                     break;
             }
+
+            ScrollPos = GUI.BeginScrollView(Center, ScrollPos, View);
+            DrawBG();
+            DrawTempCurve();
+            BeginWindows();
+            DrawCenter();
+            EndWindows();
+            GUI.EndScrollView();
+
+            DrawTop();
+            DrawButtom();
+            DrawMenu();
+        }
+        private void OnFocus()
+        {
+            wantsMouseMove = true;
+        }
+
+        //打开
+        /// <summary>
+        /// 打开窗口
+        /// </summary>
+        [MenuItem("Window/E Tool/打开故事编辑器 E Story %#q")]
+        public static void Open()
+        {
+            Instance.Refresh();
+        }
+        /// <summary>
+        /// 打开上次的故事
+        /// </summary>
+        [MenuItem("Window/E Tool/打开最近编辑的故事 %#w")]
+        public static void OpenLastStory()
+        {
+            Open();
+            Story data = StoryWindowPreference.LastOpendStory;
+            if (data)
+            {
+                Instance.OpenStory(data);
+            }
+            else
+            {
+                Debug.LogError("没有记录最近编辑的故事");
+            }
+        }
+        /// <summary>
+        /// 打开故事
+        /// </summary>
+        /// <param name="data"></param>
+        public void OpenStory(Story data)
+        {
+            if (data != null)
+            {
+                if (data != Story)
+                {
+                    data.CheckNull();
+                    Story = data;
+                    Selection.activeObject = Story;
+                    StoryWindowPreference.LastOpendStory = Story;
+                    ShowNotification(new GUIContent("已打开 " + Story.name));
+                    Debug.Log("打开故事 " + AssetDatabase.GetAssetPath(Story));
+                }
+            }
+        }
+
+        //关闭
+        /// <summary>
+        /// 关闭故事
+        /// </summary>
+        private void CloseStory()
+        {
+            if (Story == null)
+            {
+                ShowNotification(new GUIContent("当前未打开故事"));
+            }
+            else
+            {
+                ShowNotification(new GUIContent("已关闭 " + Story.name));
+                Story = null;
+            }
+        }
+
+        //创建
+        /// <summary>
+        /// 创建故事
+        /// </summary>
+        private void CreateStory()
+        {
+            string path = EditorUtility.SaveFilePanelInProject("创建故事", "新故事", "Asset", "保存故事", Application.dataPath);
+            if (path == "") return;
+            Story data = CreateInstance<Story>();
+            AssetDatabase.CreateAsset(data, path);
+            Story = data;
+            OpenStory(data);
+            //AssetDatabase.Refresh();
+        }
+        /// <summary>
+        /// 创建故事节点
+        /// </summary>
+        private void CreatePlotNode()
+        {
+            if (Story != null)
+            {
+                Story.CreatePlotNode(new Rect(MousePos.x, MousePos.y, StoryWindowPreference.NodeWidth, 80));
+            }
+            else
+            {
+                ShowNotification(new GUIContent("未指定故事"));
+                if (EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点", "好的", "关闭"))
+                {
+                }
+            }
+        }
+        /// <summary>
+        /// 创建剧情节点
+        /// </summary>
+        private void CreateOptionNode()
+        {
+            if (Story != null)
+            {
+                Story.CreateOptionNode(new Rect(MousePos.x, MousePos.y, StoryWindowPreference.NodeWidth, 80));
+            }
+            else
+            {
+                ShowNotification(new GUIContent("未指定故事"));
+                if (EditorUtility.DisplayDialog("E Writer", "你需要先打开一个故事才能创建节点", "好的", "关闭"))
+                {
+                }
+            }
+        }
+        /// <summary>
+        /// 创建内容
+        /// </summary>
+        private void CreatePlot()
+        {
+            if (Node != null)
+            {
+                string path = EditorUtility.SaveFilePanelInProject("创建剧情片段", "新剧情片段", "Asset", "保存剧情片段", Application.dataPath);
+                if (path == "") return;
+                Plot plot = CreateInstance<Plot>();
+                AssetDatabase.CreateAsset(plot, path);
+                (Node as PlotNode).plot = plot;
+                //AssetDatabase.Refresh();
+            }
+        }
+
+        //保存
+        /// <summary>
+        /// 删除故事
+        /// </summary>
+        private void SaveStory()
+        {
+            if (Story != null)
+            {
+                EditorUtility.SetDirty(Story);
+                AssetDatabase.SaveAssets();
+                ShowNotification(new GUIContent("已保存 " + Story.name));
+            }
+            else
+            {
+                ShowNotification(new GUIContent("当前未打开故事"));
+            }
+        }
+
+        //删除
+        /// <summary>
+        /// 删除故事
+        /// </summary>
+        private void DeleteStory()
+        {
+            if (Story != null)
+            {
+                string str = "确认要删除故事文件 {" + Story.name + "} 吗？这将无法恢复。";
+                if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+                {
+                    string path = AssetDatabase.GetAssetPath(Story);
+                    AssetDatabase.DeleteAsset(path);
+                    AssetDatabase.Refresh();
+                    Debug.Log("已删除故事 {" + path + "}");
+                    Story = null;
+                }
+            }
+            else
+            {
+                ShowNotification(new GUIContent("当前未打开故事"));
+            }
+        }
+
+        //清除
+        /// <summary>
+        /// 清除节点临时连接
+        /// </summary>
+        private void ClearTempConnect()
+        {
+            UpNode = null;
+            DownNode = null;
+        }
+
+        //刷新
+        /// <summary>
+        /// 刷新窗口
+        /// </summary>
+        protected override void Refresh()
+        {
+            titleContent = new GUIContent("E Story", EditorGUIUtility.IconContent("EditCollider").image);
+            minSize = new Vector2(450, 400);
+
+            Menu = new GenericMenu();
+            Menu.AddItem(new GUIContent("创建剧情节点"), false, CheckMenuClick, 2);
+            Menu.AddItem(new GUIContent("创建选项节点"), false, CheckMenuClick, 3);
+            Menu.AddSeparator("");
+            Menu.AddItem(new GUIContent("清除所有连接"), false, CheckMenuClick, 7);
+            Menu.AddSeparator("");
+            Menu.AddItem(new GUIContent("删除所有剧情节点"), false, CheckMenuClick, 12);
+            Menu.AddItem(new GUIContent("删除所有选项节点"), false, CheckMenuClick, 13);
+            Menu.AddItem(new GUIContent("删除所有节点"), false, CheckMenuClick, 14);
+
+            ClearTempConnect();
+        }
+
+        ///获取
+        
+        ///设置
+        
+        ///重置
+
+        //检查
+        /// <summary>
+        /// 检查菜单点击
+        /// </summary>
+        /// <param name="obj"></param>
+        protected override void CheckMenuClick(object obj)
+        {
+            switch (obj)
+            {
+                case 1:
+                    break;
+                case 2:
+                    CreatePlotNode();
+                    break;
+                case 3:
+                    CreateOptionNode();
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
+                case 6:
+                    break;
+                case 7:
+                    break;
+                case 8:
+                    Story.RemoveNode(Node);
+                    break;
+                case 9:
+                    break;
+                case 10:
+                    break;
+                case 11:
+                    break;
+                case 12:
+                    Story.RemovePlotNodes();
+                    break;
+                case 13:
+                    Story.RemoveOptionNodes();
+                    break;
+                case 14:
+                    Story.RemoveAllNodes();
+                    break;
+
+                default:
+                    Debug.LogError("此右键菜单无实现方法");
+                    break;
+            }
         }
         /// <summary>
         /// 检查节点连接
         /// </summary>
-        private static void CheckNodeConnect()
+        private void CheckNodeConnect()
         {
-            CurrentStory.CheckNull();
-            if (upNode != null && downNode != null)
+            Story.CheckNull();
+            if (UpNode != null && DownNode != null)
             {
-                if (upNode.GetType() == typeof(PlotNode))
+                if (UpNode.GetType() == typeof(PlotNode))
                 {
-                    PlotNode pnu = upNode as PlotNode;
-                    if (downNode.GetType() == typeof(PlotNode))
+                    PlotNode pnu = UpNode as PlotNode;
+                    if (DownNode.GetType() == typeof(PlotNode))
                     {
-                        PlotNode pnd = downNode as PlotNode;
+                        PlotNode pnd = DownNode as PlotNode;
 
                         if (pnu == pnd)
                         {
-                            Instance.ShowNotification(new GUIContent("不可连接自己"));
+                            ShowNotification(new GUIContent("不可连接自己"));
                         }
                         else
                         {
@@ -540,7 +464,7 @@ namespace E.Tool
                     }
                     else
                     {
-                        OptionNode ond = downNode as OptionNode;
+                        OptionNode ond = DownNode as OptionNode;
 
                         bool isHave = false;
                         foreach (int item in pnu.nextOptionNodes)
@@ -554,7 +478,7 @@ namespace E.Tool
 
                         if (isHave)
                         {
-                            Instance.ShowNotification(new GUIContent("已存在连接"));
+                            ShowNotification(new GUIContent("已存在连接"));
                         }
                         else
                         {
@@ -564,24 +488,24 @@ namespace E.Tool
                 }
                 else
                 {
-                    OptionNode onu = upNode as OptionNode;
-                    if (downNode.GetType() == typeof(PlotNode))
+                    OptionNode onu = UpNode as OptionNode;
+                    if (DownNode.GetType() == typeof(PlotNode))
                     {
-                        PlotNode pnd = downNode as PlotNode;
+                        PlotNode pnd = DownNode as PlotNode;
 
                         onu.nextPlotNode = pnd.id;
                     }
                     else
                     {
-                        OptionNode ond = downNode as OptionNode;
+                        OptionNode ond = DownNode as OptionNode;
 
                         if (onu == ond)
                         {
-                            Instance.ShowNotification(new GUIContent("不可连接自己"));
+                            ShowNotification(new GUIContent("不可连接自己"));
                         }
                         else
                         {
-                            Instance.ShowNotification(new GUIContent("选项节点不能链接选项节点"));
+                            ShowNotification(new GUIContent("选项节点不能链接选项节点"));
                         }
                     }
                 }
@@ -589,410 +513,428 @@ namespace E.Tool
                 ClearTempConnect();
             }
         }
-
-        //清除
         /// <summary>
-        /// 清除节点临时连接
+        /// 检查当前节点
         /// </summary>
-        private static void ClearTempConnect()
+        private void CheckNode()
         {
-            upNode = null;
-            downNode = null;
+            if (Story != null && Story.plotNodes != null)
+            {
+                //获取当前选中节点
+                bool isInNode = false;
+                foreach (PlotNode item in Story.plotNodes)
+                {
+                    if (item.layout.Contains(MousePos))
+                    {
+                        isInNode = true;
+                        //选中此节点
+                        Node = item;
+                        break;
+                    }
+                }
+                foreach (OptionNode item in Story.optionNodes)
+                {
+                    if (item.layout.Contains(MousePos))
+                    {
+                        isInNode = true;
+                        //选中此节点
+                        Node = item;
+                        break;
+                    }
+                }
+
+                if (isInNode)
+                {
+                }
+                else
+                {
+                    Node = null;
+                }
+            }
+        }
+        /// <summary>
+        /// 检查鼠标移动
+        /// </summary>
+        private void CheckMouseMove()
+        {
+            MousePos = new Vector2Int((int)((Event.current.mousePosition.x) + ScrollPos.x),
+                                                 (int)((Event.current.mousePosition.y) + ScrollPos.y - Utility.GetHeightLong(1)));
+
         }
 
         //绘制
         /// <summary>
         /// 绘制窗口背景
         /// </summary>
-        private static void DrawBG()
+        protected override void DrawBG()
         {
-            int xMin = (int)(scrollPos.x);
-            int xMax = (int)(scrollPos.x + Instance.position.width);
-            int yMin = (int)(scrollPos.y);
-            int yMax = (int)(scrollPos.y + Instance.position.height);
-            int xStart = xMin - xMin % 100;
-            int yStart = yMin - yMin % 100;
+            int xMin = (int)(ScrollPos.x);
+            int xMax = (int)(ScrollPos.x + position.width);
+            int yMin = (int)(ScrollPos.y);
+            int yMax = (int)(ScrollPos.y + position.height);
+            int xStart = xMin - xMin % GridInterval;
+            int yStart = yMin - yMin % GridInterval;
             //画垂线
-            for (int i = xStart; i <= xMax; i += 100)
+            for (int i = xStart; i <= xMax; i += GridInterval)
             {
-                Vector3 start = new Vector3(i, scrollPos.y, 0);
-                Vector3 end = new Vector3(i, scrollPos.y + Instance.position.height, 0);
+                Vector2 start = new Vector2(i, ScrollPos.y);
+                Vector2 end = new Vector2(i, ScrollPos.y + position.height);
                 DrawLine(start, end);
             }
             //画平线
-            for (int i = yStart; i <= yMax; i += 100)
+            for (int i = yStart; i <= yMax; i += GridInterval)
             {
-                Vector3 start = new Vector3(scrollPos.x, i, 0);
-                Vector3 end = new Vector3(scrollPos.x + Instance.position.width, i, 0);
+                Vector2 start = new Vector2(ScrollPos.x, i);
+                Vector2 end = new Vector2(ScrollPos.x + position.width, i);
                 DrawLine(start, end);
             }
         }
         /// <summary>
-        /// 绘制窗口头
+        /// 绘制窗口顶部
         /// </summary>
-        private static void DrawHead()
+        protected override void DrawTop()
         {
-            int btnWidth = 40;
-            Rect r1 = new Rect(Top.width - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r2 = new Rect(r1.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r3 = new Rect(r2.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r4 = new Rect(r3.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r5 = new Rect(r4.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r6 = new Rect(r5.x - btnWidth - Utility.OneSpacing, Utility.OneSpacing, btnWidth, Utility.OneHeight);
-            Rect r7 = new Rect(Utility.OneSpacing * 2 + 60, Utility.OneSpacing, r6.x - Utility.OneSpacing * 3 - 60, Utility.OneHeight);
-            Rect r8 = new Rect(Utility.OneSpacing, Utility.OneSpacing, 60, Utility.OneHeight);
-
             //顶部背景
-            EditorGUI.DrawRect(Top, StoryWindowPreference.NormalNode);
+            EditorGUI.DrawRect(Top, StoryWindowPreference.Background);
 
-            //故事
-            EditorGUI.LabelField(r8, "当前故事");
-            CurrentStory = (Story)EditorGUI.ObjectField( r7, CurrentStory, typeof(Story));
-
-            //按钮
-            if (GUI.Button(r6, "创建"))
+            EditorGUILayout.BeginHorizontal();
+            if (GUILayout.Button( "创建", GUILayout.ExpandWidth(false)))
             {
                 CreateStory();
             }
-            if (GUI.Button(r5, "删除"))
+
+            if (Story)
             {
-                DeleteCurrentStory();
+                if (GUILayout.Button("删除", GUILayout.ExpandWidth(false)))
+                {
+                    DeleteStory();
+                }
+                if (GUILayout.Button("关闭", GUILayout.ExpandWidth(false)))
+                {
+                    CloseStory();
+                }
+                if (GUILayout.Button("保存", GUILayout.ExpandWidth(false)))
+                {
+                    SaveStory();
+                }
+                if (GUILayout.Button(IsZoomOut ? "详情" : "缩略", GUILayout.ExpandWidth(false)))
+                {
+                    IsZoomOut = !IsZoomOut;
+                }
             }
-            if (GUI.Button(r4, "关闭"))
-            {
-                CloseCurrentStory();
-            }
-            if (GUI.Button(r3, "保存"))
-            {
-                SaveCurrentStory();
-            }
-            if (GUI.Button(r2, "刷新"))
+            
+            Story data = (Story)EditorGUILayout.ObjectField(Story, typeof(Story));
+            OpenStory(data);
+
+            if (GUILayout.Button( "刷新", GUILayout.ExpandWidth(false)))
             {
                 Refresh();
             }
-            if (GUI.Button(r1, "设置"))
+            if (GUILayout.Button( "设置", GUILayout.ExpandWidth(false)))
             {
-                Instance.ShowNotification(new GUIContent("请前往 Edit -> Preferences -> E Story 进行编辑"));
+                ShowNotification(new GUIContent("请前往 \"Edit -> Preferences -> E Story\" 进行编辑"));
             }
+            EditorGUILayout.EndHorizontal();
         }
         /// <summary>
-        /// 绘制窗口足
+        /// 绘制窗口底部
         /// </summary>
-        private static void DrawFoot()
+        protected override void DrawButtom()
         {
             //EditorGUI.DrawRect(Buttom, StoryWindowPreference.NormalNode);
-            string mousePos = "X: " + StoryWindow.mousePos.x + "  Y: " + StoryWindow.mousePos.y;
+            string mousePos = "X: " + MousePos.x + "  Y: " + MousePos.y;
             Rect r1 = new Rect(Utility.OneSpacing, Center.y + Center.height - Utility.GetHeightMiddle(2) + 10, 120, Utility.OneHeight);
             EditorGUI.LabelField(r1, mousePos);
         }
         /// <summary>
+        /// 绘制窗口中心
+        /// </summary>
+        protected override void DrawCenter()
+        {
+            Color c = GUI.color;
+            if (Story != null)
+            {
+                Story.CheckNull();
+                if (Story.plotNodes != null)
+                {
+                    for (int i = 0; i < Story.plotNodes.Count; i++)
+                    {
+                        PlotNode node = Story.plotNodes[i];
+                        GUI.color = Node == node ? Color.yellow : c;
+
+                        string id = string.Format("{0}-{1}-{2}-{3}", node.id.chapter, node.id.scene, node.id.part, node.id.branch);
+                        node.layout = GUI.Window(i, node.layout, DrawPlotNode, id);
+
+                        if (node.branchType != PlotBranchType.独立)
+                        {
+                            //节点类型链接按钮
+                            switch (node.timeType)
+                            {
+                                case PlotTimeType.过渡:
+                                    DrawUpButton(node);
+                                    DrawDownButton(node);
+                                    break;
+                                case PlotTimeType.开局:
+                                    DrawDownButton(node);
+                                    break;
+                                case PlotTimeType.结局:
+                                    DrawUpButton(node);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        //连接线
+                        DrawNodeCurve(node);
+                    }
+                    GUI.color = c;
+                }
+                if (Story.optionNodes != null)
+                {
+                    for (int i = 0; i < Story.optionNodes.Count; i++)
+                    {
+                        OptionNode node = Story.optionNodes[i];
+                        GUI.color = Node == node ? Color.yellow : c;
+
+                        node.layout = GUI.Window(i + Story.plotNodes.Count, node.layout, DrawOptionNode, node.id.ToString());
+
+                        //链接按钮
+                        DrawUpButton(node);
+                        DrawDownButton(node);
+                        DrawNodeCurve(node);
+                    }
+                    GUI.color = c;
+                }
+            }
+            else
+            {
+
+            }
+        }
+        /// <summary>
         /// 绘制右键菜单
         /// </summary>
-        private static void DrawContextMenu()
+        protected override void DrawMenu()
         {
-            GenericMenu menu = new GenericMenu();
-            if (CurrentStory != null)
+            if (Event.current.type == EventType.ContextClick)
             {
-                menu.AddItem(new GUIContent("创建剧情节点"), false, DoMethod, 2);
-                menu.AddItem(new GUIContent("创建选项节点"), false, DoMethod, 3);
-
-                if (CurrentNode != null)
+                if (UpNode == null && DownNode == null)
                 {
-                    if (CurrentNode.GetType() == typeof(PlotNode))
+                    if (Story != null)
                     {
-                        menu.AddItem(new GUIContent("创建剧情片段"), false, DoMethod, 1);
-
-                        menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("设为起始节点"), false, DoMethod, 9);
-                        menu.AddItem(new GUIContent("设为中间节点"), false, DoMethod, 10);
-                        menu.AddItem(new GUIContent("设为结局节点"), false, DoMethod, 11);
+                        if (Menu == null)
+                        {
+                            Refresh();
+                        }
+                        Menu.ShowAsContext();
+                        Event.current.Use();
                     }
-
-                    menu.AddSeparator("");
-                    menu.AddItem(new GUIContent("清除上行连接"), false, DoMethod, 5);
-                    menu.AddItem(new GUIContent("清除下行连接"), false, DoMethod, 6);
-                    menu.AddItem(new GUIContent("清除所有连接"), false, DoMethod, 7);
-
-                    menu.AddSeparator("");
-                    menu.AddItem(new GUIContent("删除选中节点"), false, DoMethod, 8);
                 }
                 else
                 {
-                    menu.AddSeparator("");
-                }
-                menu.AddItem(new GUIContent("删除所有剧情节点"), false, DoMethod, 12);
-                menu.AddItem(new GUIContent("删除所有选项节点"), false, DoMethod, 13);
-                menu.AddItem(new GUIContent("删除所有节点"), false, DoMethod, 14);
-            }
-            menu.ShowAsContext();
-        }
-        /// <summary>
-        /// 绘制故事
-        /// </summary>
-        private static void DrawStory()
-        {
-            if (CurrentStory != null)
-            {
-                if (CurrentStory.plotNodes != null)
-                {
-                    foreach (PlotNode item in CurrentStory.plotNodes)
-                    {
-                        DrawPlotNode(item);
-                    }
-                }
-                if (CurrentStory.optionNodes != null)
-                {
-                    foreach (OptionNode item in CurrentStory.optionNodes)
-                    {
-                        DrawOptionNode(item);
-                    }
+                    ClearTempConnect();
                 }
             }
         }
         /// <summary>
         /// 绘制剧情节点
         /// </summary>
-        private static void DrawPlotNode(PlotNode node)
+        private void DrawPlotNode(int index)
         {
+            PlotNode node = Story.plotNodes[index];
             if (node != null)
             {
-                int labelWidth = 60;
-                int inputWidth = 30;
-                node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, StoryWindowPreference.NodeSize.y);
-                Rect r0 = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
-
-                Rect r1 = new Rect(r0.x + Utility.OneSpacing, r0.y + Utility.OneSpacing, r0.width - Utility.OneSpacing * 2, Utility.OneHeight);
-                Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, Utility.OneHeight);
-                Rect r1_1 = new Rect(r1_0.x + labelWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
-                Rect r1_2 = new Rect(r1_1.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
-                Rect r1_3 = new Rect(r1_2.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
-                Rect r1_4 = new Rect(r1_3.x + inputWidth + Utility.OneSpacing, r1.y, inputWidth, Utility.OneHeight);
-                Rect r1_5 = new Rect(r1_4.x + inputWidth + Utility.OneSpacing, r1.y, labelWidth, Utility.OneHeight);
-
-                Rect r2 = new Rect(r1.x, r1.y + Utility.GetHeightMiddle(1), r1.width, StoryWindowPreference.NodeSize.y - Utility.GetHeightLong(1) * 2);
-                Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, Utility.OneHeight);
-                Rect r2_1 = new Rect(r2.x + labelWidth + Utility.OneSpacing, r2.y, r2.width - labelWidth - Utility.OneSpacing, r2.height);
-
-                Rect r3 = new Rect(r2.x, r0.y + r0.height - Utility.GetHeightMiddle(1), r2.width, Utility.OneHeight);
-                Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, Utility.OneHeight);
-                Rect r3_1 = new Rect(r3.x + labelWidth + Utility.OneSpacing, r3.y, r3.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
-
-                //节点背景
-                if (CurrentNode != null)
+                if (IsZoomOut)
                 {
-                    EditorGUI.DrawRect(r0, CurrentNode == node ? StoryWindowPreference.SelectNode : StoryWindowPreference.NormalNode);
+                    node.layout.height = Utility.GetHeightLong(2) + Utility.OneSpacing;
                 }
                 else
                 {
-                    EditorGUI.DrawRect(r0, StoryWindowPreference.NormalNode);
+                    string[] yan = node.description.Split((char)10);
+                    node.layout.height = Utility.GetHeightLong(3) + 15 * yan.Length + Utility.OneSpacing * 4;
                 }
 
-                //节点类型链接按钮
-                switch (node.type)
+                Rect r1 = new Rect(Utility.OneSpacing * 2, Utility.OneSpacing, 50, Utility.OneHeight);
+                Rect r2 = new Rect(r1.x + r1.width + Utility.OneSpacing, Utility.OneSpacing, 50, Utility.OneHeight);
+                Rect r3 = new Rect(node.layout.width - Utility.GetHeightLong(1) - Utility.OneSpacing, Utility.OneSpacing, Utility.GetHeightMiddle(1), Utility.OneHeight);
+                Rect r4 = new Rect(r3.x - r3.width - Utility.OneSpacing, r3.y, Utility.GetHeightMiddle(1), Utility.OneHeight);
+
+                EditorGUIUtility.labelWidth = Utility.LabelWidth;
+
+                //删除
+                if (GUI.Button(r3, new GUIContent("X", "删除节点")))
                 {
-                    case PlotType.过渡剧情:
-                        DrawUpButton(node);
-                        DrawDownButton(node);
-                        break;
-                    case PlotType.起始剧情:
-                        DrawDownButton(node);
-                        break;
-                    case PlotType.结局剧情:
-                        DrawUpButton(node);
-                        break;
-                    default:
-                        break;
+                    Story.RemoveNode(node);
+                    return;
                 }
 
-                //编号
-                EditorGUI.LabelField(r1_0, "剧情编号");
-                int chapter = EditorGUI.IntField(r1_1, node.id.chapter);
-                int scene = EditorGUI.IntField(r1_2, node.id.scene);
-                int part = EditorGUI.IntField(r1_3, node.id.part);
-                int branch = EditorGUI.IntField(r1_4, node.id.branch);
-                PlotID id = new PlotID(chapter, scene, part, branch);
-                if (!id.Equals(node.id))
+                if (!IsZoomOut)
                 {
-                    CurrentStory.SetPlotID(node, id);
-                }
-                //主线
-                bool ismain = EditorGUI.ToggleLeft(r1_5, "主线", node.isMainPlot);
-                if (ismain != node.isMainPlot)
-                {
-                    node.isMainPlot = ismain;
-                }
+                    //节点分支类型
+                    PlotBranchType tp = (PlotBranchType)EditorGUI.EnumPopup(r1, node.branchType);
+                    if (tp != node.branchType)
+                    {
+                        Story.SetNodeBranchType(node, tp);
+                    }
+                    if (tp != PlotBranchType.独立)
+                    {
+                        //节点时间类型
+                        PlotTimeType tp2 = (PlotTimeType)EditorGUI.EnumPopup(r2, node.timeType);
+                        if (tp2 != node.timeType)
+                        {
+                            Story.SetNodeTimeType(node, tp2);
+                        }
+                        //清空
+                        if (GUI.Button(r4, new GUIContent("O", "清空链接")))
+                        {
+                            Story.ClearNodeUpChoices(Node);
+                            Story.ClearNodeDownChoices(Node);
+                        }
+                    }
 
-                //简介
-                EditorGUI.LabelField(r2_0, "剧情简介");
-                node.description = EditorGUI.TextArea(r2_1, node.description);
+                    //编号
+                    EditorGUILayout.BeginHorizontal();
+                    int chapter = EditorGUILayout.IntField("剧情编号", node.id.chapter);
+                    int scene = EditorGUILayout.IntField(node.id.scene);
+                    int part = EditorGUILayout.IntField(node.id.part);
+                    int branch = EditorGUILayout.IntField(node.id.branch);
+                    PlotID id = new PlotID(chapter, scene, part, branch);
+                    if (!id.Equals(node.id)) Story.SetPlotID(node, id);
+                    EditorGUILayout.EndHorizontal();
+
+                }
 
                 //内容
-                EditorGUI.LabelField(r3_0, "剧情片段");
-                node.plot = (Plot)EditorGUI.ObjectField(r3_1, node.plot, typeof(Plot));
-
-                //连接线
-                if (node.nextOptionNodes != null)
+                EditorGUILayout.BeginHorizontal();
+                node.plot = (Plot)EditorGUILayout.ObjectField(IsZoomOut ? "" : "剧情片段", node.plot, typeof(Plot));
+                if (!IsZoomOut)
                 {
-                    foreach (int item in node.nextOptionNodes)
+                    if (GUILayout.Button(new GUIContent("+", "创建剧情片段"), GUILayout.ExpandWidth(false)))
                     {
-                        OptionNode on = CurrentStory.GetNode(item);
-                        if (on == null) continue;
-                        Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
-                        Vector2 end = new Vector2(on.layout.x - Utility.OneHeight, on.layout.y + on.layout.height / 2);
-
-                        PlotNode pn = CurrentStory.GetNode(on.nextPlotNode);
-                        bool isMainPlot = false;
-                        if (pn != null)
-                        {
-                            isMainPlot = node.isMainPlot && pn.isMainPlot;
-                        }
-                        DrawCurve(start, end, isMainPlot, Vector3.right, Vector3.left);
+                        CreatePlot();
                     }
                 }
-                if (!node.nextPlotNode.Equals(new PlotID()))
-                {
-                    PlotNode pn = CurrentStory.GetNode(node.nextPlotNode);
-                    if (pn == null) return;
-                    Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
-                    Vector2 end = new Vector2(pn.layout.x - Utility.OneHeight, pn.layout.y + pn.layout.height / 2);
+                EditorGUILayout.EndHorizontal();
 
-                    bool isMainPlot = node.isMainPlot && pn.isMainPlot;
-                    DrawCurve(start, end, isMainPlot, Vector3.right, Vector3.left);
+                if (!IsZoomOut)
+                {
+                    //简介
+                    node.description = EditorGUILayout.TextArea(node.description);
                 }
             }
+
+            GUI.DragWindow(new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y));
         }
         /// <summary>
         /// 绘制选项节点
         /// </summary>
-        private static void DrawOptionNode(OptionNode node)
+        private void DrawOptionNode(int index)
         {
-            int labelWidth = 60;
-            int cp = node.comparisons.Count;
-            int ch = node.changes.Count;
-            int lines = cp + ch;
-            node.layout = new RectInt(node.layout.x, node.layout.y, StoryWindowPreference.NodeSize.x, (int)(Utility.GetHeightMiddle(1) * (lines + 3) + Utility.OneSpacing));
-            Rect r0 = new Rect(node.layout.x, node.layout.y, node.layout.width, node.layout.height);
+            OptionNode node = Story.optionNodes[index - Story.plotNodes.Count];
 
-            Rect r1 = new Rect(r0.x + Utility.OneSpacing, r0.y + Utility.OneSpacing, r0.width - Utility.OneSpacing * 2, Utility.OneHeight);
-            Rect r1_0 = new Rect(r1.x, r1.y, labelWidth, Utility.OneHeight);
-            Rect r1_1 = new Rect(r1.x + labelWidth + Utility.OneSpacing, r1.y, r1.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
-
-            Rect r2 = new Rect(r1.x, r1.y + Utility.GetHeightMiddle(1), r1.width, Utility.GetHeightMiddle(1) * (cp + 1) - Utility.OneSpacing);
-            Rect r2_0 = new Rect(r2.x, r2.y, labelWidth, Utility.OneHeight);
-            Rect r2_1 = new Rect(r2.x + labelWidth + Utility.OneSpacing, r2.y, r2.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
-            Rect r2_2 = new Rect(r2_1.x, r2_1.y + Utility.GetHeightMiddle(1), r2_1.width, r2.height - Utility.GetHeightMiddle(1));
-
-            Rect r3 = new Rect(r2.x, r2.y + r2.height + Utility.OneSpacing, r2.width, Utility.GetHeightMiddle(1) * (ch + 1) - Utility.OneSpacing);
-            Rect r3_0 = new Rect(r3.x, r3.y, labelWidth, Utility.OneHeight);
-            Rect r3_1 = new Rect(r3.x + labelWidth + Utility.OneSpacing, r3.y, r3.width - labelWidth - Utility.OneSpacing, Utility.OneHeight);
-            Rect r3_2 = new Rect(r3_1.x, r3_1.y + Utility.GetHeightMiddle(1), r3_1.width, r3.height - Utility.GetHeightMiddle(1));
-
-            //节点背景
-            if (CurrentNode != null)
+            if (IsZoomOut)
             {
-                EditorGUI.DrawRect(r0, CurrentNode == node ? StoryWindowPreference.SelectNode : StoryWindowPreference.NormalNode);
+                node.layout.height = Utility.GetHeightLong(2) + Utility.OneSpacing;
             }
             else
             {
-                EditorGUI.DrawRect(r0, StoryWindowPreference.NormalNode);
+                int cp = node.comparisons.Count;
+                int ch = node.changes.Count;
+                int lines = cp + ch;
+                node.layout.height = Utility.GetHeightLong(lines + 4) + Utility.OneSpacing * 2;
+            }
+            Rect r1 = new Rect(node.layout.width - Utility.GetHeightLong(1) - Utility.OneSpacing, Utility.OneSpacing, Utility.GetHeightMiddle(1), Utility.OneHeight);
+            Rect r4 = new Rect(r1.x - r1.width - Utility.OneSpacing, r1.y, Utility.GetHeightMiddle(1), Utility.OneHeight);
+
+            //删除
+            if (GUI.Button(r1, new GUIContent("X", "删除节点")))
+            {
+                Story.RemoveNode(node);
+                return;
             }
 
-            //链接按钮
-            DrawUpButton(node);
-            DrawDownButton(node);
-
+            if (!IsZoomOut)
+            {
+                //清空
+                if (GUI.Button(r4, new GUIContent("O", "清空链接")))
+                {
+                    Story.ClearNodeUpChoices(Node);
+                    Story.ClearNodeDownChoices(Node);
+                }
+            }
             //选项描述
-            EditorGUI.LabelField(r1_0, "选项描述");
-            node.description = EditorGUI.TextField(r1_1, node.description);
+            node.description = EditorGUILayout.TextField(node.description);
 
-            //通过条件
-            //EditorGUI.DrawRect(r2, StoryWindowPreference.SelectNode);
-            EditorGUI.LabelField(r2_0, "通过条件");
-            if (GUI.Button(r2_1, "+"))
+            if (!IsZoomOut)
             {
-                node.comparisons.Add(new ConditionComparison());
-            }
-            for (int j = 0; j < node.comparisons.Count; j++)
-            {
-                int width = 80;
-                Rect re0 = new Rect(r2_2.x, r2_2.y + Utility.GetHeightMiddle(1) * j, r2_2.width, Utility.OneHeight);
-                Rect re1 = new Rect(re0.x, re0.y, width, Utility.OneHeight);
-                Rect re2 = new Rect(re1.x + width + Utility.OneSpacing, re1.y, width, Utility.OneHeight);
-                Rect re3 = new Rect(re2.x + width + Utility.OneSpacing, re2.y, re0.width - 160 - Utility.OneSpacing * 3 - Utility.OneHeight, Utility.OneHeight);
-                Rect re4 = new Rect(re3.x + re3.width + Utility.OneSpacing, re3.y, Utility.OneHeight, Utility.OneHeight);
-
-                node.comparisons[j].keyIndex = EditorGUI.Popup(re1, node.comparisons[j].keyIndex, CurrentStory.ConditionKeys);
-                node.comparisons[j].comparison = (Comparison)EditorGUI.EnumPopup(re2, GUIContent.none, node.comparisons[j].comparison);
-                node.comparisons[j].value = EditorGUI.IntField(re3, GUIContent.none, node.comparisons[j].value);
-
-                if (GUI.Button(re4, "X"))
+                //通过条件
+                EditorGUILayout.BeginHorizontal();
+                if (GUILayout.Button("添加通过条件"))
                 {
-                    node.comparisons.RemoveAt(j);
-                    j--;
-                }
-            }
-
-            //数值变动
-            //EditorGUI.DrawRect(r3, StoryWindowPreference.SelectNode);
-            EditorGUI.LabelField(r3_0, "数值变动");
-            if (GUI.Button(r3_1, "+"))
-            {
-                node.changes.Add(new ConditionChange());
-            }
-            for (int j = 0; j < node.changes.Count; j++)
-            {
-                int width = 80;
-                Rect re0 = new Rect(r3_2.x, r3_2.y + Utility.GetHeightMiddle(1) * j, r3_2.width, Utility.OneHeight);
-                Rect re1 = new Rect(re0.x, re0.y, width, Utility.OneHeight);
-                Rect re2 = new Rect(re1.x + width + Utility.OneSpacing, re1.y, width, Utility.OneHeight);
-                Rect re3 = new Rect(re2.x + width + Utility.OneSpacing, re2.y, re0.width - 160 - Utility.OneSpacing * 3 - Utility.OneHeight, Utility.OneHeight);
-                Rect re4 = new Rect(re3.x + re3.width + Utility.OneSpacing, re3.y, Utility.OneHeight, Utility.OneHeight);
-
-                node.changes[j].keyIndex = EditorGUI.Popup(re1, node.changes[j].keyIndex, CurrentStory.ConditionKeys);
-                node.changes[j].change = (Change)EditorGUI.EnumPopup(re2, GUIContent.none, node.changes[j].change);
-                node.changes[j].value = EditorGUI.IntField(re3, GUIContent.none, node.changes[j].value);
-
-                if (GUI.Button(re4, "X"))
-                {
-                    node.changes.RemoveAt(j);
-                    j--;
-                }
-            }
-
-            //连接线
-            if (!node.nextPlotNode.Equals(new PlotID()))
-            {
-                PlotNode pn = CurrentStory.GetNode(node.nextPlotNode);
-                if (pn == null) return;
-                Vector2 start = new Vector2(r0.x + r0.width + Utility.OneHeight, r0.y + r0.height / 2);
-                Vector2 end = new Vector2(pn.layout.x - Utility.OneHeight, pn.layout.y + pn.layout.height / 2);
-
-                bool isLastMainPlot = false;
-                foreach (PlotNode item in CurrentStory.plotNodes)
-                {
-                    if (item.nextOptionNodes.Contains(node.id))
+                    if (Story.conditions.Count > 0)
                     {
-                        if (item.isMainPlot)
-                        {
-                            isLastMainPlot = true;
-                            break;
-                        }
+                        node.comparisons.Add(new ConditionComparison());
+                    }
+                    else
+                    {
+                        ShowNotification(new GUIContent("未设置条件"));
                     }
                 }
-                bool isMainPlot = pn.isMainPlot && isLastMainPlot;
-                DrawCurve(start, end, isMainPlot, Vector3.right, Vector3.left);
+                EditorGUILayout.EndHorizontal();
+
+                for (int j = 0; j < node.comparisons.Count; j++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    node.comparisons[j].keyIndex = EditorGUILayout.Popup(node.comparisons[j].keyIndex, Story.ConditionKeys);
+                    node.comparisons[j].comparison = (Comparison)EditorGUILayout.EnumPopup(node.comparisons[j].comparison);
+                    node.comparisons[j].value = EditorGUILayout.IntField(node.comparisons[j].value);
+                    if (GUILayout.Button(new GUIContent("X", "移除通过条件"), GUILayout.ExpandWidth(false)))
+                    {
+                        node.comparisons.RemoveAt(j);
+                        j--;
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+
+                //数值变动
+                if (GUILayout.Button("添加数值变动"))
+                {
+                    if (Story.conditions.Count > 0)
+                    {
+                        node.changes.Add(new ConditionChange());
+                    }
+                    else
+                    {
+                        ShowNotification(new GUIContent("未设置条件"));
+                    }
+                }
+                for (int j = 0; j < node.changes.Count; j++)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    node.changes[j].keyIndex = EditorGUILayout.Popup(node.changes[j].keyIndex, Story.ConditionKeys);
+                    node.changes[j].change = (Change)EditorGUILayout.EnumPopup(node.changes[j].change);
+                    node.changes[j].value = EditorGUILayout.IntField(node.changes[j].value);
+                    if (GUILayout.Button(new GUIContent("X", "移除数值变动"), GUILayout.ExpandWidth(false)))
+                    {
+                        node.changes.RemoveAt(j);
+                        j--;
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
             }
+
+            GUI.DragWindow(new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y));
         }
         /// <summary>
         /// 绘制节点上按钮
         /// </summary>
         /// <param name="node"></param>
-        private static void DrawUpButton(Node node)
+        private void DrawUpButton(Node node)
         {
-            Rect rect = new Rect(node.layout.x - Utility.OneHeight, node.layout.y, Utility.OneHeight, node.layout.height);
-            if (GUI.Button(rect, "←"))
+            Rect rect = new Rect(node.layout.x + (node.layout.width - 25) / 2, node.layout.y - 25, 25, 25);
+            if (GUI.Button(rect, new GUIContent("O", "链接上一个节点")))
             {
-                downNode = node;
+                DownNode = node;
                 CheckNodeConnect();
             }
         }
@@ -1000,31 +942,98 @@ namespace E.Tool
         /// 绘制节点下按钮
         /// </summary>
         /// <param name="node"></param>
-        private static void DrawDownButton(Node node)
+        private void DrawDownButton(Node node)
         {
-            Rect rect = new Rect(node.layout.x + node.layout.width, node.layout.y, Utility.OneHeight, node.layout.height);
-            if (GUI.Button(rect, "→"))
+            Rect rect = new Rect(node.layout.x + (node.layout.width - 25) / 2, node.layout.y + node.layout.height, 25, 25);
+            if (GUI.Button(rect, new GUIContent("O", "链接下一个节点")))
             {
-                upNode = node;
+                UpNode = node;
                 CheckNodeConnect();
+            }
+        }
+        /// <summary>
+        /// 绘制连接线
+        /// </summary>
+        private void DrawNodeCurve(Node node)
+        {
+            if (node.GetType() == typeof(PlotNode))
+            {
+                PlotNode pn = node as PlotNode;
+
+                if (pn.nextOptionNodes != null)
+                {
+                    foreach (int item in pn.nextOptionNodes)
+                    {
+                        OptionNode on = Story.GetNode(item);
+                        if (on == null) continue;
+                        Vector2 start = new Vector2(pn.layout.x + pn.layout.width / 2, pn.layout.y + pn.layout.height + 25);
+                        Vector2 end = new Vector2(on.layout.x + on.layout.width / 2, on.layout.y - 25);
+
+                        PlotNode next = Story.GetNode(on.nextPlotNode);
+                        bool isMainPlot = false;
+                        if (next != null)
+                        {
+                            isMainPlot = pn.branchType == PlotBranchType.主线 && next.branchType == PlotBranchType.主线;
+                        }
+                        DrawCurve(start, end, isMainPlot, Vector3.up, Vector3.down);
+                    }
+                }
+                if (!pn.nextPlotNode.Equals(new PlotID()))
+                {
+                    PlotNode next = Story.GetNode(pn.nextPlotNode);
+                    if (next == null) return;
+                    Vector2 start = new Vector2(pn.layout.x + pn.layout.width / 2, pn.layout.y + pn.layout.height + 25);
+                    Vector2 end = new Vector2(next.layout.x + next.layout.width / 2, next.layout.y - 25);
+
+                    bool isMainPlot = pn.branchType == PlotBranchType.主线 && next.branchType == PlotBranchType.主线;
+                    DrawCurve(start, end, isMainPlot, Vector3.up, Vector3.down);
+                }
+            }
+            else
+            {
+                OptionNode on = node as OptionNode;
+
+                //连接线
+                if (!on.nextPlotNode.Equals(new PlotID()))
+                {
+                    PlotNode next = Story.GetNode(on.nextPlotNode);
+                    if (next == null) return;
+                    Vector2 start = new Vector2(on.layout.x + on.layout.width / 2, on.layout.y + on.layout.height + 25);
+                    Vector2 end = new Vector2(next.layout.x + next.layout.width / 2, next.layout.y - 25);
+
+                    bool isLastMainPlot = false;
+                    foreach (PlotNode item in Story.plotNodes)
+                    {
+                        if (item.nextOptionNodes.Contains(on.id))
+                        {
+                            if (item.branchType == PlotBranchType.主线)
+                            {
+                                isLastMainPlot = true;
+                                break;
+                            }
+                        }
+                    }
+                    bool isMainPlot = next.branchType == PlotBranchType.主线 && isLastMainPlot;
+                    DrawCurve(start, end, isMainPlot, Vector3.up, Vector3.down);
+                }
             }
         }
         /// <summary>
         /// 绘制节点预览连接线
         /// </summary>
-        private static void DrawTempCurve()
+        private void DrawTempCurve()
         {
-            if (upNode != null)
+            if (UpNode != null)
             {
-                Vector2 start = new Vector2(upNode.layout.x + upNode.layout.width + Utility.OneHeight, upNode.layout.y + upNode.layout.height / 2);
-                Vector2 end = mousePos;
-                DrawCurve(start, end, true, Vector3.right, Vector3.left);
+                Vector2 start = new Vector2(UpNode.layout.x + UpNode.layout.width / 2, UpNode.layout.y + UpNode.layout.height + 25);
+                Vector2 end = MousePos;
+                DrawCurve(start, end, true, Vector3.up, Vector3.down);
             }
-            if (downNode != null)
+            if (DownNode != null)
             {
-                Vector2 start = mousePos;
-                Vector2 end = new Vector2(downNode.layout.x - Utility.OneHeight, downNode.layout.y + downNode.layout.height / 2);
-                DrawCurve(start, end, true, Vector3.right, Vector3.left);
+                Vector2 start = MousePos;
+                Vector2 end = new Vector2(DownNode.layout.x + DownNode.layout.width / 2, DownNode.layout.y - 25);
+                DrawCurve(start, end, true, Vector3.up, Vector3.down);
             }
         }
         /// <summary>
@@ -1033,12 +1042,12 @@ namespace E.Tool
         /// <param name="start">起始节点窗口</param>
         /// <param name="end">结束节点窗口</param>
         /// <param name="isMainLine">是否绘制成主线高亮颜色</param>
-        private static void DrawCurve(Vector2 start, Vector2 end, bool isMainLine, Vector3 startDirc, Vector3 endDirc)
+        private void DrawCurve(Vector2 start, Vector2 end, bool isMainLine, Vector3 startDirc, Vector3 endDirc)
         {
             Vector3 startPos = new Vector3(start.x, start.y, 0);
             Vector3 endPos = new Vector3(end.x, end.y, 0);
-            Vector3 startTan = startPos + startDirc * 50;
-            Vector3 endTan = endPos + endDirc * 50;
+            Vector3 startTan = startPos + startDirc * BendingFactor;
+            Vector3 endTan = endPos + endDirc * BendingFactor;
             //绘制阴影
             for (int i = 0; i < 3; i++)
             {
@@ -1053,15 +1062,6 @@ namespace E.Tool
             {
                 Handles.DrawBezier(startPos, endPos, startTan, endTan, StoryWindowPreference.BranchLine, null, 3);
             }
-        }
-        /// <summary>
-        /// 绘制直线
-        /// </summary>
-        /// <param name="start"></param>
-        /// <param name="end"></param>
-        private static void DrawLine(Vector3 start, Vector3 end)
-        {
-            Handles.DrawBezier(start, end, start, end, new Color(0, 0, 0, 0.1f), null, 2);
         }
     }
 }

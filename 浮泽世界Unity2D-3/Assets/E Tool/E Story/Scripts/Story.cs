@@ -9,11 +9,15 @@ namespace E.Tool
     [CreateAssetMenu(menuName = "E Story", order = 0)]
     public class Story : ScriptableObject
     {
-        [Tooltip("故事描述"), TextArea(1, 10)] public string description;
+        public string description;
         public List<PlotNode> plotNodes = new List<PlotNode>();
         public List<OptionNode> optionNodes = new List<OptionNode>();
         public List<Condition> conditions = new List<Condition>();
+        public bool isZoomOut = false;
 
+        /// <summary>
+        /// 条件集合
+        /// </summary>
         public string[] ConditionKeys
         {
             get
@@ -35,13 +39,31 @@ namespace E.Tool
                 return keys;
             }
         }
+        /// <summary>
+        /// 结局数量
+        /// </summary>
+        public int EndingCount
+        {
+            get
+            {
+                int count = 0;
+                foreach (PlotNode item in plotNodes)
+                {
+                    if (item.timeType == PlotTimeType.结局)
+                    {
+                        count++;
+                    }
+                }
+                return count;
+            }
+        }
 
         /// <summary>
         /// 创建剧情节点
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        public PlotNode CreatePlotNode(RectInt rect)
+        public PlotNode CreatePlotNode(Rect rect)
         {
             if (plotNodes == null)
             {
@@ -62,7 +84,7 @@ namespace E.Tool
         /// </summary>
         /// <param name="rect"></param>
         /// <returns></returns>
-        public OptionNode CreateOptionNode(RectInt rect)
+        public OptionNode CreateOptionNode(Rect rect)
         {
             if (optionNodes == null)
             {
@@ -145,13 +167,13 @@ namespace E.Tool
             return null;
         }
         /// <summary>
-        /// 获取节点
+        /// 获取开局节点
         /// </summary>
         public PlotNode GetStartNode()
         {
             foreach (PlotNode item in plotNodes)
             {
-                if (item.type == PlotType.起始剧情)
+                if (item.timeType == PlotTimeType.开局)
                 {
                     return item;
                 }
@@ -166,7 +188,7 @@ namespace E.Tool
             List<PlotNode> nodes = new List<PlotNode>();
             foreach (PlotNode item in plotNodes)
             {
-                if (item.type == PlotType.结局剧情)
+                if (item.timeType == PlotTimeType.结局)
                 {
                     nodes.Add(item);
                 }
@@ -211,33 +233,56 @@ namespace E.Tool
             node.id = newID;
         }
         /// <summary>
-        /// 设置剧情节点类型
+        /// 设置剧情分支类型
         /// </summary>
-        public void SetNodeType(PlotNode node, PlotType nodeType)
+        public void SetNodeBranchType(PlotNode node, PlotBranchType type)
         {
             if (IsContainID(node.id))
             {
-                switch (nodeType)
+                switch (type)
                 {
-                    case PlotType.过渡剧情:
+                    case PlotBranchType.主线:
                         break;
-                    case PlotType.起始剧情:
+                    case PlotBranchType.支线:
+                        break;
+                    case PlotBranchType.独立:
+                        ClearNodeDownChoices(node);
+                        ClearNodeUpChoices(node);
+                        break;
+                    default:
+                        break;
+                }
+                node.branchType = type;
+            }
+        }
+        /// <summary>
+        /// 设置剧情时间类型
+        /// </summary>
+        public void SetNodeTimeType(PlotNode node, PlotTimeType type)
+        {
+            if (IsContainID(node.id))
+            {
+                switch (type)
+                {
+                    case PlotTimeType.过渡:
+                        break;
+                    case PlotTimeType.开局:
                         foreach (PlotNode item in plotNodes)
                         {
-                            if (item.type == PlotType.起始剧情)
+                            if (item.timeType == PlotTimeType.开局)
                             {
-                                item.type = PlotType.过渡剧情;
+                                item.timeType = PlotTimeType.过渡;
                             }
                         }
                         ClearNodeUpChoices(node);
                         break;
-                    case PlotType.结局剧情:
+                    case PlotTimeType.结局:
                         ClearNodeDownChoices(node);
                         break;
                     default:
                         break;
                 }
-                node.type = nodeType;
+                node.timeType = type;
             }
         }
 
@@ -258,6 +303,40 @@ namespace E.Tool
                 {
                     optionNodes.Remove(node as OptionNode);
                 }
+            }
+        }
+        /// <summary>
+        /// 移除剧情节点
+        /// </summary>
+        public void RemovePlotNodes()
+        {
+            string str = "确认要清空所有剧情节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+            {
+                plotNodes.Clear();
+            }
+        }
+        /// <summary>
+        /// 移除选项节点
+        /// </summary>
+        public void RemoveOptionNodes()
+        {
+            string str = "确认要清空所有选项节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+            {
+                optionNodes.Clear();
+            }
+        }
+        /// <summary>
+        /// 移除所有节点
+        /// </summary>
+        public void RemoveAllNodes()
+        {
+            string str = "确认要清空所有节点吗？";
+            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
+            {
+                plotNodes.Clear();
+                optionNodes.Clear();
             }
         }
 
@@ -314,40 +393,6 @@ namespace E.Tool
                         item.nextOptionNodes.RemoveAll(x => x == on.id);
                     }
                 }
-            }
-        }
-        /// <summary>
-        /// 清空剧情节点
-        /// </summary>
-        public void ClearPlotNodes()
-        {
-            string str = "确认要清空所有剧情节点吗？";
-            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
-            {
-                plotNodes.Clear();
-            }
-        }
-        /// <summary>
-        /// 清空选项节点
-        /// </summary>
-        public void ClearOptionNodes()
-        {
-            string str = "确认要清空所有选项节点吗？";
-            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
-            {
-                optionNodes.Clear();
-            }
-        }
-        /// <summary>
-        /// 清空所有节点
-        /// </summary>
-        public void ClearAllNodes()
-        {
-            string str = "确认要清空所有节点吗？";
-            if (EditorUtility.DisplayDialog("警告", str, "确认", "取消"))
-            {
-                plotNodes.Clear();
-                optionNodes.Clear();
             }
         }
 

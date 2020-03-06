@@ -7,7 +7,7 @@ using E.Tool;
 namespace E.Tool
 {
     [Serializable]
-    public class CharacterDynamicData : EntityDynamicData
+    public class RoleDynamicData : EntityDynamicData
     {
         [Header("角色实体动态数据")]
         [Tooltip("脑力")] public IntProperty mind = new IntProperty(20, 20);

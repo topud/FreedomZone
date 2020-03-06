@@ -10,21 +10,21 @@ namespace E.Tool
     [Serializable]
     public class PlotNode : Node
     {
-        [Tooltip("剧情编号")] [ReadOnly] public PlotID id;
-        [Tooltip("剧情类型")] [ReadOnly] public PlotType type;
-        [Tooltip("是否主线")] public bool isMainPlot;
+        [Tooltip("剧情编号")] public PlotID id;
+        [Tooltip("剧情分支类型")] public PlotBranchType branchType;
+        [Tooltip("剧情时间类型")] public PlotTimeType timeType;
         [Tooltip("剧情内容")] public Plot plot;
         [Tooltip("后续选项节点")] public List<int> nextOptionNodes = new List<int>();
 
-        public PlotNode(RectInt rect, PlotID id)
+        public PlotNode(Rect rect, PlotID id)
         {
             layout = rect;
             description = "剧情简介";
             nextPlotNode = new PlotID();
 
             this.id = id;
-            type = PlotType.过渡剧情;
-            isMainPlot = true;
+            timeType = PlotTimeType.过渡;
+            branchType = PlotBranchType.主线;
             plot = null;
             nextOptionNodes = new List<int>();
         }
@@ -108,10 +108,16 @@ namespace E.Tool
         }
     }
 
-    public enum PlotType
+    public enum PlotBranchType
     {
-        过渡剧情,
-        起始剧情,
-        结局剧情
+        主线,
+        支线,
+        独立
+    }
+    public enum PlotTimeType
+    {
+        过渡,
+        开局,
+        结局
     }
 }

@@ -92,7 +92,7 @@ public class CharacterManager : MonoBehaviour
     {
         GameObject go;
         Character character;
-        CharacterStaticData sData = Addressables.LoadAsset<CharacterStaticData>(name).Result;
+        RoleStaticData sData = Addressables.LoadAsset<RoleStaticData>(name).Result;
         if (sData)
         {
             if (sData.Prefab)
@@ -120,11 +120,11 @@ public class CharacterManager : MonoBehaviour
     /// <summary>
     /// 生成角色，从动态数据（如存档）
     /// </summary>
-    public Character SpawnCharacter(CharacterDynamicData dData)
+    public Character SpawnCharacter(RoleDynamicData dData)
     {
         GameObject go;
         Character character;
-        CharacterStaticData sData = Addressables.LoadAsset<CharacterStaticData>(dData.nameID).Result;
+        RoleStaticData sData = Addressables.LoadAsset<RoleStaticData>(dData.nameID).Result;
         if (sData)
         {
             if (sData.Prefab)

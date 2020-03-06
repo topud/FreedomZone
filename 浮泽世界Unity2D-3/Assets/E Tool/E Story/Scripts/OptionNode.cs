@@ -12,7 +12,7 @@ namespace E.Tool
         [Tooltip("选择此选项的条件数值要求")] public List<ConditionComparison> comparisons = new List<ConditionComparison>();
         [Tooltip("选择此选项后的条件数值变动")] public List<ConditionChange> changes = new List<ConditionChange>();
 
-        public OptionNode(RectInt rect, int id)
+        public OptionNode(Rect rect, int id)
         {
             layout = rect;
             description = "选项简介";

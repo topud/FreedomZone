@@ -18,14 +18,14 @@ namespace E.Tool
         /// </summary>
         public static int OneHeight
         {
-            get => (int)EditorGUIUtility.singleLineHeight;
+            get => 18;
         }
         /// <summary>
         /// 行间隔
         /// </summary>
         public static int OneSpacing
         {
-            get => (int)EditorGUIUtility.standardVerticalSpacing;
+            get => 2;
         }
         /// <summary>
         /// 标签宽度
@@ -33,6 +33,13 @@ namespace E.Tool
         public static int LabelWidth
         {
             get => 50;
+        }
+        /// <summary>
+        /// 输入宽度
+        /// </summary>
+        public static int InputWidth
+        {
+            get => 30;
         }
 
         /// <summary>

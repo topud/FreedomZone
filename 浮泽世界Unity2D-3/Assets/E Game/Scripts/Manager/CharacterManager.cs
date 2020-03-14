@@ -11,10 +11,10 @@ public class CharacterManager : MonoBehaviour
     public GameObject HumanPrefab;
 
     [Header("数据")]
-    [SerializeField] private Character player;
-    [SerializeField, ReadOnly] private List<Character> characters = new List<Character>();
+    [SerializeField] private Role player;
+    [SerializeField, ReadOnly] private List<Role> characters = new List<Role>();
 
-    public Character Player 
+    public Role Player 
     {
         get
         {
@@ -37,12 +37,12 @@ public class CharacterManager : MonoBehaviour
             player = value;
         }
     }
-    public List<Character> Characters
+    public List<Role> Characters
     {
         get
         {
             characters.Clear();
-            Character[] chars = transform.GetComponentsInChildren<Character>();
+            Role[] chars = transform.GetComponentsInChildren<Role>();
             characters.AddRange(chars);
             return characters;
         }
@@ -56,7 +56,7 @@ public class CharacterManager : MonoBehaviour
             do
             {
                 bool isExsit = false;
-                foreach (Character item in Characters)
+                foreach (Role item in Characters)
                 {
                     if (i == item.DynamicData.nameID.id)
                     {
@@ -88,23 +88,23 @@ public class CharacterManager : MonoBehaviour
     /// <param name="sData"></param>
     /// <param name="position"></param>
     /// <returns></returns>
-    public Character SpawnCharacter(string name, Vector2 position, bool isPlayer = false)
+    public Role SpawnCharacter(string name, Vector2 position, bool isPlayer = false)
     {
         GameObject go;
-        Character character;
+        Role character;
         RoleStaticData sData = Addressables.LoadAsset<RoleStaticData>(name).Result;
         if (sData)
         {
-            if (sData.Prefab)
+            if (sData.prefab)
             {
-                go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
-                character = go.GetComponent<Character>();
+                go = Instantiate(sData.prefab, position, new Quaternion(0, 0, 0, 0), transform);
+                character = go.GetComponent<Role>();
                 character.Refresh();
             }
             else
             {
                 go = Instantiate(HumanPrefab, position, new Quaternion(0, 0, 0, 0), transform);
-                character = go.GetComponent<Character>();
+                character = go.GetComponent<Role>();
                 character.SetStaticData(name);
             }
             character.IsPlayer = isPlayer;
@@ -120,23 +120,23 @@ public class CharacterManager : MonoBehaviour
     /// <summary>
     /// 生成角色，从动态数据（如存档）
     /// </summary>
-    public Character SpawnCharacter(RoleDynamicData dData)
+    public Role SpawnCharacter(RoleDynamicData dData)
     {
         GameObject go;
-        Character character;
+        Role character;
         RoleStaticData sData = Addressables.LoadAsset<RoleStaticData>(dData.nameID).Result;
         if (sData)
         {
-            if (sData.Prefab)
+            if (sData.prefab)
             {
-                go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
-                character = go.GetComponent<Character>();
+                go = Instantiate(sData.prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
+                character = go.GetComponent<Role>();
                 character.SetDynamicData(dData);
             }
             else
             {
                 go = Instantiate(HumanPrefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
-                character = go.GetComponent<Character>();
+                character = go.GetComponent<Role>();
                 character.StaticData = sData;
                 character.SetDynamicData(dData);
             }
@@ -154,9 +154,9 @@ public class CharacterManager : MonoBehaviour
     /// </summary>
     /// <param name="name">角色名</param>
     /// <returns></returns>
-    public Character GetCharacter(NameAndID nameID)
+    public Role GetCharacter(NameAndID nameID)
     {
-        foreach (Character item in Characters)
+        foreach (Role item in Characters)
         {
             if (item.DynamicData.nameID.Equals(nameID))
             {

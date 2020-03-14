@@ -7,13 +7,13 @@ namespace E.Tool
 {
     public class ItemTrigger : MonoBehaviour
     {
-        private Character character;
+        private Role character;
 
         private void Update()
         {
             if (!character)
             {
-                character = transform.GetComponentInParent<Character>();
+                character = transform.GetComponentInParent<Role>();
             }
         }
         private void OnTriggerEnter2D(Collider2D col)
@@ -27,7 +27,7 @@ namespace E.Tool
                     character.NearbyItems.Add(item);
                     if (character.IsPlayer)
                     {
-                        Character.onNearbyItemChange.Invoke();
+                        Role.onNearbyItemChange.Invoke();
                     }
                 }
             }
@@ -41,7 +41,7 @@ namespace E.Tool
                 character.NearbyItems.Remove(item);
                 if (character.IsPlayer)
                 {
-                    Character.onNearbyItemChange.Invoke();
+                    Role.onNearbyItemChange.Invoke();
                 }
             }
         }

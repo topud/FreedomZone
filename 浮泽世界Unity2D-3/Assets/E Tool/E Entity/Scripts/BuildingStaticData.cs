@@ -9,11 +9,7 @@ namespace E.Tool
     public class BuildingStaticData : EntityStaticData
     {
         [Header("建筑实体静态数据")]
-        [SerializeField, Tooltip("价格")] private int rmbPrice = 10;
-
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public int RMBPrice { get => rmbPrice; }
+        [Tooltip("价格")] public int rmbPrice = 10;
+        [Tooltip("耐久")] public FloatProperty health;
     }
 }

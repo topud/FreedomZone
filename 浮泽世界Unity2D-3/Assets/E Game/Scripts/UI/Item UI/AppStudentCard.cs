@@ -36,8 +36,8 @@ public class AppStudentCard : PhoneApp
     public Text txtDefense;
 
     [Header("数据")]
-    private Character target;
-    public Character Target
+    private Role target;
+    public Role Target
     {
         get => target;
         set => target = value;
@@ -52,29 +52,29 @@ public class AppStudentCard : PhoneApp
     {
         if (Target)
         {
-            txtName.text = Target.StaticData.Name;
-            txtDescription.text = Target.StaticData.Description;
+            txtName.text = Target.StaticData.name;
+            txtDescription.text = Target.StaticData.description;
 
             txtBirthday.text = Target.StaticData.Birthday.ToString("yyyy 年 M 月 d 日");
-            txtGender.text = Target.StaticData.Gender.ToString();
-            txtHeight.text = Target.StaticData.Height.ToString() + " cm";
-            txtWeight.text = Target.StaticData.Weight.ToString() + " kg";
+            txtGender.text = Target.StaticData.gender.ToString();
+            txtHeight.text = Target.StaticData.height.ToString() + " cm";
+            txtWeight.text = Target.StaticData.weight.ToString() + " kg";
 
-            txtStartYear.text = Target.StaticData.StartYear.ToString() + " 年";
-            txtCollege.text = Target.StaticData.College.ToString();
-            txtProfession.text = Target.StaticData.Profession.ToString();
-            txtDegree.text = Target.StaticData.Degree.ToString();
-            txtGrade.text = Target.StaticData.Grade.ToString();
-            txtClass.text = Target.StaticData.Class.ToString();
-            txtStudentID.text = Target.StaticData.StudentID.ToString();
+            txtDegree.text = Target.StaticData.educational.degree.ToString();
+            txtStartYear.text = Target.StaticData.educational.startYear.ToString() + " 年";
+            txtCollege.text = Target.StaticData.educational.college.ToString();
+            txtProfession.text = Target.StaticData.educational.profession.ToString();
+            txtGrade.text = Target.StaticData.educational.grade.ToString();
+            txtClass.text = Target.StaticData.educational.@class.ToString();
+            txtStudentID.text = Target.StaticData.educational.studentID.ToString();
 
-            txtHealth.text = Target.DynamicData.health.Max.ToString();
-            txtMind.text = Target.DynamicData.mind.Max.ToString();
-            txtPower.text = Target.DynamicData.power.Max.ToString();
-            txtIntelligence.text = Target.DynamicData.iq.ToString();
-            txtSpeed.text = Target.DynamicData.speed.ToString();
-            txtStrength.text = Target.DynamicData.strength.ToString();
-            txtDefense.text = Target.DynamicData.defense.ToString();
+            txtHealth.text = Target.DynamicData.bodyState.health.Max.ToString();
+            txtMind.text = Target.DynamicData.bodyState.mind.Max.ToString();
+            txtPower.text = Target.DynamicData.bodyState.power.Max.ToString();
+            //txtIntelligence.text = Target.DynamicData.iq.ToString();
+            txtSpeed.text = Target.DynamicData.physique.speed.ToString();
+            txtStrength.text = Target.DynamicData.physique.force.ToString();
+            txtDefense.text = Target.DynamicData.physique.defense.ToString();
         }
     }
 }

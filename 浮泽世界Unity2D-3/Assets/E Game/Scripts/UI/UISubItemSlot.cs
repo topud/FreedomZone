@@ -17,8 +17,8 @@ namespace E.Tool
         }
         public override void UpdateData()
         {
-            imgIcon.sprite = item.StaticData.Icon;
-            txtName.text = item.StaticData.Name;
+            imgIcon.sprite = item.StaticData.icon;
+            txtName.text = item.StaticData.name;
         }
     }
 }

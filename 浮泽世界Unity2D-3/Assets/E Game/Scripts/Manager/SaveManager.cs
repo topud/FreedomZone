@@ -200,7 +200,7 @@ public class SaveManager : MonoBehaviour
         {
             NodeID = GameManager.Story.CurrentNodeID
         };
-        foreach (Character item in GameManager.Character.Characters)
+        foreach (Role item in GameManager.Character.Characters)
         {
             save.CharacterDynamicDatas.Add(item.DynamicData);
         }
@@ -234,7 +234,7 @@ public class SaveManager : MonoBehaviour
         GameManager.Story.CurrentNodeID = save.NodeID;
         foreach (RoleDynamicData item in save.CharacterDynamicDatas)
         {
-            Character character = GameManager.Character.GetCharacter(item.nameID);
+            Role character = GameManager.Character.GetCharacter(item.nameID);
             if (character)
             {
                 character.SetDynamicData(item);

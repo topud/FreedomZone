@@ -68,9 +68,9 @@ public class UIItemDetail : UIBase
                 btnDrop.gameObject.SetActive(false);
             }
 
-            txtName.text = data.StaticData.Name;
-            txtDes.text = data.StaticData.Description;
-            imgIcon.sprite = data.StaticData.Icon;
+            txtName.text = data.StaticData.name;
+            txtDes.text = data.StaticData.description;
+            imgIcon.sprite = data.StaticData.icon;
             RefreshFloatData();
             RefreshBtnUse();
         }
@@ -99,7 +99,7 @@ public class UIItemDetail : UIBase
     private void RefreshBtnUse()
     {
         string str = "使用";
-        switch (data.StaticData.Type)
+        switch (data.StaticData.type)
         {
             case ItemType.Food:
                 break;

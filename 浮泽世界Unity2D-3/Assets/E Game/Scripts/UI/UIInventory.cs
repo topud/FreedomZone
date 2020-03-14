@@ -10,7 +10,7 @@ public class UIInventory : UIList<Item, UISlotItem>
     protected override void OnEnable()
     {
         Refresh();
-        Character.onPlayerItemChange.AddListener(Refresh);
+        Role.onPlayerItemChange.AddListener(Refresh);
     }
     private void Update()
     {
@@ -27,7 +27,7 @@ public class UIInventory : UIList<Item, UISlotItem>
     }
     protected override void OnDisable()
     {
-        Character.onPlayerItemChange.RemoveListener(Refresh);
+        Role.onPlayerItemChange.RemoveListener(Refresh);
     }
 
     public override void LoadData()

@@ -9,80 +9,48 @@ namespace E.Tool
     public class ItemStaticData : EntityStaticData
     {
         [Header("物品实体静态数据")]
-        [SerializeField, Tooltip("物品类型")] private ItemType type = ItemType.Food;
-        [SerializeField, Tooltip("价格")] private int rmbPrice = 10;
-        [SerializeField, Tooltip("容量")] private int capacity = 0;
-        [SerializeField, Tooltip("是否正在使用")] private bool isUsing = false;
-        [SerializeField, Tooltip("初始容纳物品")] private List<ItemStaticData> items = new List<ItemStaticData>();
-        [SerializeField, Tooltip("组成的部件")] private List<ItemStaticData> components = new List<ItemStaticData>();
-        [SerializeField, Tooltip("使用时/使用后习得的技能")] private List<Skill> skills = new List<Skill>();
-        [SerializeField, Tooltip("使用时/使用后获得的增益")] private List<Buff> buffs = new List<Buff>();
-
-        /// <summary>
-        /// 物品类型
-        /// </summary>
-        public ItemType Type { get => type; }
-        /// <summary>
-        /// 价格
-        /// </summary>
-        public int RMBPrice { get => rmbPrice; }
-        /// <summary>
-        /// 容量
-        /// </summary>
-        public int Capacity { get => capacity; }
-        /// <summary>
-        /// 是否正在使用
-        /// </summary>
-        public bool IsUsing { get => isUsing; }
-        /// <summary>
-        /// 初始容纳物品
-        /// </summary>
-        public List<ItemStaticData> Items { get => items; }
-        /// <summary>
-        /// 组成的部件
-        /// </summary>
-        public List<ItemStaticData> Components { get => components; }
-        /// <summary>
-        /// 使用时/使用后习得的技能
-        /// </summary>
-        public List<Skill> Skills { get => skills; }
-        /// <summary>
-        /// 使用时/使用后获得的增益
-        /// </summary>
-        public List<Buff> Buffs { get => buffs; }
+        [Tooltip("物品类型")] public ItemType type = ItemType.Food;
+        [Tooltip("初始耐久")] public FloatProperty health;
+        [Tooltip("初始能量")] public FloatProperty power;
+        [Tooltip("价格")] public int rmbPrice = 10;
+        [Tooltip("容量")] public int capacity = 0;
+        [Tooltip("初始容纳物品")] public List<ItemStack> items = new List<ItemStack>();
+        [Tooltip("组成的部件")] public List<ItemStack> components = new List<ItemStack>();
+        [Tooltip("使用时/使用后习得的技能")] public List<Skill> skills = new List<Skill>();
+        [Tooltip("使用时/使用后获得的增益")] public List<Buff> buffs = new List<Buff>();
 
         private void OnValidate()
         {
-            switch (Type)
+            switch (type)
             {
                 case ItemType.Food:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 case ItemType.Weapon:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 case ItemType.Book:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 case ItemType.Ammo:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 case ItemType.Bag:
                     //capacity = 0;
                     //items = new List<ItemStaticData>();
-                    items.RemoveAll(x => x.Type == ItemType.Bag);
+                    items.RemoveAll(x => x.item.type == ItemType.Bag);
                     break;
                 case ItemType.Switch:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 case ItemType.Other:
                     capacity = 0;
-                    items = new List<ItemStaticData>();
+                    items = new List<ItemStack>();
                     break;
                 default:
                     break;

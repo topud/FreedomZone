@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -8,6 +9,8 @@ namespace E.Tool
 {
     public class Item : Entity<ItemStaticData, ItemDynamicData>
     {
+        [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
+
         public GameObject SwitchableObject 
         {
             get => transform.Find("SwitchableObject").gameObject; 
@@ -21,7 +24,7 @@ namespace E.Tool
             }
             set 
             {
-                switch (StaticData.Type)
+                switch (StaticData.type)
                 {
                     case ItemType.Food:
                         break;
@@ -48,6 +51,19 @@ namespace E.Tool
         public bool IsPowerEnough
         {
             get => DynamicData.power.Now > 0;
+        }
+        public List<Item> Items
+        {
+            get => items;
+            set
+            {
+                items = value;
+                DynamicData.items.Clear();
+                foreach (Item item in Items)
+                {
+                    DynamicData.items.Add(item.DynamicData.nameID);
+                }
+            }
         }
 
         protected override void Awake()
@@ -106,11 +122,13 @@ namespace E.Tool
 
             DynamicData = new ItemDynamicData
             {
-                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : GameManager.Item.AvailableID),
+                nameID = new NameAndID(StaticData.name, IsAsset ? -1 : GameManager.Item.AvailableID),
                 position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
-                health = StaticData.Health,
-                power = StaticData.Power,
-                //DynamicData.items = StaticData.Items;              **
+                
+                health = StaticData.health,
+                power = StaticData.power,
+
+                //DynamicData.items = StaticData.Items; 
             };
 
             Refresh();
@@ -128,7 +146,7 @@ namespace E.Tool
             }
             if (DynamicData == null)
             {
-                Debug.Log("动态数据初始化 " + StaticData.Name);
+                Debug.Log("动态数据初始化 " + StaticData.name);
                 ResetDynamicData();
             }
 
@@ -137,10 +155,10 @@ namespace E.Tool
 
             name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
             transform.position = DynamicData.position;
-            Rigidbody.mass = StaticData.Weight;
+            Rigidbody.mass = StaticData.weight;
 
             Items.Clear();
-            switch (StaticData.Type)
+            switch (StaticData.type)
             {
                 case ItemType.Food:
                     break;
@@ -196,9 +214,9 @@ namespace E.Tool
             int vo = 0;
             foreach (Item item in Items)
             {
-                vo += item.StaticData.Volume;
+                vo += item.StaticData.volume;
             }
-            return (StaticData.Capacity > 0) ? (float)vo / StaticData.Capacity : 0;
+            return (StaticData.capacity > 0) ? (float)vo / StaticData.capacity : 0;
         }
 
         /// <summary>
@@ -206,14 +224,13 @@ namespace E.Tool
         /// </summary>
         /// <param name="target"></param>
         /// <param name="user"></param>
-        public void Use(Character target)
+        public void Use(Role target)
         {
             string info = "";
-            switch (StaticData.Type)
+            switch (StaticData.type)
             {
                 case ItemType.Food:
-                    target.DynamicData.skills.AddRange(StaticData.Skills);
-                    target.DynamicData.buffs.AddRange(StaticData.Buffs);
+                    target.DynamicData.skills.AddRange(StaticData.skills);
                     break;
                 case ItemType.Weapon:
                     break;
@@ -242,7 +259,7 @@ namespace E.Tool
         {
             if (IsUsing)
             {
-                switch (StaticData.Type)
+                switch (StaticData.type)
                 {
                     case ItemType.Food:
                         break;
@@ -266,7 +283,7 @@ namespace E.Tool
         }
         private void CheckPower()
         {
-            switch (StaticData.Type)
+            switch (StaticData.type)
             {
                 case ItemType.Food:
                     break;
@@ -296,7 +313,7 @@ namespace E.Tool
         private string Switch()
         {
             string info = "";
-            if (StaticData.Type != ItemType.Switch)
+            if (StaticData.type != ItemType.Switch)
             {
                 Debug.LogError(name + " 不是开关型物品");
                 return info;
@@ -319,11 +336,22 @@ namespace E.Tool
                 }
                 else
                 {
-                    info = string.Format("能量不足，无法打开{0}", StaticData.Name);
+                    info = string.Format("能量不足，无法打开{0}", StaticData.name);
                 }
                 return info;
             }
         }
         #endregion
+    }
+
+    [Serializable]
+    public class ItemDynamicData : EntityDynamicData
+    {
+        [Tooltip("是否正在使用")] public bool isUsing = false;
+        [Tooltip("快捷键0~9")] public KeyCode hotKey = KeyCode.None;
+
+        [Tooltip("耐久")] public FloatProperty health;
+        [Tooltip("能量")] public FloatProperty power;
+        [Tooltip("容纳的物品")] public List<NameAndID> items = new List<NameAndID>();
     }
 }

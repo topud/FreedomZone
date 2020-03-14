@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
             //场景测试流程
             if (!Character.Player)
             {
-                Character player = Character.GetCharacter(new NameAndID("璃亚", 0));
+                Role player = Character.GetCharacter(new NameAndID("璃亚", 0));
                 player.IsPlayer = true;
                 Debug.Log("本次运行为调试模式，已自动添加可控制角色");
             }

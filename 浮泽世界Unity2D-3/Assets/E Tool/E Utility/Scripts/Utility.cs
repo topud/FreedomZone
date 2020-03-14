@@ -18,28 +18,46 @@ namespace E.Tool
         /// </summary>
         public static int OneHeight
         {
-            get => 18;
+            //18
+            get => (int)EditorGUIUtility.singleLineHeight;
         }
         /// <summary>
         /// 行间隔
         /// </summary>
         public static int OneSpacing
         {
-            get => 2;
+            //2
+            get => (int)EditorGUIUtility.standardVerticalSpacing;
         }
         /// <summary>
         /// 标签宽度
         /// </summary>
         public static int LabelWidth
         {
-            get => 50;
+            get => (int)EditorGUIUtility.labelWidth;
         }
         /// <summary>
         /// 输入宽度
         /// </summary>
-        public static int InputWidth
+        public static int FieldWidth
         {
-            get => 30;
+            get => (int)EditorGUIUtility.fieldWidth;
+        }
+        /// <summary>
+        /// 设置标签宽度
+        /// </summary>
+        /// <param name="width"></param>
+        public static void SetLabelWidth(int width)
+        {
+            EditorGUIUtility.labelWidth = width;
+        }
+        /// <summary>
+        /// 设置值最小宽度
+        /// </summary>
+        /// <param name="width"></param>
+        public static void SetFieldWidth(int width)
+        {
+            EditorGUIUtility.fieldWidth = width;
         }
 
         /// <summary>

@@ -72,7 +72,7 @@ public class ItemManager : MonoBehaviour
         ItemStaticData sData = Addressables.LoadAsset<ItemStaticData>(name).Result;
         if (sData)
         {
-            go = Instantiate(sData.Prefab, position, new Quaternion(0, 0, 0, 0), transform);
+            go = Instantiate(sData.prefab, position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
             item.Refresh();
             Debug.Log("物品生成成功：" + name);
@@ -94,7 +94,7 @@ public class ItemManager : MonoBehaviour
         ItemStaticData sData = Addressables.LoadAsset<ItemStaticData>(dData.nameID).Result;
         if (sData)
         {
-            go = Instantiate(sData.Prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
+            go = Instantiate(sData.prefab, dData.position, new Quaternion(0, 0, 0, 0), transform);
             item = go.GetComponent<Item>();
             item.SetDynamicData(dData);
             Debug.Log("物品生成成功：" + dData.nameID.NameID);

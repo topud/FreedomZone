@@ -1,25 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
+
 
 namespace E.Tool
 {
     [Serializable]
-    public struct Skill
+    public class Skill
     {
-        [SerializeField, Tooltip("技能类型")] private SkillTpye skillTpye;
-        [SerializeField, Tooltip("熟练等级")] private SkillLevel level;
-        [SerializeField, Tooltip("熟练等级经验"), Range(0, 1)] private float levelEx;
+        [Tooltip("技能类型")] public SkillTpye skillTpye;
+        [Tooltip("熟练等级")] public SkillLevel level;
+        [Tooltip("等级经验"), Range(0, 1)] public float levelEx;
 
-        /// <summary>
-        /// 技能类型
-        /// </summary>
-        public SkillTpye SkillTpye { get => skillTpye; set => skillTpye = value; }
-        /// <summary>
-        /// 熟练等级
-        /// </summary>
-        public SkillLevel Level { get => level; set => level = value; }
         /// <summary>
         /// 熟练等级经验
         /// </summary>
@@ -29,7 +22,7 @@ namespace E.Tool
             set
             {
                 levelEx = value;
-                if (levelEx >= 1 )
+                if (levelEx >= 1)
                 {
                     if (level == SkillLevel.巅峰)
                     {
@@ -42,17 +35,6 @@ namespace E.Tool
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// 构造器
-        /// </summary>
-        /// <param name="type"></param>
-        public Skill(SkillTpye type)
-        {
-            skillTpye = type;
-            level = SkillLevel.生涩;
-            levelEx = 0;
         }
     }
 

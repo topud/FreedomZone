@@ -51,7 +51,7 @@ namespace E.Tool
         }
         public override void UpdateData()
         {
-            imgIcon.sprite = Data.StaticData.Icon;
+            imgIcon.sprite = Data.StaticData.icon;
             imgHealth.fillAmount = Data.DynamicData.health.NowPercent;
             imgPower.fillAmount = Data.DynamicData.power.NowPercent;
 

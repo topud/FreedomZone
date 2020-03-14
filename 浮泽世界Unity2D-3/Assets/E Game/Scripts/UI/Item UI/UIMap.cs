@@ -28,7 +28,7 @@ namespace E.Tool
 
         void Update()
         {
-            Character player = GameManager.Character.Player;
+            Role player = GameManager.Character.Player;
             if (player)
             {
                 gameObject.SetActive(true);

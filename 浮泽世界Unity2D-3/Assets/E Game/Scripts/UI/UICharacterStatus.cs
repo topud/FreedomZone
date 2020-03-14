@@ -14,7 +14,7 @@ namespace E.Tool
         [SerializeField] private UISlotBuff slotPrefab;
 
         [Header("数据")]
-        public Character Data;
+        public Role Data;
 
         private void Start()
         {
@@ -24,9 +24,9 @@ namespace E.Tool
         {
             if (Data)
             {
-                sldHealth.value = Data.DynamicData.health.NowPercent;
-                sldMind.value = Data.DynamicData.mind.NowPercent;
-                sldPower.value = Data.DynamicData.power.NowPercent;
+                sldHealth.value = Data.DynamicData.bodyState.health.NowPercent;
+                sldMind.value = Data.DynamicData.bodyState.mind.NowPercent;
+                sldPower.value = Data.DynamicData.bodyState.power.NowPercent;
             }
         }
     }

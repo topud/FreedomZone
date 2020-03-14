@@ -11,7 +11,7 @@ namespace E.Tool
 {
     [RequireComponent(typeof(AIPath))]
     [RequireComponent(typeof(AIDestinationSetter))]
-    public class Character : Entity<RoleStaticData, RoleDynamicData>
+    public class Role : Entity<RoleStaticData, RoleDynamicData>
     {
         public static UnityEvent onPlayerItemChange = new UnityEvent();
         public static UnityEvent onPlayerInfoChange = new UnityEvent();
@@ -31,37 +31,29 @@ namespace E.Tool
         { get => GetComponentInChildren<InHandItemController>(true); }
 
         [Header("角色状态")]
-        [SerializeField, ReadOnly] private CharacterState state = CharacterState.Idle;
+        [SerializeField, ReadOnly] private RoleState state = RoleState.Idle;
         [SerializeField, ReadOnly] private InteractiveMode mode = InteractiveMode.Survey;
         [SerializeField, ReadOnly] private int currentSpeed = 0;
         [SerializeField, ReadOnly] private float runBeyondDistance = 5;
         [SerializeField, ReadOnly] private Item lastPutInBagItem;
         [SerializeField, ReadOnly] private Item nearistItem;
-        [SerializeField, ReadOnly] private Character nearistCharacter;
+        [SerializeField, ReadOnly] private Role nearistRole;
         [SerializeField, ReadOnly] private GameObject nearistEntity;
         [SerializeField, ReadOnly] private GameObject lastNearistEntity;
         [SerializeField, ReadOnly] private List<Item> nearbyItems = new List<Item>();
-        [SerializeField, ReadOnly] private List<Character> nearbyCharacters = new List<Character>();
+        [SerializeField, ReadOnly] private List<Role> nearbyRoles = new List<Role>();
+        [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
 
-        /// <summary>
-        /// 角色状态
-        /// </summary>
-        public CharacterState State
+        public RoleState State
         {
             get => state;
             private set => state = value;
         }
-        /// <summary>
-        /// 交互模式
-        /// </summary>
         public InteractiveMode Mode
         { 
             get => mode;
             private set => mode = value; 
         }
-        /// <summary>
-        /// 是否玩家控制角色
-        /// </summary>
         public bool IsPlayer
         {
             get => GameManager.Character.Player == this;
@@ -83,9 +75,6 @@ namespace E.Tool
                 }
             }
         }
-        /// <summary>
-        /// 是否面朝右边
-        /// </summary>
         public bool IsFaceRight
         {
             get
@@ -97,19 +86,13 @@ namespace E.Tool
                 SpriteSorter.transform.localScale = new Vector3(value ? 1 : -1, 1, 1);
             }
         }
-        /// <summary>
-        /// 是否存活
-        /// </summary>
         public bool IsAlive
         {
             get
             {
-                return DynamicData.health.Now > 0;
+                return DynamicData.bodyState.health.Now > 0;
             }
         }
-        /// <summary>
-        /// 跟随目标
-        /// </summary>
         public Transform FollowTarget
         {
             get
@@ -121,45 +104,43 @@ namespace E.Tool
                 AIDestinationSetter.target = value;
             }
         }
-        /// <summary>
-        /// 距离最近的物品
-        /// </summary>
         public Item NearistItem
         {
             get => nearistItem;
             private set => nearistItem = value;
         }
-        /// <summary>
-        /// 距离最近的角色
-        /// </summary>
-        public Character NearistCharacter
+        public Role NearistRole
         {
-            get => nearistCharacter;
-            private set => nearistCharacter = value;
+            get => nearistRole;
+            private set => nearistRole = value;
         }
-        /// <summary>
-        /// 距离最近的实体
-        /// </summary>
         public GameObject NearistEntity
         {
             get => nearistEntity;
             private set => nearistEntity = value;
         }
-        /// <summary>
-        /// 附近的物品
-        /// </summary>
         public List<Item> NearbyItems
         {
             get => nearbyItems;
             set => nearbyItems = value;
         }
-        /// <summary>
-        /// 附近的角色
-        /// </summary>
-        public List<Character> NearbyCharacters
+        public List<Role> NearbyRoles
         {
-            get => nearbyCharacters;
-            set => nearbyCharacters = value;
+            get => nearbyRoles;
+            set => nearbyRoles = value;
+        }
+        public List<Item> Items
+        {
+            get => items;
+            set
+            {
+                items = value;
+                DynamicData.items.Clear();
+                foreach (Item item in Items)
+                {
+                    DynamicData.items.Add(item.DynamicData.nameID);
+                }
+            }
         }
 
         protected override void Awake()
@@ -182,7 +163,7 @@ namespace E.Tool
             {
                 CheckAIPathMaxSpeed();
             }
-            if (State != CharacterState.Dead && State != CharacterState.Talk)
+            if (State != RoleState.Dead && State != RoleState.Talk)
             {
                 if (IsPlayer)
                 {
@@ -224,7 +205,7 @@ namespace E.Tool
         {
             base.FixedUpdate();
 
-            if (State != CharacterState.Dead && State != CharacterState.Talk)
+            if (State != RoleState.Dead && State != RoleState.Talk)
             {
                 if (IsPlayer)
                 {
@@ -277,26 +258,19 @@ namespace E.Tool
 
             DynamicData = new RoleDynamicData
             {
-                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : GameManager.Character.AvailableID),
+                nameID = new NameAndID(StaticData.name, IsAsset ? -1 : GameManager.Character.AvailableID),
                 position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
-                health = StaticData.Health,
-                power = StaticData.Power,
-                //DynamicData.items = StaticData.Items;              **
-
-                mind = StaticData.Mind,
-                speed = StaticData.Speed,
-                iq = StaticData.IQ,
-                strength = StaticData.Strength,
-                defense = StaticData.Defense,
-
-                rmb = StaticData.RMB,
-                fzb = StaticData.FZB,
+                
+                physique = StaticData.physique,
+                mentality = StaticData.mentality,
+                sense = StaticData.sense,
+                bodyState = StaticData.bodyState,
+                //DynamicData.items = StaticData.Items; 
+                rmb = StaticData.rmb,
+                fzb = StaticData.fzb,
                 //ItemInstanceIDs
-                skills = new List<Skill>(StaticData.Skills),
-                buffs = StaticData.Buffs,
-                acceptedQuests = StaticData.AcceptedQuests,
-                publishedQuests = StaticData.PublishedQuests,
-                relationships = StaticData.Relationships
+                relationships = StaticData.relationships,
+                skills = new List<Skill>(StaticData.skills),
             };
 
             Refresh();
@@ -316,7 +290,7 @@ namespace E.Tool
             }
             if (DynamicData == null)
             {
-                Debug.Log("动态数据初始化 " + StaticData.Name);
+                Debug.Log("动态数据初始化 " + StaticData.name);
                 ResetDynamicData();
             }
 
@@ -330,7 +304,7 @@ namespace E.Tool
 
             name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
             transform.position = DynamicData.position;
-            Rigidbody.mass = StaticData.Weight;
+            Rigidbody.mass = StaticData.weight;
 
             Items.Clear();
             foreach (NameAndID item in DynamicData.items)
@@ -374,14 +348,14 @@ namespace E.Tool
         /// </summary>
         public void ChangeHealthMax(int value)
         {
-            DynamicData.health.Max += value;
+            DynamicData.bodyState.health.Max += value;
         }
         /// <summary>
         /// 更改当前生命值
         /// </summary>
         public void ChangeHealthNow(int value)
         {
-            DynamicData.health.Now += value;
+            DynamicData.bodyState.health.Now += value;
         }
         /// <summary>
         /// 复活
@@ -389,20 +363,20 @@ namespace E.Tool
         /// <param name="healthP"></param>
         public void Revive(float healthP = 1, float mindP = 1, float powerP = 1)
         {
-            DynamicData.health.Now = (int)(DynamicData.health.Max * healthP);
-            DynamicData.mind.Now = (int)(DynamicData.mind.Max * mindP);
-            DynamicData.power.Now = (int)(DynamicData.power.Max * powerP);
+            DynamicData.bodyState.health.Now = DynamicData.bodyState.health.Max * healthP;
+            DynamicData.bodyState.mind.Now = DynamicData.bodyState.mind.Max * mindP;
+            DynamicData.bodyState.power.Now = DynamicData.bodyState.power.Max * powerP;
         }
         /// <summary>
         /// 恢复
         /// </summary>
         public void Recover()
         {
-            if (enabled && DynamicData.health.Now > 0)
+            if (enabled && DynamicData.bodyState.health.now > 0)
             {
-                if (DynamicData.health.AutoChangeable) DynamicData.health.Now += (int)(0.1 * DynamicData.health.AutoChangeRate);
-                if (DynamicData.mind.AutoChangeable) DynamicData.mind.Now += (int)(0.1 * DynamicData.mind.AutoChangeRate);
-                if (DynamicData.power.AutoChangeable) DynamicData.power.Now += (int)(0.1 * DynamicData.power.AutoChangeRate);
+                DynamicData.bodyState.health.now += DynamicData.bodyState.health.autoAdd;
+                DynamicData.bodyState.mind.now += DynamicData.bodyState.mind.autoAdd;
+                DynamicData.bodyState.power.now += DynamicData.bodyState.power.autoAdd;
             }
         }
         /// <summary>
@@ -495,7 +469,7 @@ namespace E.Tool
             if (IsInView(target))
             {
                 TargetUI.ShowChat();
-                TargetUI.SetChat(target.StaticData.Description);
+                TargetUI.SetChat(target.StaticData.description);
             }
             else
             {
@@ -553,7 +527,7 @@ namespace E.Tool
             }
             else
             {
-                Debug.LogError(string.Format("{0} 无法投掷未携带该物品 {1}", name, target.StaticData.Name));
+                Debug.LogError(string.Format("{0} 无法投掷未携带该物品 {1}", name, target.StaticData.name));
             }
         }
         /// <summary>
@@ -584,7 +558,7 @@ namespace E.Tool
         /// </summary>
         /// <param name="targetItem"></param>
         /// <param name="targetCharacter"></param>
-        public void GiveTo(Character target)
+        public void GiveTo(Role target)
         {
             Item item = GetRightHandItem();
             if (item)
@@ -684,7 +658,7 @@ namespace E.Tool
             PutRightHandItemInBag();
             RightHandItemController.SetItem(target, isLookAtCursor);
 
-            Debug.Log(string.Format("{0} 把 {1} 放在手中", name, target.StaticData.Name));
+            Debug.Log(string.Format("{0} 把 {1} 放在手中", name, target.StaticData.name));
         }
         /// <summary>
         /// 将右手物品放在背包
@@ -697,7 +671,7 @@ namespace E.Tool
             Item item = RightHandItemController.Item;
             RightHandItemController.RemoveItem(false);
 
-            Debug.Log(string.Format("{0} 把 {1} 放入背包", name, item.StaticData.Name));
+            Debug.Log(string.Format("{0} 把 {1} 放入背包", name, item.StaticData.name));
         }
         /// <summary>
         /// 切换物品位置
@@ -720,7 +694,7 @@ namespace E.Tool
         /// 是否在视野内
         /// </summary>
         /// <returns></returns>
-        public bool IsInView(Character target)
+        public bool IsInView(Role target)
         {
             return Vector2.Distance(target.transform.position, transform.position) < 7;
         }
@@ -729,37 +703,37 @@ namespace E.Tool
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        public bool IsNearby(Character target)
+        public bool IsNearby(Role target)
         {
-            return NearbyCharacters.Contains(target);
+            return NearbyRoles.Contains(target);
         }
         /// <summary>
         /// 与角色对话
         /// </summary>
         /// <param name="target"></param>
-        public void ChatWith(Character target)
+        public void ChatWith(Role target)
         {
             if (IsNearby(target))
             {
-                if (target.StaticData.RandomStorys.Count > 0)
-                {
-                    TargetUI.HideChat();
-                    target.TargetUI.HideName();
-                    target.TargetUI.ShowChat();
-                    string content = target.StaticData.RandomStorys[new System.Random().Next(0, target.StaticData.RandomStorys.Count)];
-                    target.TargetUI.SetChat(content);
-                    Debug.Log(string.Format("正在与 {0} 对话", target.StaticData.Name));
-                }
-                else
-                {
-                    string str = string.Format("{0}好像没有什么想说的", target.StaticData.Name);
-                    TargetUI.ShowChat();
-                    TargetUI.SetChat(str);
-                }
+                //if (target.StaticData.ra.Count > 0)
+                //{
+                //    TargetUI.HideChat();
+                //    target.TargetUI.HideName();
+                //    target.TargetUI.ShowChat();
+                //    string content = target.StaticData.RandomStorys[new System.Random().Next(0, target.StaticData.RandomStorys.Count)];
+                //    target.TargetUI.SetChat(content);
+                //    Debug.Log(string.Format("正在与 {0} 对话", target.StaticData.name));
+                //}
+                //else
+                //{
+                //    string str = string.Format("{0}好像没有什么想说的", target.StaticData.name);
+                //    TargetUI.ShowChat();
+                //    TargetUI.SetChat(str);
+                //}
             }
             else
             {
-                string str = string.Format("我需要靠近点才能和{0}对话", target.StaticData.Name);
+                string str = string.Format("我需要靠近点才能和{0}对话", target.StaticData.name);
                 TargetUI.ShowChat();
                 TargetUI.SetChat(str);
             }
@@ -768,13 +742,13 @@ namespace E.Tool
         /// 调查角色
         /// </summary>
         /// <param name="item"></param>
-        public void Survey(Character target)
+        public void Survey(Role target)
         {
             if (IsInView(target))
             {
                 //target.TargetUI.HideAll();
                 TargetUI.ShowChat();
-                TargetUI.SetChat(target.StaticData.Description);
+                TargetUI.SetChat(target.StaticData.description);
             }
             else
             {
@@ -798,11 +772,11 @@ namespace E.Tool
                 //是否跑步
                 if (Input.GetKey(KeyCode.LeftShift))
                 {
-                    currentSpeed = DynamicData.speed.Max;
+                    currentSpeed = DynamicData.physique.speed;
                 }
                 else
                 {
-                    currentSpeed = DynamicData.speed.Min;
+                    currentSpeed = 2;
                 }
                 Rigidbody.velocity = direction * currentSpeed;
 
@@ -835,20 +809,20 @@ namespace E.Tool
         }
         private void CheckNearistCharacter()
         {
-            if (NearbyCharacters.Count > 0)
+            if (NearbyRoles.Count > 0)
             {
                 //计算所有附近角色离自己的距离
                 List<float> diss = new List<float>();
-                for (int i = 0; i < NearbyCharacters.Count; i++)
+                for (int i = 0; i < NearbyRoles.Count; i++)
                 {
-                    diss.Add(Vector2.Distance(NearbyCharacters[i].transform.position, transform.position));
+                    diss.Add(Vector2.Distance(NearbyRoles[i].transform.position, transform.position));
                 }
                 //获取离自己最近的角色
-                NearistCharacter = NearbyCharacters[Utility.IndexMin(diss)];
+                NearistRole = NearbyRoles[Utility.IndexMin(diss)];
             }
             else
             {
-                NearistCharacter = null;
+                NearistRole = null;
             }
         }
         private void CheckNearistEntity()
@@ -858,7 +832,7 @@ namespace E.Tool
             //最近物品离自己的距离
             float ni = NearistItem ? Vector2.Distance(NearistItem.transform.position, transform.position) : -1;
             //最近角色离自己的距离
-            float nc = NearistCharacter ? Vector2.Distance(NearistCharacter.transform.position, transform.position) : -1;
+            float nc = NearistRole ? Vector2.Distance(NearistRole.transform.position, transform.position) : -1;
             if (ni > nc)
             {
                 if (NearistItem)
@@ -881,12 +855,12 @@ namespace E.Tool
             }
             else
             {
-                if (NearistCharacter)
+                if (NearistRole)
                 {
-                    if (NearistEntity != NearistCharacter.gameObject)
+                    if (NearistEntity != NearistRole.gameObject)
                     {
-                        NearistEntity = NearistCharacter.gameObject;
-                        NearistCharacter.SpriteSorter.SetAlpha(0.5f);
+                        NearistEntity = NearistRole.gameObject;
+                        NearistRole.SpriteSorter.SetAlpha(0.5f);
                         isChangeNearistEntity = true;
                     }
                 }
@@ -925,9 +899,9 @@ namespace E.Tool
                     {
                         lastNearistEntity.GetComponent<Item>().SpriteSorter.SetAlpha(1f);
                     }
-                    else if (lastNearistEntity.GetComponent<Character>())
+                    else if (lastNearistEntity.GetComponent<Role>())
                     {
-                        lastNearistEntity.GetComponent<Character>().SpriteSorter.SetAlpha(1f);
+                        lastNearistEntity.GetComponent<Role>().SpriteSorter.SetAlpha(1f);
                     }
                     else
                     {
@@ -950,9 +924,9 @@ namespace E.Tool
                     {
                         PickUp(NearistEntity.GetComponent<Item>());
                     }
-                    else if (NearistEntity.GetComponent<Character>())
+                    else if (NearistEntity.GetComponent<Role>())
                     {
-                        ChatWith(NearistEntity.GetComponent<Character>());
+                        ChatWith(NearistEntity.GetComponent<Role>());
                     }
                 }
             }
@@ -967,9 +941,9 @@ namespace E.Tool
                     {
                         Survey(NearistEntity.GetComponent<Item>());
                     }
-                    else if (NearistEntity.GetComponent<Character>())
+                    else if (NearistEntity.GetComponent<Role>())
                     {
-                        Survey(NearistEntity.GetComponent<Character>());
+                        Survey(NearistEntity.GetComponent<Role>());
                     }
                 }
             }
@@ -983,12 +957,12 @@ namespace E.Tool
                 bool isPointerOverItem = GameManager.Event.EventSystem.IsPointerOverGameObject();
                 GameObject go;
                 Item targetItem = null;
-                Character targetCharacter = null;
+                Role targetCharacter = null;
                 if (isPointerOverItem)
                 {
                     go = GameManager.Event.GetOverGameObject();
                     targetItem = go.GetComponent<Item>();
-                    targetCharacter = go.GetComponent<Character>();
+                    targetCharacter = go.GetComponent<Role>();
                 }
 
                 if (isGetRightHandItem)
@@ -1036,7 +1010,7 @@ namespace E.Tool
                         {
                             GameObject go = GameManager.Event.GetOverGameObject();
                             Item item = go.GetComponent<Item>();
-                            Character character = go.GetComponent<Character>();
+                            Role character = go.GetComponent<Role>();
                             if (item)
                             {
                                 Survey(item);
@@ -1064,12 +1038,12 @@ namespace E.Tool
                 bool isPointerOverItem = GameManager.Event.EventSystem.IsPointerOverGameObject();
                 GameObject go;
                 Item targetItem = null;
-                Character targetCharacter = null;
+                Role targetCharacter = null;
                 if (isPointerOverItem)
                 {
                     go = GameManager.Event.GetOverGameObject();
                     targetItem = go.GetComponent<Item>();
-                    targetCharacter = go.GetComponent<Character>();
+                    targetCharacter = go.GetComponent<Role>();
                 }
 
                 TargetUI.HideAll();
@@ -1173,11 +1147,11 @@ namespace E.Tool
         {
             if (Vector2.Distance(transform.position, AIDestinationSetter.target.transform.position) > runBeyondDistance)
             {
-                AIPath.maxSpeed = DynamicData.speed.Max;
+                AIPath.maxSpeed = DynamicData.physique.speed;
             }
             else
             {
-                AIPath.maxSpeed = DynamicData.speed.Now;
+                AIPath.maxSpeed = 2;
             }
         }
         private void CheckWatch()
@@ -1237,7 +1211,25 @@ namespace E.Tool
         }
     }
 
-    public enum CharacterState
+    [Serializable]
+    public class RoleDynamicData : EntityDynamicData
+    {
+        [Header("角色实体动态数据")]
+        [Tooltip("生理素质")] public PhysiqueInfo physique = new PhysiqueInfo();
+        [Tooltip("心理素质")] public MentalityInfo mentality = new MentalityInfo();
+        [Tooltip("感官素质")] public SenseInfo sense = new SenseInfo();
+        [Tooltip("身体状态")] public BodyState bodyState = new BodyState();
+
+        [Tooltip("携带的人民币")] public int rmb = 100;
+        [Tooltip("携带的浮泽币")] public int fzb = 0;
+        [Tooltip("携带的物品的引用")] public List<NameAndID> items = new List<NameAndID>();
+        [Tooltip("当前人际关系")] public List<Relationship> relationships = new List<Relationship>();
+        [Tooltip("掌握的技能")] public List<Skill> skills = new List<Skill>();
+        [Tooltip("拥有的增益")] public List<Buff> buffs = new List<Buff>();
+        [Tooltip("接受的任务")] public List<Quest> acceptedQuests = new List<Quest>();
+    }
+
+    public enum RoleState
     {
         Idle = 0,
         Walk = 1,

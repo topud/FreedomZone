@@ -10,8 +10,8 @@ public class AppHome : PhoneApp
     [Header("视图")]
 
     [Header("数据")]
-    private Character target;
-    public Character Target
+    private Role target;
+    public Role Target
     {
         get => target;
         set => target = value;

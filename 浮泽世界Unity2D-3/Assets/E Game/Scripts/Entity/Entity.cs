@@ -26,7 +26,6 @@ namespace E.Tool
         [Header("实体数据")]
         public S StaticData;
         public D DynamicData;
-        [SerializeField, ReadOnly] private List<Item> items = new List<Item>();
         
         public bool IsAsset
         {
@@ -34,19 +33,6 @@ namespace E.Tool
             {
                 string assetPath = AssetDatabase.GetAssetPath(gameObject);
                 return !string.IsNullOrEmpty(assetPath);
-            }
-        }
-        public List<Item> Items
-        {
-            get => items;
-            set
-            {
-                items = value;
-                DynamicData.items.Clear();
-                foreach (Item item in Items)
-                {
-                    DynamicData.items.Add(item.DynamicData.nameID);
-                }
             }
         }
 
@@ -122,10 +108,10 @@ namespace E.Tool
                 Debug.LogError("静态数据不存在，动态数据无法设置");
                 return;
             }
-            if (data.nameID.name != StaticData.Name)
+            if (data.nameID.name != StaticData.name)
             {
                 Debug.LogError(string.Format("对象名称不匹配，无法设置数据。当前指定对象是 {0}，目标数据指定对象是 {1}",
-                    StaticData.Name, data.nameID));
+                    StaticData.name, data.nameID));
                 return;
             }
 
@@ -140,5 +126,29 @@ namespace E.Tool
         /// 刷新对象
         /// </summary>
         public abstract void Refresh();
+    }
+
+    public abstract class EntityDynamicData
+    {
+        [Header("实体动态数据")]
+        [Tooltip("名称与编号")] public NameAndID nameID = new NameAndID("NoName", 0);
+        [Tooltip("坐标")] public Vector2 position = new Vector2(0, 0);
+    }
+
+    [Serializable]
+    public struct NameAndID
+    {
+        [ReadOnly] public string name;
+        public int id;
+
+        public NameAndID(string name, int id)
+        {
+            this.name = name;
+            this.id = id;
+        }
+        public string NameID
+        {
+            get => name + id.ToString();
+        }
     }
 }

@@ -5,36 +5,36 @@ using UnityEngine;
 
 namespace E.Tool
 {
-    public class CharacterTrigger : MonoBehaviour
+    public class RoleTrigger : MonoBehaviour
     {
-        private Character character;
+        private Role role;
 
         private void Update()
         {
-            if (!character)
+            if (!role)
             {
-                character = transform.GetComponentInParent<Character>();
+                role = transform.GetComponentInParent<Role>();
             }
         }
         private void OnTriggerEnter2D(Collider2D col)
         {
             //加入列表
-            Character target = col.GetComponent<Character>();
+            Role target = col.GetComponent<Role>();
             if (target)
             {
-                if (!character.NearbyCharacters.Contains(target))
+                if (!role.NearbyRoles.Contains(target))
                 {
-                    character.NearbyCharacters.Add(target);
+                    role.NearbyRoles.Add(target);
                 }
             }
         }
         private void OnTriggerExit2D(Collider2D col)
         {
             //移出列表
-            Character target = col.GetComponent<Character>();
+            Role target = col.GetComponent<Role>();
             if (target)
             {
-                character.NearbyCharacters.Remove(target);
+                role.NearbyRoles.Remove(target);
             }
 
             //隐藏名称

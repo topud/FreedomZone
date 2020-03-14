@@ -12,9 +12,20 @@ namespace E.Tool
 {
     public class StoryWindow : MyEditorWindow<StoryWindow>
     {
-        /// <summary>
-        /// 缩放模式
-        /// </summary>
+        private Rect Top { get => new Rect(0, 0, position.width, Utility.GetHeightLong(1)); }
+        private Rect Center { get => new Rect(0, Top.height, position.width, position.height - Top.height - Buttom.height); }
+        private Rect Buttom { get => new Rect(0, position.height, position.width, 0); }
+        private Rect ScrollView { get => new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y); }
+       
+        private Vector2 TopLineLeft { get => new Vector2(Top.x, Top.height); }
+        private Vector2 TopLineRight { get => new Vector2(Top.width, Top.height); }
+
+        private int GridInterval { get => 100; }
+        private float BendingFactor { get => IsZoomOut ? 50 * Zoom : 50; }
+        private float Zoom { get => 0.5f; }
+
+        private Vector2Int MousePos { get; set; }
+        private Vector2 ScrollPos { get; set; }
         public bool IsZoomOut
         {
             get
@@ -70,46 +81,10 @@ namespace E.Tool
                 }
             }
         }
-        /// <summary>
-        /// 当前故事
-        /// </summary>
         public Story Story { get; set; }
-        /// <summary>
-        /// 当前故事节点
-        /// </summary>
         public Node Node { get; set; }
-        /// <summary>
-        /// 当前选中的上行节点
-        /// </summary>
         public Node UpNode { get; set; }
-        /// <summary>
-        /// 当前选中的下行节点
-        /// </summary>
         public Node DownNode { get; set; }
-        /// <summary>
-        /// 滚动位置
-        /// </summary>
-        private Vector2 ScrollPos { get; set; }
-        /// <summary>
-        /// 光标位置
-        /// </summary>
-        private Vector2Int MousePos { get; set; }
-        /// <summary>
-        /// 窗口尺寸
-        /// </summary>
-        private Rect View { get => new Rect(0, 0, StoryWindowPreference.ViewSize.x, StoryWindowPreference.ViewSize.y); }
-        /// <summary>
-        /// 背景网格间隔
-        /// </summary>
-        private int GridInterval { get => 100; }
-        /// <summary>
-        /// 曲线节点弯曲系数
-        /// </summary>
-        private float BendingFactor { get => IsZoomOut ? 50 * Zoom : 50; }
-        /// <summary>
-        /// 缩放系数
-        /// </summary>
-        private float Zoom { get => 0.5f; }
 
         private void Update()
         {
@@ -164,7 +139,7 @@ namespace E.Tool
                     break;
             }
 
-            ScrollPos = GUI.BeginScrollView(Center, ScrollPos, View);
+            ScrollPos = GUI.BeginScrollView(Center, ScrollPos, ScrollView);
             DrawBG();
             DrawTempCurve();
             BeginWindows();
@@ -564,6 +539,31 @@ namespace E.Tool
 
         //绘制
         /// <summary>
+        /// 绘制右键菜单
+        /// </summary>
+        protected override void DrawMenu()
+        {
+            if (Event.current.type == EventType.ContextClick)
+            {
+                if (UpNode == null && DownNode == null)
+                {
+                    if (Story != null)
+                    {
+                        if (Menu == null)
+                        {
+                            Refresh();
+                        }
+                        Menu.ShowAsContext();
+                        Event.current.Use();
+                    }
+                }
+                else
+                {
+                    ClearTempConnect();
+                }
+            }
+        }
+        /// <summary>
         /// 绘制窗口背景
         /// </summary>
         protected override void DrawBG()
@@ -592,32 +592,35 @@ namespace E.Tool
         /// <summary>
         /// 绘制窗口顶部
         /// </summary>
-        protected override void DrawTop()
+        private void DrawTop()
         {
             //顶部背景
-            EditorGUI.DrawRect(Top, StoryWindowPreference.Background);
+            //EditorGUI.DrawRect(Top, StoryWindowPreference.Background);
+
+            //分割线
+            DrawLine(TopLineLeft, TopLineRight, Color.black);
 
             EditorGUILayout.BeginHorizontal();
-            if (GUILayout.Button( "创建", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button( "创建", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
             {
                 CreateStory();
             }
 
             if (Story)
             {
-                if (GUILayout.Button("删除", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("删除", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
                 {
                     DeleteStory();
                 }
-                if (GUILayout.Button("关闭", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("关闭", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
                 {
                     CloseStory();
                 }
-                if (GUILayout.Button("保存", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button("保存", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
                 {
                     SaveStory();
                 }
-                if (GUILayout.Button(IsZoomOut ? "详情" : "缩略", GUILayout.ExpandWidth(false)))
+                if (GUILayout.Button(IsZoomOut ? "详情" : "缩略", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
                 {
                     IsZoomOut = !IsZoomOut;
                 }
@@ -626,11 +629,11 @@ namespace E.Tool
             Story data = (Story)EditorGUILayout.ObjectField(Story, typeof(Story));
             OpenStory(data);
 
-            if (GUILayout.Button( "刷新", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button( "刷新", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
             {
                 Refresh();
             }
-            if (GUILayout.Button( "设置", GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button( "设置", GUILayout.ExpandWidth(false), GUILayout.Height(18)))
             {
                 ShowNotification(new GUIContent("请前往 \"Edit -> Preferences -> E Story\" 进行编辑"));
             }
@@ -639,7 +642,7 @@ namespace E.Tool
         /// <summary>
         /// 绘制窗口底部
         /// </summary>
-        protected override void DrawButtom()
+        private void DrawButtom()
         {
             //EditorGUI.DrawRect(Buttom, StoryWindowPreference.NormalNode);
             string mousePos = "X: " + MousePos.x + "  Y: " + MousePos.y;
@@ -649,7 +652,7 @@ namespace E.Tool
         /// <summary>
         /// 绘制窗口中心
         /// </summary>
-        protected override void DrawCenter()
+        private void DrawCenter()
         {
             Color c = GUI.color;
             if (Story != null)
@@ -712,31 +715,6 @@ namespace E.Tool
             }
         }
         /// <summary>
-        /// 绘制右键菜单
-        /// </summary>
-        protected override void DrawMenu()
-        {
-            if (Event.current.type == EventType.ContextClick)
-            {
-                if (UpNode == null && DownNode == null)
-                {
-                    if (Story != null)
-                    {
-                        if (Menu == null)
-                        {
-                            Refresh();
-                        }
-                        Menu.ShowAsContext();
-                        Event.current.Use();
-                    }
-                }
-                else
-                {
-                    ClearTempConnect();
-                }
-            }
-        }
-        /// <summary>
         /// 绘制剧情节点
         /// </summary>
         private void DrawPlotNode(int index)
@@ -759,7 +737,7 @@ namespace E.Tool
                 Rect r3 = new Rect(node.layout.width - Utility.GetHeightLong(1) - Utility.OneSpacing, Utility.OneSpacing, Utility.GetHeightMiddle(1), Utility.OneHeight);
                 Rect r4 = new Rect(r3.x - r3.width - Utility.OneSpacing, r3.y, Utility.GetHeightMiddle(1), Utility.OneHeight);
 
-                EditorGUIUtility.labelWidth = Utility.LabelWidth;
+                Utility.SetLabelWidth(50);
 
                 //删除
                 if (GUI.Button(r3, new GUIContent("X", "删除节点")))
@@ -794,7 +772,8 @@ namespace E.Tool
 
                     //编号
                     EditorGUILayout.BeginHorizontal();
-                    int chapter = EditorGUILayout.IntField("剧情编号", node.id.chapter);
+                    EditorGUILayout.LabelField("剧情编号", GUILayout.Width(50));
+                    int chapter = EditorGUILayout.IntField(node.id.chapter);
                     int scene = EditorGUILayout.IntField(node.id.scene);
                     int part = EditorGUILayout.IntField(node.id.part);
                     int branch = EditorGUILayout.IntField(node.id.branch);
@@ -806,7 +785,11 @@ namespace E.Tool
 
                 //内容
                 EditorGUILayout.BeginHorizontal();
-                node.plot = (Plot)EditorGUILayout.ObjectField(IsZoomOut ? "" : "剧情片段", node.plot, typeof(Plot));
+                if (!IsZoomOut)
+                {
+                    EditorGUILayout.LabelField("剧情片段", GUILayout.Width(50));
+                }
+                node.plot = (Plot)EditorGUILayout.ObjectField(node.plot, typeof(Plot));
                 if (!IsZoomOut)
                 {
                     if (GUILayout.Button(new GUIContent("+", "创建剧情片段"), GUILayout.ExpandWidth(false)))

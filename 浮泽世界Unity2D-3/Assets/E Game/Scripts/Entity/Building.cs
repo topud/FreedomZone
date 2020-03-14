@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -54,7 +55,7 @@ namespace E.Tool
         }
         private void OnTriggerEnter2D(Collider2D collision)
         {
-            Character character = collision.GetComponent<Character>();
+            Role character = collision.GetComponent<Role>();
             if (!character) return;
 
             if (character.IsPlayer)
@@ -64,7 +65,7 @@ namespace E.Tool
         }
         private void OnTriggerExit2D(Collider2D collision)
         {
-            Character character = collision.GetComponent<Character>();
+            Role character = collision.GetComponent<Role>();
             if (!character) return;
 
             if (character.IsPlayer)
@@ -87,12 +88,9 @@ namespace E.Tool
 
             DynamicData = new BuildingDynamicData
             {
-                nameID = new NameAndID(StaticData.Name, IsAsset ? -1 : 0),
+                nameID = new NameAndID(StaticData.name, IsAsset ? -1 : 0),
                 position = IsAsset ? new Vector2(0, 0) : new Vector2(transform.position.x, transform.position.y),
-                health = StaticData.Health,
-                power = StaticData.Power,
-                //DynamicData.items = StaticData.Items;              **
-
+                health = StaticData.health,
             };
 
             Refresh();
@@ -110,7 +108,7 @@ namespace E.Tool
             }
             if (DynamicData == null)
             {
-                Debug.Log("动态数据初始化 " + StaticData.Name);
+                Debug.Log("动态数据初始化 " + StaticData.name);
                 ResetDynamicData();
             }
 
@@ -119,10 +117,15 @@ namespace E.Tool
 
             name = IsAsset ? DynamicData.nameID.name : DynamicData.nameID.NameID;
             transform.position = DynamicData.position;
-            Rigidbody.mass = StaticData.Weight;
+            Rigidbody.mass = StaticData.weight;
             Rigidbody.bodyType = RigidbodyType2D.Static;
-
-            Items.Clear();
         }
+    }
+
+    [Serializable]
+    public class BuildingDynamicData : EntityDynamicData
+    {
+        [Tooltip("当前容纳/携带物品")] public List<NameAndID> items = new List<NameAndID>();
+        [Tooltip("耐久")] public FloatProperty health;
     }
 }

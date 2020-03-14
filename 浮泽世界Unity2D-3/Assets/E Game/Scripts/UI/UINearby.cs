@@ -8,11 +8,11 @@ public class UINearby : UIList<Item, UISlotItem>
     protected override void OnEnable()
     {
         Refresh();
-        Character.onNearbyItemChange.AddListener(Refresh);
+        Role.onNearbyItemChange.AddListener(Refresh);
     }
     protected override void OnDisable()
     {
-        Character.onNearbyItemChange.RemoveListener(Refresh);
+        Role.onNearbyItemChange.RemoveListener(Refresh);
     }
 
     public override void LoadData()

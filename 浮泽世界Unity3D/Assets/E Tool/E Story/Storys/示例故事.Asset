@@ -1,0 +1,170 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fddaeb3ceb9edaa42a207ef610f9456d, type: 3}
+  m_Name: "\u793A\u4F8B\u6545\u4E8B"
+  m_EditorClassIdentifier: 
+  description: "\u5728\u8FD9\u91CC\u6DFB\u52A0\u4E00\u4E9B\u6545\u4E8B\u63CF\u8FF0"
+  plotNodes:
+  - layout:
+      serializedVersion: 2
+      x: 236
+      y: 5
+      width: 300
+      height: 85
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 3
+      branch: 1
+    id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 1
+    branchType: 0
+    timeType: 1
+    plot: {fileID: 11400000, guid: 519e5acc5ab83f34e987dbae5a22951b, type: 2}
+    nextOptionNodes: 0000000001000000
+  - layout:
+      serializedVersion: 2
+      x: 70
+      y: 331
+      width: 300
+      height: 85
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 3
+      branch: 1
+    id:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 1
+    branchType: 0
+    timeType: 0
+    plot: {fileID: 11400000, guid: e3492fe22c7fdc1458a93495dca4ae63, type: 2}
+    nextOptionNodes: 
+  - layout:
+      serializedVersion: 2
+      x: 487
+      y: 333
+      width: 300
+      height: 85
+    description: "\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 3
+      branch: 1
+    id:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 2
+    branchType: 1
+    timeType: 0
+    plot: {fileID: 11400000, guid: f91429cb1f80088418f33276a1984507, type: 2}
+    nextOptionNodes: 
+  - layout:
+      serializedVersion: 2
+      x: 238
+      y: 474.5
+      width: 300
+      height: 100
+    description: "\u5267\u60C5\u7B80\u4ECB\n\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 3
+      branch: 1
+    branchType: 0
+    timeType: 2
+    plot: {fileID: 11400000, guid: 30ff57de2ac03a64eb40a07edf1bf6d1, type: 2}
+    nextOptionNodes: 
+  - layout:
+      serializedVersion: 2
+      x: 852
+      y: 35
+      width: 300
+      height: 115
+    description: "\u5267\u60C5\u7B80\u4ECB\n\u5267\u60C5\u7B80\u4ECB\n\u5267\u60C5\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 0
+      scene: 0
+      part: 0
+      branch: 0
+    id:
+      chapter: 1
+      scene: 1
+      part: 1
+      branch: 2
+    branchType: 2
+    timeType: 0
+    plot: {fileID: 11400000, guid: 9ee200f88a1a4f644b9ebdeec9087940, type: 2}
+    nextOptionNodes: 
+  optionNodes:
+  - layout:
+      serializedVersion: 2
+      x: 9.5
+      y: 133
+      width: 300
+      height: 126
+    description: "\u9009\u9879\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 1
+    id: 1
+    comparisons:
+    - keyIndex: 0
+      comparison: 0
+      value: 0
+    changes:
+    - keyIndex: 1
+      change: 0
+      value: 1
+  - layout:
+      serializedVersion: 2
+      x: 443.5
+      y: 133
+      width: 300
+      height: 126
+    description: "\u9009\u9879\u7B80\u4ECB"
+    nextPlotNode:
+      chapter: 1
+      scene: 1
+      part: 2
+      branch: 2
+    id: 0
+    comparisons:
+    - keyIndex: 0
+      comparison: 2
+      value: 0
+    changes:
+    - keyIndex: 1
+      change: 0
+      value: -1
+  conditions:
+  - key: "\u6761\u4EF61"
+    value: 0
+  - key: "\u6761\u4EF62"
+    value: 0
+  isZoomOut: 0
